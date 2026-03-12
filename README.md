@@ -74,6 +74,7 @@ pnpm start
 .
 ├── app/
 │   ├── components/         # 组件
+│   │   ├── DrawnTitle.tsx  # SVG 绘画标题组件
 │   │   ├── TypeWriter.tsx  # 打字机效果组件
 │   │   └── LanguageSwitcher.tsx  # 语言切换组件
 │   ├── contexts/           # React Context
@@ -126,8 +127,7 @@ export const linksConfig = {
 ```typescript
 export const translations = {
   zh: {
-    siteName: "你的名字",
-    siteTitle: "欢迎来到我的主页",
+    siteTitle: "你的主页标题",
     // ...
   },
   en: {

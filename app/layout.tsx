@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, ZCOOL_QingKe_HuangYou } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -17,6 +17,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const zcoolQingKeHuangYou = ZCOOL_QingKe_HuangYou({
+  variable: "--font-zcool-qingke",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${zcoolQingKeHuangYou.variable} antialiased`}
       >
         <LanguageProvider>
           {children}

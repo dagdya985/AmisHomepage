@@ -8,7 +8,6 @@ type TranslationKey = keyof Translations["zh"];
 
 // 定义每个key的返回类型
 type TranslationReturnType = {
-  siteName: string;
   siteTitle: string;
   typeWriterText: string;
   typeWriterText2: string;

@@ -6,6 +6,7 @@ import { linksConfig } from "./config";
 import { useLanguage } from "./contexts/LanguageContext";
 import TypeWriter from "./components/TypeWriter";
 import LanguageSwitcher from "./components/LanguageSwitcher";
+import DrawnTitle from "./components/DrawnTitle";
 
 export default function Home() {
   const { language, t } = useLanguage();
@@ -61,13 +62,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/30"></div>
         
         {/* 导航栏 */}
-        <nav className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
-          {/* 网站标题 */}
-          <div id="blog-info">
-            <a href="/" className="text-white text-xl font-semibold hover:opacity-80 transition-opacity">
-              <span className="site-name">{t("siteName")}</span>
-            </a>
-          </div>
+        <nav className="relative z-10 flex items-center justify-end px-6 py-4 md:px-12">
           
           {/* 桌面端导航菜单 */}
           <div id="menus" className="hidden md:flex items-center space-x-6">
@@ -94,10 +89,8 @@ export default function Home() {
         </nav>
         
         {/* 网站信息 */}
-        <div id="site-info" className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-5">
-          <h1 id="site-title" className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg animate-fade-in">
-            {t("siteTitle")}
-          </h1>
+        <div id="site-info" className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-5 overflow-visible px-4">
+          <DrawnTitle text={t("siteTitle")} className="w-[90vw] mb-4" />
           <div id="site-subtitle" className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl px-4">
             <TypeWriter 
               key={language}

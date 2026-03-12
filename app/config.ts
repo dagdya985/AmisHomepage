@@ -45,8 +45,7 @@ export const linksConfig = {
 // 多语言文本配置
 export const translations = {
   zh: {
-    siteName: "Amis的主页",
-    siteTitle: "欢迎来到Amis的主页",
+    siteTitle: "Amis的主页",
     typeWriterText: "记录技术文章和生活感悟",
     typeWriterText2: "热爱编程，追求极致，永不止步",
     quickLinks: "快速链接",
@@ -58,8 +57,7 @@ export const translations = {
     },
   },
   en: {
-    siteName: "Amis's Homepage",
-    siteTitle: "Welcome to Amis's Homepage",
+    siteTitle: "Amis's Homepage",
     typeWriterText: "Recording technical articles and life insights",
     typeWriterText2: "Passionate about coding, pursuing excellence, never stopping",
     quickLinks: "Quick Links",
