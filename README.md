@@ -4,7 +4,7 @@
 
 ## 在线预览
 
-🌐 [https://www.amisblog.cn](https://www.amisblog.cn)
+🌐 [https://www.amisweb.cn](https://www.amisweb.cn)
 
 ## 功能特性
 

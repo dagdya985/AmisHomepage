@@ -1,65 +1,256 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { linksConfig } from "./config";
+import { useLanguage } from "./contexts/LanguageContext";
+import TypeWriter from "./components/TypeWriter";
+import LanguageSwitcher from "./components/LanguageSwitcher";
 
 export default function Home() {
+  const { language, t } = useLanguage();
+  const nav = t("nav");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  // 页面加载动画
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  // 监听滚动显示返回顶部按钮
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // 平滑滚动到顶部
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // 平滑滚动到内容区域
+  const scrollToContent = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const content = document.getElementById("content");
+    if (content) {
+      content.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className={`min-h-screen font-sans transition-opacity duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`}>
+      {/* 全屏Header */}
+      <header className="relative h-screen w-full">
+        {/* 背景图 - 使用Next.js Image优化 */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/index.jpg"
+            alt="Background"
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+        </div>
+        
+        {/* 遮罩层 */}
+        <div className="absolute inset-0 bg-black/30"></div>
+        
+        {/* 导航栏 */}
+        <nav className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
+          {/* 网站标题 */}
+          <div id="blog-info">
+            <a href="/" className="text-white text-xl font-semibold hover:opacity-80 transition-opacity">
+              <span className="site-name">{t("siteName")}</span>
+            </a>
+          </div>
+          
+          {/* 桌面端导航菜单 */}
+          <div id="menus" className="hidden md:flex items-center space-x-6">
+            <a href={linksConfig.blog.url} className="text-white/90 hover:text-white transition-colors flex items-center gap-2">
+              <i className="fas fa-blog fa-fw"></i>
+              <span>{nav.blog}</span>
+            </a>
+            <a href={linksConfig.github.url} target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-white transition-colors flex items-center gap-2">
+              <i className="fab fa-github fa-fw"></i>
+              <span>{nav.github}</span>
+            </a>
+            <a href={linksConfig.gitee.url} target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-white transition-colors flex items-center gap-2">
+              <i className="fab fa-gitee fa-fw"></i>
+              <span>{nav.gitee}</span>
+            </a>
+            {/* 语言切换 */}
+            <LanguageSwitcher />
+          </div>
+          
+          {/* 移动端只显示语言切换 */}
+          <div className="md:hidden">
+            <LanguageSwitcher />
+          </div>
+        </nav>
+        
+        {/* 网站信息 */}
+        <div id="site-info" className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-5">
+          <h1 id="site-title" className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg animate-fade-in">
+            {t("siteTitle")}
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+          <div id="site-subtitle" className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl px-4">
+            <TypeWriter 
+              key={language}
+              texts={[t("typeWriterText"), t("typeWriterText2")]} 
+              typeSpeed={120} 
+              deleteSpeed={80}
+              delay={800} 
+              pauseTime={2000}
+            />
+          </div>
+          
+          {/* 社交图标 */}
+          <div id="site_social_icons" className="flex items-center gap-4">
+            <a 
+              href={linksConfig.email.url}
+              rel="external nofollow noreferrer" 
+              target="_blank" 
+              title={linksConfig.email.title[language]}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 hover:scale-110 transition-all duration-300"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <i className="fas fa-envelope text-white"></i>
+            </a>
+            <a 
+              href={linksConfig.github.url}
+              target="_blank" 
+              rel="noopener noreferrer"
+              title={linksConfig.github.title[language]}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 hover:scale-110 transition-all duration-300"
             >
-              Learning
-            </a>{" "}
-            center.
+              <i className="fab fa-github text-white"></i>
+            </a>
+            <a 
+              href={linksConfig.gitee.url}
+              target="_blank" 
+              rel="noopener noreferrer"
+              title={linksConfig.gitee.title[language]}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 hover:scale-110 transition-all duration-300"
+            >
+              <i className="fab fa-gitee text-white"></i>
+            </a>
+            <a 
+              href={linksConfig.blog.url}
+              target="_blank"
+              title={linksConfig.blog.title[language]}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 hover:scale-110 transition-all duration-300"
+            >
+              <i className="fas fa-blog text-white"></i>
+            </a>
+          </div>
+        </div>
+        
+        {/* 向下滚动提示 */}
+        <div id="scroll-down" className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+          <a 
+            href="#content" 
+            onClick={scrollToContent}
+            className="text-white/80 hover:text-white transition-colors animate-bounce block"
+          >
+            <i className="fas fa-angle-down text-3xl"></i>
+          </a>
+        </div>
+      </header>
+      
+      {/* 内容区域 */}
+      <section id="content" className="py-16 px-6 md:px-12 bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
+            {t("quickLinks")}
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Blog卡片 */}
+            <a 
+              href={linksConfig.blog.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+            >
+              <div className="h-32 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <i className="fas fa-blog text-4xl text-white"></i>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-500 transition-colors">
+                  {linksConfig.blog.title[language]}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {linksConfig.blog.description[language]}
+                </p>
+              </div>
+            </a>
+            
+            {/* GitHub卡片 */}
+            <a 
+              href={linksConfig.github.url}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+            >
+              <div className="h-32 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <i className="fab fa-github text-4xl text-white"></i>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-gray-600 transition-colors">
+                  {linksConfig.github.title[language]}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {linksConfig.github.description[language]}
+                </p>
+              </div>
+            </a>
+            
+            {/* Gitee卡片 */}
+            <a 
+              href={linksConfig.gitee.url}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+            >
+              <div className="h-32 bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <i className="fab fa-gitee text-4xl text-white"></i>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-red-500 transition-colors">
+                  {linksConfig.gitee.title[language]}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {linksConfig.gitee.description[language]}
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+      
+      {/* 页脚 */}
+      <footer className="bg-gray-900 text-white py-8 px-6">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-gray-400">
+            {t("footer")}
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
+
+      {/* 返回顶部按钮 */}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-8 right-8 w-12 h-12 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 z-50 ${
+          showBackToTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+        }`}
+        aria-label="Back to top"
+      >
+        <i className="fas fa-arrow-up"></i>
+      </button>
     </div>
   );
 }
