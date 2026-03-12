@@ -208,7 +208,23 @@ pnpm install
 - 修改 `app/config.ts` 中的链接和翻译
 - 替换 `public/images/` 中的背景图和图标
 
-### 第五步：推送到你的仓库（Fork 用户）
+### 第五步：环境变量配置
+
+复制环境变量示例文件：
+
+```bash
+cp .env.example .env
+```
+
+`.env` 文件内容：
+
+```env
+PORT=9998
+```
+
+你可以根据需要修改端口号。
+
+### 第六步：推送到你的仓库（Fork 用户）
 
 ```bash
 git add .
@@ -216,14 +232,14 @@ git commit -m "Update config"
 git push origin main
 ```
 
-### 第六步：部署到 Vercel
+### 第七步：部署到 Vercel
 
 1. 访问 [Vercel](https://vercel.com/)
 2. 点击 `New Project`
 3. 导入你的仓库
 4. 点击 `Deploy` 完成部署
 
-### 第七步：绑定自定义域名（可选）
+### 第八步：绑定自定义域名（可选）
 
 - 在 Vercel 项目设置中添加域名
 - 按提示配置 DNS 解析
