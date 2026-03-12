@@ -7,121 +7,121 @@ export default function AboutCard() {
   const { language, t } = useLanguage();
 
   return (
-    <div className="w-full max-w-3xl mx-auto space-y-6">
+    <div className="w-full max-w-3xl mx-auto space-y-8">
       {/* 关于我 */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20">
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <i className="fas fa-rocket text-yellow-400"></i>
-          {t("aboutMe")}
-        </h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div className="flex items-center gap-3 text-white/80">
-            <i className="fas fa-user text-blue-400 w-5"></i>
-            <span>{aboutMeConfig.name}</span>
-          </div>
-          <div className="flex items-center gap-3 text-white/80">
-            <i className="fas fa-map-marker-alt text-red-400 w-5"></i>
-            <span>{aboutMeConfig.location[language]}</span>
-          </div>
-          <div className="flex items-center gap-3 text-white/80">
-            <i className="fas fa-briefcase text-green-400 w-5"></i>
-            <span>{aboutMeConfig.focus[language]}</span>
-          </div>
-          <div className="flex items-center gap-3 text-white/80">
-            <i className="fas fa-heart text-pink-400 w-5"></i>
-            <span>{aboutMeConfig.hobbies[language]}</span>
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
+        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20 hover:border-white/40 transition-all duration-300">
+          <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
+              <i className="fas fa-rocket text-white text-sm"></i>
+            </span>
+            {t("aboutMe")}
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { icon: "fas fa-user", color: "from-blue-400 to-blue-600", value: aboutMeConfig.name },
+              { icon: "fas fa-map-marker-alt", color: "from-red-400 to-red-600", value: aboutMeConfig.location[language] },
+              { icon: "fas fa-briefcase", color: "from-green-400 to-green-600", value: aboutMeConfig.focus[language] },
+              { icon: "fas fa-heart", color: "from-pink-400 to-pink-600", value: aboutMeConfig.hobbies[language] },
+            ].map((item, index) => (
+              <div 
+                key={index}
+                className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:translate-x-1"
+              >
+                <span className={`w-8 h-8 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center shrink-0`}>
+                  <i className={`${item.icon} text-white text-xs`}></i>
+                </span>
+                <span className="text-white/80 text-sm">{item.value}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* 技术栈 */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20">
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <i className="fas fa-tools text-purple-400"></i>
-          {t("techStack")}
-        </h3>
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
+        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20 hover:border-white/40 transition-all duration-300">
+          <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400 to-violet-600 flex items-center justify-center">
+              <i className="fas fa-tools text-white text-sm"></i>
+            </span>
+            {t("techStack")}
+          </h3>
 
-        {/* Backend */}
-        <div className="mb-4">
-          <p className="text-white/60 text-xs mb-2 flex items-center gap-2">
-            <i className="fas fa-server"></i>
-            {t("backend")}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {techStackConfig.backend.map((tech) => (
-              <span
-                key={tech.name}
-                className={`${tech.color} text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 hover:scale-105 transition-transform cursor-default`}
-              >
-                <i className={tech.icon}></i>
-                {tech.name}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile */}
-        <div className="mb-4">
-          <p className="text-white/60 text-xs mb-2 flex items-center gap-2">
-            <i className="fas fa-mobile-alt"></i>
-            {t("mobile")}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {techStackConfig.mobile.map((tech) => (
-              <span
-                key={tech.name}
-                className={`${tech.color} text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 hover:scale-105 transition-transform cursor-default`}
-              >
-                <i className={tech.icon}></i>
-                {tech.name}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Frontend */}
-        <div>
-          <p className="text-white/60 text-xs mb-2 flex items-center gap-2">
-            <i className="fas fa-laptop-code"></i>
-            {t("frontend")}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {techStackConfig.frontend.map((tech) => (
-              <span
-                key={tech.name}
-                className={`${tech.color} text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 hover:scale-105 transition-transform cursor-default`}
-              >
-                <i className={tech.icon}></i>
-                {tech.name}
-              </span>
+          <div className="space-y-5">
+            {[
+              { key: "backend", data: techStackConfig.backend, icon: "fas fa-server", gradient: "from-orange-500 to-red-500" },
+              { key: "mobile", data: techStackConfig.mobile, icon: "fas fa-mobile-alt", gradient: "from-blue-500 to-cyan-500" },
+              { key: "frontend", data: techStackConfig.frontend, icon: "fas fa-laptop-code", gradient: "from-purple-500 to-pink-500" },
+            ].map((category) => (
+              <div key={category.key}>
+                <p className="text-white/60 text-xs mb-2 flex items-center gap-2">
+                  <i className={category.icon}></i>
+                  {t(category.key as "backend" | "mobile" | "frontend")}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {category.data.map((tech, index) => (
+                    <span
+                      key={tech.name}
+                      className="relative group/tag"
+                    >
+                      <span className="absolute inset-0 bg-white/20 rounded-full blur-sm group-hover/tag:blur-md transition-all duration-300 opacity-0 group-hover/tag:opacity-100"></span>
+                      <span
+                        className={`relative ${tech.color} text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 hover:scale-110 transition-all duration-300 cursor-default shadow-lg`}
+                      >
+                        <i className={tech.icon}></i>
+                        {tech.name}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </div>
 
       {/* 当前关注 */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20">
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <i className="fas fa-bullseye text-red-400"></i>
-          {t("currentFocus")}
-        </h3>
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
+        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20 hover:border-white/40 transition-all duration-300">
+          <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-400 to-rose-600 flex items-center justify-center">
+              <i className="fas fa-bullseye text-white text-sm"></i>
+            </span>
+            {t("currentFocus")}
+          </h3>
 
-        <div className="space-y-3">
-          {aboutMeConfig.currentFocus.map((item, index) => (
-            <div key={index} className="flex items-start gap-3 text-white/80 text-sm">
-              <i className={item.icon + " mt-1"}></i>
-              <span>{item.text[language]}</span>
-            </div>
-          ))}
+          <div className="space-y-3">
+            {aboutMeConfig.currentFocus.map((item, index) => (
+              <div 
+                key={index} 
+                className="flex items-start gap-4 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:translate-x-1"
+              >
+                <span className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <i className={item.icon}></i>
+                </span>
+                <span className="text-white/80 text-sm leading-relaxed">{item.text[language]}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* 座右铭 */}
-      <div className="text-center py-4">
-        <p className="text-white/60 text-sm italic">
-          💡 "{aboutMeConfig.motto[language]}"
-        </p>
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-red-500/20 blur-xl"></div>
+        <div className="relative text-center py-6 px-8">
+          <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10">
+            <span className="text-2xl">💡</span>
+            <p className="text-white/80 text-sm italic">
+              "{aboutMeConfig.motto[language]}"
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
