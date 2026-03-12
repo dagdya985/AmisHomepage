@@ -1,36 +1,178 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Amis's Homepage
 
-## Getting Started
+我的个人主页，使用 Next.js + TypeScript + Tailwind CSS 构建。
 
-First, run the development server:
+## 在线预览
+
+🌐 [https://www.amisblog.cn](https://www.amisblog.cn)
+
+## 功能特性
+
+- 🎨 **现代化设计** - 参考 Butterfly 博客主题风格，全屏背景图 + 渐变遮罩
+- ⌨️ **打字机效果** - 动态打字机文字效果，支持多文本循环
+- 🌍 **多语言支持** - 支持中文/英文切换，自动检测系统语言
+- 📱 **响应式布局** - 完美适配桌面端和移动端
+- ⚡ **性能优化** - Next.js Image 图片优化、页面加载动画
+- 🔝 **返回顶部** - 滚动时显示返回顶部按钮
+- 🔗 **快速链接** - 卡片式展示 Blog、GitHub、Gitee 链接
+- 🌙 **暗色模式** - 支持 dark mode
+
+## 技术栈
+
+- [Next.js 16](https://nextjs.org/) - React 框架
+- [TypeScript](https://www.typescriptlang.org/) - 类型安全
+- [Tailwind CSS](https://tailwindcss.com/) - 原子化 CSS
+- [Font Awesome](https://fontawesome.com/) - 图标库
+
+## 快速开始
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 开发模式
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+访问 http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 构建生产版本
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+### 启动生产服务器
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 项目结构
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+.
+├── app/
+│   ├── components/         # 组件
+│   │   ├── TypeWriter.tsx  # 打字机效果组件
+│   │   └── LanguageSwitcher.tsx  # 语言切换组件
+│   ├── contexts/           # React Context
+│   │   └── LanguageContext.tsx   # 语言管理
+│   ├── config.ts           # 链接配置和翻译
+│   ├── globals.css         # 全局样式
+│   ├── layout.tsx          # 根布局
+│   └── page.tsx            # 首页
+├── public/
+│   ├── images/             # 图片资源
+│   │   ├── index.jpg       # 背景图
+│   │   └── icon.png        # 网站图标
+│   └── svg/                # SVG 图标
+├── next.config.ts          # Next.js 配置
+├── tailwind.config.ts      # Tailwind 配置
+└── package.json
+```
 
-## Deploy on Vercel
+## 配置说明
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 修改链接
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+编辑 `app/config.ts` 中的 `linksConfig`：
+
+```typescript
+export const linksConfig = {
+  blog: {
+    url: "https://your-blog.com",
+    title: { zh: "博客", en: "Blog" },
+    description: { zh: "描述", en: "Description" },
+  },
+  github: {
+    url: "https://github.com/yourname",
+    // ...
+  },
+  // ...
+};
+```
+
+### 修改翻译文本
+
+编辑 `app/config.ts` 中的 `translations`：
+
+```typescript
+export const translations = {
+  zh: {
+    siteName: "你的名字",
+    siteTitle: "欢迎来到我的主页",
+    // ...
+  },
+  en: {
+    // ...
+  },
+};
+```
+
+### 更换背景图
+
+将背景图片放入 `public/images/index.jpg`，建议使用 1920x1080 或更高分辨率的图片。
+
+### 更换网站图标
+
+将图标放入 `public/images/icon.png`，建议使用 512x512 像素的 PNG 图片。
+
+## 自定义
+
+### 打字机效果
+
+在 `app/page.tsx` 中修改 TypeWriter 组件参数：
+
+```tsx
+<TypeWriter 
+  texts={[t("typeWriterText"), t("typeWriterText2")]} 
+  typeSpeed={120}      // 打字速度 (ms)
+  deleteSpeed={80}     // 删除速度 (ms)
+  delay={800}          // 开始延迟 (ms)
+  pauseTime={2000}     // 暂停时间 (ms)
+/>
+```
+
+### 卡片样式
+
+卡片使用 Tailwind CSS 类名控制样式：
+
+```tsx
+className="group bg-white rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+```
+
+## 部署
+
+### Vercel（推荐）
+
+1. 将代码推送到 GitHub
+2. 在 [Vercel](https://vercel.com/) 导入项目
+3. 自动部署
+
+### 静态导出
+
+```bash
+npm run build
+```
+
+将 `dist` 目录部署到任何静态托管服务。
+
+## License
+
+本项目采用 [CC BY-NC-SA 4.0](LICENSE) 许可协议。
+
+**简单来说：**
+- ✅ 可以自由分享和修改
+- ❌ **禁止商业用途**
+- 📋 修改后必须使用相同协议
+
+详见 [LICENSE](LICENSE) 文件。
+
+---
+
+Made with ❤️ by Amis
