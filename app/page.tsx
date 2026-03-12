@@ -13,6 +13,20 @@ export default function Home() {
   const nav = t("nav");
   const [isLoaded, setIsLoaded] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [isLanguageChanging, setIsLanguageChanging] = useState(false);
+  const [prevLanguage, setPrevLanguage] = useState(language);
+
+  // 语言切换时的淡出淡入效果
+  useEffect(() => {
+    if (prevLanguage !== language) {
+      setIsLanguageChanging(true);
+      const timer = setTimeout(() => {
+        setIsLanguageChanging(false);
+        setPrevLanguage(language);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [language, prevLanguage]);
 
   // 页面加载动画
   useEffect(() => {
@@ -89,8 +103,13 @@ export default function Home() {
         </nav>
         
         {/* 网站信息 */}
-        <div id="site-info" className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-5 overflow-visible px-4">
-          <DrawnTitle text={t("siteTitle")} className="w-[90vw] mb-4" />
+        <div 
+          id="site-info" 
+          className={`absolute inset-0 flex flex-col items-center justify-center text-center text-white z-5 overflow-visible px-4 transition-opacity duration-300 ${isLanguageChanging ? 'opacity-0' : 'opacity-100'}`}
+        >
+          <div className="min-h-[80px] flex items-center justify-center w-[90vw] mb-4">
+            <DrawnTitle text={t("siteTitle")} className="w-full" />
+          </div>
           <div id="site-subtitle" className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl px-4">
             <TypeWriter 
               key={language}
