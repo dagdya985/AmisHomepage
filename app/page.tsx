@@ -184,14 +184,15 @@ export default function Home() {
       </header>
       
       {/* 内容区域 - 关于我 */}
-      <section id="content" className="py-16 px-6 md:px-12 bg-gradient-to-b from-transparent to-black/20">
-        <div className="max-w-6xl mx-auto">
+      <section id="content" className="py-16 px-6 md:px-12 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0f0f23]/80 to-[#1a1a2e]/90"></div>
+        <div className="max-w-6xl mx-auto relative z-10">
           <AboutCard />
         </div>
       </section>
       
       {/* 页脚 */}
-      <footer className="bg-black/30 backdrop-blur-sm text-white py-8 px-6">
+      <footer className="bg-[#0a0a0a]/80 backdrop-blur-sm text-white py-8 px-6 border-t border-white/10">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-white/60">
             {t("footer")}

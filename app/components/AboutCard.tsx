@@ -10,8 +10,8 @@ export default function AboutCard() {
     <div className="w-full max-w-3xl mx-auto space-y-8">
       {/* 关于我 */}
       <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
-        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20 hover:border-white/40 transition-all duration-300">
+        <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
+        <div className="relative bg-[#0d0d1a]/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
           <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
             <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
               <i className="fas fa-rocket text-white text-sm"></i>
@@ -42,8 +42,8 @@ export default function AboutCard() {
 
       {/* 技术栈 */}
       <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
-        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20 hover:border-white/40 transition-all duration-300">
+        <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/30 via-blue-500/30 to-purple-500/30 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
+        <div className="relative bg-[#0d0d1a]/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
           <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
             <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400 to-violet-600 flex items-center justify-center">
               <i className="fas fa-tools text-white text-sm"></i>
@@ -86,8 +86,8 @@ export default function AboutCard() {
 
       {/* 当前关注 */}
       <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
-        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20 hover:border-white/40 transition-all duration-300">
+        <div className="absolute -inset-1 bg-gradient-to-r from-green-500/30 via-emerald-500/30 to-teal-500/30 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
+        <div className="relative bg-[#0d0d1a]/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
           <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
             <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-400 to-rose-600 flex items-center justify-center">
               <i className="fas fa-bullseye text-white text-sm"></i>
@@ -113,7 +113,7 @@ export default function AboutCard() {
 
       {/* 座右铭 */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-red-500/20 blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 via-orange-500/10 to-red-500/10 blur-xl"></div>
         <div className="relative text-center py-6 px-8">
           <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10">
             <span className="text-2xl">💡</span>
