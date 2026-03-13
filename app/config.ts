@@ -1,55 +1,51 @@
-// 链接配置
-export const linksConfig = {
-  blog: {
-    url: "https://www.amisblog.cn",
-    title: {
-      zh: "Amis的博客",
-      en: "Amis's Blog",
-    },
-    description: {
-      zh: "记录技术文章和生活感悟",
-      en: "Technical articles and life insights",
-    },
-  },
-  github: {
-    url: "https://github.com/AmisKwok",
-    title: {
-      zh: "GitHub",
-      en: "GitHub",
-    },
-    description: {
-      zh: "开源项目和代码仓库",
-      en: "Open source projects and code repositories",
-    },
-  },
-  gitee: {
-    url: "https://gitee.com/AmisKwok",
-    title: {
-      zh: "Gitee",
-      en: "Gitee",
-    },
-    description: {
-      zh: "国内代码托管平台",
-      en: "Domestic code hosting platform",
-    },
-  },
-  email: {
-    url: "mailto:amiskwokk@gmail.com",
-    title: {
-      zh: "邮箱",
-      en: "Email",
-    },
-  },
+import configData from "../config.json";
+
+export type Language = "zh" | "en";
+
+export type I18nText = {
+  zh: string;
+  en: string;
 };
 
-// 项目精选配置
+export interface SiteConfig {
+  name: string;
+  title: string;
+  url: string;
+  ogImage: string;
+  author: string;
+  description: I18nText;
+  keywords: string[];
+  footer: I18nText;
+}
+
+export interface ProfileConfig {
+  name: string;
+  avatar: string;
+  location: I18nText;
+  focus: I18nText;
+  hobbies: I18nText;
+  motto: I18nText;
+  typeWriterTexts: {
+    zh: string[];
+    en: string[];
+  };
+  currentFocus: Array<{
+    icon: string;
+    text: I18nText;
+  }>;
+}
+
+export interface LinkConfig {
+  url: string;
+  title: I18nText;
+  description?: I18nText;
+  icon: string;
+}
+
 export interface Project {
   id: string;
   name: string;
-  description: {
-    zh: string;
-    en: string;
-  };
+  description: I18nText;
   url: string;
   image: string;
   tags: string[];
@@ -57,71 +53,6 @@ export interface Project {
   gradient: string;
 }
 
-export const projectsConfig: Project[] = [
-  {
-    id: "vibe-music-server",
-    name: "Vibe Music Server",
-    description: {
-      zh: "基于 Spring Boot 3 的高性能音乐服务后端系统，支持高并发访问、MinIO 分布式存储、Redis 智能缓存",
-      en: "High-performance music service backend based on Spring Boot 3, supporting high concurrency, MinIO distributed storage, and Redis intelligent caching",
-    },
-    url: "https://github.com/AmisKwok/vibe-music-server",
-    image: "/images/index3.jpg",
-    tags: ["Spring Boot", "Java", "MySQL", "Redis", "MinIO"],
-    icon: "fas fa-server",
-    gradient: "from-blue-500 to-purple-600",
-  },
-  {
-    id: "vibe-music-app",
-    name: "Vibe Music App",
-    description: {
-      zh: "基于 Flutter 的跨平台音乐播放器，支持 Android、iOS、Web 和桌面端",
-      en: "Cross-platform music player based on Flutter, supporting Android, iOS, Web, and desktop",
-    },
-    url: "https://github.com/AmisKwok/vibe-music-app",
-    image: "/images/index2.jpg",
-    tags: ["Flutter", "Dart", "GetX", "Material Design"],
-    icon: "fas fa-music",
-    gradient: "from-pink-500 to-rose-600",
-  },
-  {
-    id: "amis-homepage",
-    name: "Amis's Homepage",
-    description: {
-      zh: "个人主页项目，支持亮色/暗色主题切换、多语言、动态背景效果",
-      en: "Personal homepage with light/dark theme switching, multi-language support, and dynamic backgrounds",
-    },
-    url: "https://github.com/AmisKwok/AmisHomepage",
-    image: "/images/index5.jpg",
-    tags: ["Next.js", "TypeScript", "Tailwind CSS", "React"],
-    icon: "fas fa-home",
-    gradient: "from-violet-500 to-purple-600",
-  },
-  {
-    id: "amis-blog-demo",
-    name: "Amis's Blog Demo",
-    description: {
-      zh: "个人博客系统，支持 Markdown 编辑、图片管理、项目展示等功能",
-      en: "Personal blog system with Markdown editing, image management, and project showcase",
-    },
-    url: "https://github.com/AmisKwok/amis-s-blog-demo",
-    image: "/images/index6.jpg",
-    tags: ["Next.js", "React", "Markdown", "Tailwind CSS"],
-    icon: "fas fa-blog",
-    gradient: "from-emerald-500 to-teal-600",
-  },
-];
-
-// 更多项目配置
-export const moreProjectsConfig = {
-  url: "https://github.com/AmisKwok",
-  title: {
-    zh: "查看更多项目",
-    en: "View More Projects",
-  },
-};
-
-// 技能配置
 export interface Skill {
   name: string;
   level: number;
@@ -129,142 +60,116 @@ export interface Skill {
   icon: string;
 }
 
-export const skillsConfig: Skill[] = [
-  { name: "Java", level: 90, color: "from-orange-500 to-red-500", icon: "fab fa-java" },
-  { name: "Spring Boot", level: 85, color: "from-green-500 to-emerald-600", icon: "fas fa-leaf" },
-  { name: "Flutter", level: 80, color: "from-blue-500 to-cyan-600", icon: "fas fa-mobile-alt" },
-  { name: "Next.js", level: 75, color: "from-gray-700 to-gray-900", icon: "fas fa-bolt" },
-  { name: "MySQL", level: 85, color: "from-blue-600 to-blue-800", icon: "fas fa-database" },
-  { name: "Redis", level: 75, color: "from-red-500 to-red-700", icon: "fas fa-bolt" },
-  { name: "TypeScript", level: 70, color: "from-blue-600 to-indigo-700", icon: "fab fa-js" },
-  { name: "React", level: 70, color: "from-cyan-500 to-blue-600", icon: "fab fa-react" },
-];
-
-// 社交媒体配置
-export const socialConfig = {
-  email: {
-    url: "mailto:amiskwokk@gmail.com",
-    icon: "fas fa-envelope",
-    color: "from-blue-400 to-blue-600",
-  },
-};
-
-// 技术栈配置
 export interface TechItem {
   name: string;
   color: string;
   icon: string;
 }
 
+interface AppConfig {
+  site: SiteConfig;
+  profile: ProfileConfig;
+  links: Record<string, LinkConfig>;
+  projects: {
+    featured: Project[];
+    moreProjectsUrl: string;
+  };
+  skills: Skill[];
+  techStack: {
+    backend: TechItem[];
+    mobile: TechItem[];
+    frontend: TechItem[];
+  };
+  translations: {
+    zh: Record<string, string>;
+    en: Record<string, string>;
+  };
+}
+
+const appConfig: AppConfig = configData as AppConfig;
+
+export const linksConfig = appConfig.links;
+
+export const projectsConfig: Project[] = appConfig.projects.featured;
+
+export const moreProjectsConfig = {
+  url: appConfig.projects.moreProjectsUrl,
+  title: {
+    zh: appConfig.translations.zh.moreProjects || "查看更多项目",
+    en: appConfig.translations.en.moreProjects || "View More Projects",
+  },
+};
+
+export const skillsConfig: Skill[] = appConfig.skills;
+
+export const socialConfig = {
+  email: {
+    url: appConfig.links.email?.url || "",
+    icon: appConfig.links.email?.icon || "fas fa-envelope",
+    color: "from-blue-400 to-blue-600",
+  },
+};
+
 export const techStackConfig = {
-  backend: [
-    { name: "Java", color: "bg-orange-500", icon: "fab fa-java" },
-    { name: "Spring Boot", color: "bg-green-600", icon: "fas fa-leaf" },
-    { name: "MySQL", color: "bg-blue-600", icon: "fas fa-database" },
-    { name: "Redis", color: "bg-red-500", icon: "fas fa-bolt" },
-  ] as TechItem[],
-  mobile: [
-    { name: "Flutter", color: "bg-blue-500", icon: "fas fa-mobile-alt" },
-    { name: "Dart", color: "bg-blue-700", icon: "fas fa-code" },
-    { name: "Android", color: "bg-green-500", icon: "fab fa-android" },
-  ] as TechItem[],
-  frontend: [
-    { name: "Next.js", color: "bg-gray-800", icon: "fas fa-bolt" },
-    { name: "TypeScript", color: "bg-blue-600", icon: "fab fa-js" },
-    { name: "React", color: "bg-cyan-500", icon: "fab fa-react" },
-  ] as TechItem[],
+  backend: appConfig.techStack.backend as TechItem[],
+  mobile: appConfig.techStack.mobile as TechItem[],
+  frontend: appConfig.techStack.frontend as TechItem[],
 };
 
-// 关于我配置
 export const aboutMeConfig = {
-  name: "AmisKwok",
-  location: {
-    zh: "中国 🇨🇳",
-    en: "China 🇨🇳",
-  },
-  focus: {
-    zh: "后端 & 移动端开发",
-    en: "Backend & Mobile Dev",
-  },
-  hobbies: {
-    zh: "编程、学习、开源",
-    en: "Coding, Learning, Open Source",
-  },
-  currentFocus: [
-    {
-      icon: "fas fa-satellite text-blue-400",
-      text: {
-        zh: "正在专注于后端服务与移动应用开发",
-        en: "Working on Backend Services & Mobile Apps",
-      },
-    },
-    {
-      icon: "fas fa-seedling text-green-400",
-      text: {
-        zh: "正在学习云原生与微服务架构",
-        en: "Learning Cloud Native & Microservices",
-      },
-    },
-    {
-      icon: "fas fa-comments text-yellow-400",
-      text: {
-        zh: "欢迎交流 Java、Flutter、后端开发",
-        en: "Ask me about Java, Flutter, Backend Dev",
-      },
-    },
-  ],
-  motto: {
-    zh: "至繁归于至简",
-    en: "Simplicity is the ultimate sophistication",
-  },
+  name: appConfig.profile.name,
+  location: appConfig.profile.location,
+  focus: appConfig.profile.focus,
+  hobbies: appConfig.profile.hobbies,
+  currentFocus: appConfig.profile.currentFocus,
+  motto: appConfig.profile.motto,
 };
 
-// 多语言文本配置
 export const translations = {
   zh: {
-    siteTitle: "Amis的主页",
-    typeWriterText: "记录技术文章和生活感悟",
-    typeWriterText2: "热爱编程，追求极致，永不止步",
-    quickLinks: "快速链接",
-    footer: "© 2026 Amis的个人主页. All Rights Reserved.",
+    siteTitle: appConfig.translations.zh.siteTitle || appConfig.site.title,
+    typeWriterText: appConfig.profile.typeWriterTexts.zh[0],
+    typeWriterText2: appConfig.profile.typeWriterTexts.zh[1],
+    quickLinks: appConfig.translations.zh.quickLinks,
+    footer: appConfig.site.footer.zh,
     nav: {
-      blog: "Blog",
-      github: "GitHub",
-      gitee: "Gitee",
+      blog: appConfig.links.blog?.title.zh || "Blog",
+      github: appConfig.links.github?.title.zh || "GitHub",
+      gitee: appConfig.links.gitee?.title.zh || "Gitee",
     },
-    aboutMe: "关于我",
-    techStack: "技术栈",
-    backend: "后端",
-    mobile: "移动端",
-    frontend: "前端",
-    currentFocus: "当前关注",
-    featuredProjects: "精选项目",
-    skills: "技能",
-    viewProject: "查看项目",
-    moreProjects: "更多项目",
+    aboutMe: appConfig.translations.zh.aboutMe,
+    techStack: appConfig.translations.zh.techStack,
+    backend: appConfig.translations.zh.backend,
+    mobile: appConfig.translations.zh.mobile,
+    frontend: appConfig.translations.zh.frontend,
+    currentFocus: appConfig.translations.zh.currentFocus,
+    featuredProjects: appConfig.translations.zh.featuredProjects,
+    skills: appConfig.translations.zh.skills,
+    viewProject: appConfig.translations.zh.viewProject,
+    moreProjects: appConfig.translations.zh.moreProjects,
   },
   en: {
-    siteTitle: "Amis's Homepage",
-    typeWriterText: "Recording technical articles and life insights",
-    typeWriterText2: "Passionate about coding, pursuing excellence, never stopping",
-    quickLinks: "Quick Links",
-    footer: "© 2026 Amis's Personal Homepage. All Rights Reserved.",
+    siteTitle: appConfig.translations.en.siteTitle || appConfig.site.title,
+    typeWriterText: appConfig.profile.typeWriterTexts.en[0],
+    typeWriterText2: appConfig.profile.typeWriterTexts.en[1],
+    quickLinks: appConfig.translations.en.quickLinks,
+    footer: appConfig.site.footer.en,
     nav: {
-      blog: "Blog",
-      github: "GitHub",
-      gitee: "Gitee",
+      blog: appConfig.links.blog?.title.en || "Blog",
+      github: appConfig.links.github?.title.en || "GitHub",
+      gitee: appConfig.links.gitee?.title.en || "Gitee",
     },
-    aboutMe: "About Me",
-    techStack: "Tech Stack",
-    backend: "Backend",
-    mobile: "Mobile",
-    frontend: "Frontend",
-    currentFocus: "Current Focus",
-    featuredProjects: "Featured Projects",
-    skills: "Skills",
-    viewProject: "View Project",
-    moreProjects: "More Projects",
+    aboutMe: appConfig.translations.en.aboutMe,
+    techStack: appConfig.translations.en.techStack,
+    backend: appConfig.translations.en.backend,
+    mobile: appConfig.translations.en.mobile,
+    frontend: appConfig.translations.en.frontend,
+    currentFocus: appConfig.translations.en.currentFocus,
+    featuredProjects: appConfig.translations.en.featuredProjects,
+    skills: appConfig.translations.en.skills,
+    viewProject: appConfig.translations.en.viewProject,
+    moreProjects: appConfig.translations.en.moreProjects,
   },
 };
 
-export type Language = "zh" | "en";
+export const siteConfig = appConfig.site;

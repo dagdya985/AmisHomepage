@@ -1,16 +1,5 @@
 import type { Metadata, Viewport } from "next";
-
-export const siteConfig = {
-  name: "Amis's Homepage",
-  title: "Amis's Homepage",
-  url: "https://www.amisweb.cn",
-  ogImage: "/images/index.jpg",
-  author: "AmisKwok",
-  description: {
-    zh: "后端开发者 | 移动端开发者。专注于 Java Spring Boot、Flutter 和 Next.js 开发。热爱编程，追求极致，永不止步。",
-    en: "Backend Developer | Mobile Developer. Focused on Java Spring Boot, Flutter and Next.js development. Passionate about coding, pursuing excellence, never stopping.",
-  },
-};
+import { siteConfig } from "./config";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -19,26 +8,7 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description.zh,
-  keywords: [
-    "Amis",
-    "AmisKwok",
-    "个人主页",
-    "博客",
-    "技术",
-    "Java",
-    "Spring Boot",
-    "Flutter",
-    "Next.js",
-    "后端开发",
-    "移动端开发",
-    "GitHub",
-    "Gitee",
-    "Personal Homepage",
-    "Blog",
-    "Technology",
-    "Backend Developer",
-    "Mobile Developer",
-  ],
+  keywords: siteConfig.keywords,
   authors: [{ name: siteConfig.author, url: "https://github.com/AmisKwok" }],
   creator: siteConfig.author,
   publisher: siteConfig.author,

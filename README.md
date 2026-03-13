@@ -32,431 +32,339 @@
 - [Tailwind CSS](https://tailwindcss.com/) - 原子化 CSS
 - [Font Awesome](https://fontawesome.com/) - 图标库
 
-## 快速开始
+---
 
-### 安装依赖
+## 🚀 小白快速上手指南
+
+> **只需 3 步，零代码基础也能搭建自己的主页！**
+
+### 第一步：准备配置文件
+
+1. 复制 `config.example.json` 文件，重命名为 `config.json`
+2. 用任意文本编辑器打开 `config.json`
+
+### 第二步：修改配置
+
+编辑 `config.json` 文件，修改以下内容：
+
+#### 1. 网站基本信息
+
+```json
+{
+  "site": {
+    "name": "张三的主页",
+    "title": "张三的主页",
+    "url": "https://your-domain.com",
+    "author": "张三",
+    "description": {
+      "zh": "前端开发者 | 热爱编程",
+      "en": "Frontend Developer | Love Coding"
+    },
+    "keywords": ["张三", "个人主页", "博客"],
+    "footer": {
+      "zh": "© 2026 张三的个人主页. All Rights Reserved.",
+      "en": "© 2026 Zhang San's Homepage. All Rights Reserved."
+    }
+  }
+}
+```
+
+#### 2. 个人资料
+
+```json
+{
+  "profile": {
+    "name": "张三",
+    "avatar": "/images/avatar.jpg",
+    "location": {
+      "zh": "北京 🇨🇳",
+      "en": "Beijing 🇨🇳"
+    },
+    "focus": {
+      "zh": "前端开发",
+      "en": "Frontend Development"
+    },
+    "motto": {
+      "zh": "代码改变世界",
+      "en": "Code changes the world"
+    },
+    "typeWriterTexts": {
+      "zh": ["热爱编程，追求极致", "记录技术与生活"],
+      "en": ["Love coding, pursue excellence", "Recording tech and life"]
+    }
+  }
+}
+```
+
+#### 3. 社交链接
+
+```json
+{
+  "links": {
+    "blog": {
+      "url": "https://your-blog.com",
+      "title": { "zh": "博客", "en": "Blog" },
+      "icon": "fas fa-blog"
+    },
+    "github": {
+      "url": "https://github.com/yourusername",
+      "title": { "zh": "GitHub", "en": "GitHub" },
+      "icon": "fab fa-github"
+    },
+    "email": {
+      "url": "mailto:your@email.com",
+      "title": { "zh": "邮箱", "en": "Email" },
+      "icon": "fas fa-envelope"
+    }
+  }
+}
+```
+
+#### 4. 精选项目
+
+```json
+{
+  "projects": {
+    "featured": [
+      {
+        "id": "my-project",
+        "name": "我的项目",
+        "description": {
+          "zh": "这是一个很棒的项目",
+          "en": "This is an awesome project"
+        },
+        "url": "https://github.com/yourusername/project",
+        "image": "/images/project.jpg",
+        "tags": ["React", "TypeScript"],
+        "icon": "fas fa-star",
+        "gradient": "from-blue-500 to-purple-600"
+      }
+    ],
+    "moreProjectsUrl": "https://github.com/yourusername"
+  }
+}
+```
+
+#### 5. 技能展示
+
+```json
+{
+  "skills": [
+    { "name": "JavaScript", "level": 90, "color": "from-yellow-500 to-orange-500", "icon": "fab fa-js" },
+    { "name": "React", "level": 85, "color": "from-cyan-500 to-blue-600", "icon": "fab fa-react" },
+    { "name": "TypeScript", "level": 80, "color": "from-blue-600 to-indigo-700", "icon": "fab fa-js" }
+  ]
+}
+```
+
+### 第三步：替换图片
+
+将以下图片放入 `public/images/` 目录：
+
+| 文件名 | 用途 | 建议尺寸 |
+|--------|------|----------|
+| `avatar.jpg` | 头像 | 512x512 |
+| `index.jpg` | 暗色背景图 | 1920x1080 |
+| `index4.jpg` | 亮色背景图 | 1920x1080 |
+| `icon.png` | 网站图标 | 512x512 |
+| `index2.jpg` ~ `index9.jpg` | 项目展示图 | 1200x630 |
+
+### 第四步：运行项目
 
 ```bash
-# 使用 npm
+# 安装依赖
 npm install
 
-# 或使用 pnpm
-pnpm install
-```
-
-### 开发模式
-
-```bash
-# 使用 npm
+# 启动开发服务器
 npm run dev
-
-# 或使用 pnpm
-pnpm dev
 ```
 
-访问 http://localhost:9998
+访问 http://localhost:9998 即可预览！
 
-### 构建生产版本
+---
 
-```bash
-# 使用 npm
-npm run build
+## 配置详解
 
-# 或使用 pnpm
-pnpm build
+### 完整配置结构
+
+```
+config.json
+├── site              # 网站基本信息
+│   ├── name          # 网站名称
+│   ├── title         # 网站标题
+│   ├── url           # 网站地址
+│   ├── ogImage       # 分享预览图
+│   ├── author        # 作者名
+│   ├── description   # 网站描述（中英文）
+│   ├── keywords      # SEO 关键词
+│   └── footer        # 页脚文字
+├── profile           # 个人资料
+│   ├── name          # 名字
+│   ├── avatar        # 头像路径
+│   ├── location      # 所在地
+│   ├── focus         # 专业领域
+│   ├── hobbies       # 爱好
+│   ├── motto         # 座右铭
+│   ├── typeWriterTexts # 打字机文字
+│   └── currentFocus  # 当前关注事项
+├── links             # 社交链接
+├── projects          # 项目展示
+│   ├── featured      # 精选项目列表
+│   └── moreProjectsUrl # 更多项目链接
+├── skills            # 技能列表
+├── techStack         # 技术栈分类
+│   ├── backend       # 后端技术
+│   ├── mobile        # 移动端技术
+│   └── frontend      # 前端技术
+└── translations      # 多语言文本
 ```
 
-### 启动生产服务器
+### 图标使用说明
 
-```bash
-# 使用 npm
-npm start
+本项目使用 [Font Awesome](https://fontawesome.com/icons) 图标库，常用图标：
 
-# 或使用 pnpm
-pnpm start
-```
+| 用途 | 图标代码 |
+|------|----------|
+| 博客 | `fas fa-blog` |
+| GitHub | `fab fa-github` |
+| 邮箱 | `fas fa-envelope` |
+| 数据库 | `fas fa-database` |
+| 服务器 | `fas fa-server` |
+| 手机 | `fas fa-mobile-alt` |
+| 代码 | `fas fa-code` |
+| 音乐 | `fas fa-music` |
+| 首页 | `fas fa-home` |
+| Java | `fab fa-java` |
+| React | `fab fa-react` |
+| JS | `fab fa-js` |
+| Android | `fab fa-android` |
+
+### 渐变色说明
+
+项目卡片使用 Tailwind CSS 渐变色，常用组合：
+
+| 渐变色代码 | 效果 |
+|------------|------|
+| `from-blue-500 to-purple-600` | 蓝紫渐变 |
+| `from-pink-500 to-rose-600` | 粉红渐变 |
+| `from-emerald-500 to-teal-600` | 绿青渐变 |
+| `from-orange-500 to-red-500` | 橙红渐变 |
+| `from-cyan-500 to-blue-600` | 青蓝渐变 |
+
+---
 
 ## 项目结构
 
 ```
 .
+├── config.json             # 📝 主配置文件（用户编辑）
+├── config.example.json     # 📋 配置示例模板
 ├── app/
 │   ├── components/         # 组件
-│   │   ├── DrawnTitle.tsx       # SVG 绘画标题组件
-│   │   ├── TypeWriter.tsx       # 打字机效果组件
-│   │   ├── LanguageSwitcher.tsx # 语言切换组件
-│   │   ├── ThemeSwitcher.tsx    # 主题切换组件
-│   │   ├── Avatar.tsx           # 头像组件
-│   │   ├── AboutCard.tsx        # 关于我卡片组件
-│   │   ├── FeaturedProjects.tsx # 精选项目组件
-│   │   ├── Skills.tsx           # 技能可视化组件
-│   │   ├── StarryBackground.tsx # 星空动态背景组件（暗色）
-│   │   ├── LightBackground.tsx  # 落叶动态背景组件（亮色）
-│   │   ├── ThemeTransition.tsx  # 主题切换过渡动画组件
-│   │   ├── LoadingScreen.tsx    # 加载动画组件
-│   │   ├── SectionNav.tsx       # 桌面端侧边导航组件
-│   │   └── MobileNav.tsx        # 移动端底部导航组件
 │   ├── contexts/           # React Context
-│   │   ├── LanguageContext.tsx  # 语言管理
-│   │   └── ThemeContext.tsx     # 主题管理
 │   ├── hooks/              # 自定义 Hooks
-│   │   └── useScrollAnimation.ts # 滚动动画 Hook
-│   ├── config.ts           # 链接配置和翻译
-│   ├── config/
-│   │   └── themeConfig.ts       # 主题配色配置
+│   ├── config.ts           # 配置读取（自动）
 │   ├── globals.css         # 全局样式
 │   ├── layout.tsx          # 根布局
-│   ├── metadata.ts         # SEO 元数据配置
-│   ├── sitemap.ts          # 网站地图
+│   ├── metadata.ts         # SEO 元数据
 │   └── page.tsx            # 首页
 ├── public/
 │   ├── images/             # 图片资源
-│   │   ├── index.jpg       # 暗色主题背景图（银河）
-│   │   ├── index4.jpg      # 亮色主题背景图（迷雾森林）
-│   │   ├── index2.jpg      # 项目图片
-│   │   ├── index3.jpg      # 项目图片
-│   │   ├── avatar.jpg      # 头像
-│   │   └── icon.png        # 网站图标
 │   ├── markdown/           # Markdown 文件
-│   │   └── aboutMeContent.md # 关于我内容
-│   ├── robots.txt          # 爬虫规则
-│   └── svg/                # SVG 图标
+│   └── robots.txt          # 爬虫规则
 ├── .env.example            # 环境变量示例
 ├── Dockerfile              # Docker 配置
 ├── docker-compose.yml      # Docker Compose 配置
-├── next.config.ts          # Next.js 配置
-├── tailwind.config.ts      # Tailwind 配置
 └── package.json
-```
-
-## 配置说明
-
-### 修改链接
-
-编辑 `app/config.ts` 中的 `linksConfig`：
-
-```typescript
-export const linksConfig = {
-  blog: {
-    url: "https://your-blog.com",
-    title: { zh: "博客", en: "Blog" },
-    description: { zh: "描述", en: "Description" },
-  },
-  github: {
-    url: "https://github.com/yourname",
-    // ...
-  },
-  // ...
-};
-```
-
-### 修改项目配置
-
-编辑 `app/config.ts` 中的 `projectsConfig`：
-
-```typescript
-export const projectsConfig: Project[] = [
-  {
-    id: "project-id",
-    name: "项目名称",
-    description: {
-      zh: "项目描述",
-      en: "Project description",
-    },
-    url: "https://github.com/yourname/project",
-    image: "/images/project.jpg",
-    tags: ["Tag1", "Tag2"],
-    icon: "fas fa-icon",
-    gradient: "from-blue-500 to-purple-600",
-  },
-  // ...
-];
-```
-
-### 修改技能配置
-
-编辑 `app/config.ts` 中的 `skillsConfig`：
-
-```typescript
-export const skillsConfig: Skill[] = [
-  { name: "技能名称", level: 90, color: "from-blue-500 to-purple-600", icon: "fas fa-icon" },
-  // ...
-];
-```
-
-### 修改翻译文本
-
-编辑 `app/config.ts` 中的 `translations`：
-
-```typescript
-export const translations = {
-  zh: {
-    siteTitle: "你的主页标题",
-    // ...
-  },
-  en: {
-    // ...
-  },
-};
-```
-
-### 更换背景图
-
-将背景图片放入 `public/images/index.jpg`，建议使用 1920x1080 或更高分辨率的图片。
-
-### 更换头像
-
-将头像图片放入 `public/images/avatar.jpg`，建议使用 512x512 像素的图片。
-
-### 更换网站图标
-
-将图标放入 `public/images/icon.png`，建议使用 512x512 像素的 PNG 图片。
-
-### 更换关于我内容
-
-编辑 `public/markdown/aboutMeContent.md` 文件。
-
-## 自定义
-
-### 打字机效果
-
-在 `app/page.tsx` 中修改 TypeWriter 组件参数：
-
-```tsx
-<TypeWriter 
-  texts={[t("typeWriterText"), t("typeWriterText2")]} 
-  typeSpeed={120}      // 打字速度 (ms)
-  deleteSpeed={80}     // 删除速度 (ms)
-  delay={800}          // 开始延迟 (ms)
-  pauseTime={2000}     // 暂停时间 (ms)
-/>
-```
-
-### 头像大小
-
-在 `app/page.tsx` 中修改 Avatar 组件的 size 属性：
-
-```tsx
-<Avatar 
-  src="/images/avatar.jpg" 
-  alt="Amis" 
-  size={140}  // 头像大小 (px)
-  className="mb-6"
-/>
-```
-
-### 卡片样式
-
-卡片使用 Tailwind CSS 类名控制样式：
-
-```tsx
-className="group bg-white/5 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300"
-```
-
-## 部署
-
-### 第一步：获取代码
-
-选择以下任一方式：
-
-**方式 A：Fork（推荐）**
-- 点击右上角 `Fork` 按钮，将项目 Fork 到你的 GitHub 账户
-- 方便后续拉取更新
-
-**方式 B：直接克隆**
-```bash
-git clone https://github.com/AmisKwok/AmisHomepage.git
-```
-
-### 第二步：克隆到本地
-
-**如果选择了 Fork：**
-```bash
-git clone https://github.com/你的用户名/AmisHomepage.git
-cd AmisHomepage
-```
-
-**如果选择了直接克隆：**
-```bash
-cd AmisHomepage
-```
-
-### 第三步：安装依赖
-
-```bash
-# 使用 npm
-npm install
-
-# 或使用 pnpm
-pnpm install
-```
-
-### 第四步：修改配置
-
-- 修改 `app/config.ts` 中的链接、项目和技能配置
-- 替换 `public/images/` 中的背景图、头像和图标
-- 编辑 `public/markdown/aboutMeContent.md` 修改关于我内容
-
-### 第五步：环境变量配置
-
-复制环境变量示例文件：
-
-```bash
-cp .env.example .env
-```
-
-`.env` 文件内容：
-
-```env
-PORT=9998
-```
-
-你可以根据需要修改端口号。
-
-### 第六步：推送到你的仓库（Fork 用户）
-
-```bash
-git add .
-git commit -m "Update config"
-git push origin main
-```
-
-### 第七步：部署到 Vercel
-
-1. 访问 [Vercel](https://vercel.com/)
-2. 点击 `New Project`
-3. 导入你的仓库
-4. 点击 `Deploy` 完成部署
-
-### 第八步：绑定自定义域名（可选）
-
-- 在 Vercel 项目设置中添加域名
-- 按提示配置 DNS 解析
-
-### 拉取更新（Fork 用户）
-
-```bash
-git remote add upstream https://github.com/AmisKwok/AmisHomepage.git
-git fetch upstream
-git merge upstream/main
 ```
 
 ---
 
-## 其他部署方式
+## 部署教程
 
-### Docker 部署
+### 方式一：Vercel 部署（推荐）
 
-**使用 Docker Compose（推荐）**
+**适合人群：小白用户，免费托管**
+
+1. **Fork 本项目**
+   - 点击右上角 `Fork` 按钮
+
+2. **登录 Vercel**
+   - 访问 [vercel.com](https://vercel.com/)
+   - 使用 GitHub 登录
+
+3. **导入项目**
+   - 点击 `New Project`
+   - 选择你 Fork 的仓库
+   - 点击 `Deploy`
+
+4. **绑定域名（可选）**
+   - 在项目设置中添加自定义域名
+
+### 方式二：Docker 部署
+
+**适合人群：有服务器的用户**
 
 ```bash
+# 克隆项目
+git clone https://github.com/你的用户名/AmisHomepage.git
+cd AmisHomepage
+
+# 修改配置
+# 编辑 config.json
+# 替换 public/images/ 中的图片
+
 # 构建并启动
 docker-compose up -d
 
-# 查看日志
-docker-compose logs -f
-
-# 停止
-docker-compose down
+# 访问
+http://localhost:9998
 ```
 
-**使用 Docker 命令**
+### 方式三：服务器部署
+
+**适合人群：有 Linux 服务器的用户**
 
 ```bash
-# 构建镜像
-docker build -t amis-homepage .
+# 1. 安装 Node.js 18+
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
 
-# 运行容器
-docker run -d -p 9998:9998 --name amis-homepage amis-homepage
-```
+# 2. 安装 PM2
+sudo npm install -g pm2
 
-访问 http://localhost:9998
+# 3. 克隆项目
+git clone https://github.com/你的用户名/AmisHomepage.git
+cd AmisHomepage
 
-### 服务器部署
-
-**方式一：使用 PM2**
-
-1. 安装 PM2
-```bash
-npm install -g pm2
-# 或
-pnpm add -g pm2
-```
-
-2. 安装依赖并构建项目
-```bash
-# 使用 npm
+# 4. 安装依赖并构建
 npm install
 npm run build
 
-# 或使用 pnpm
-pnpm install
-pnpm build
-```
+# 5. 启动服务
+pm2 start npm --name "homepage" -- start
 
-3. 启动服务
-```bash
-# 使用 npm
-pm2 start npm --name "amis-homepage" -- start
-
-# 使用 pnpm
-pm2 start pnpm --name "amis-homepage" -- start
-```
-
-4. 常用命令
-```bash
-pm2 list                    # 查看所有进程
-pm2 logs amis-homepage      # 查看日志
-pm2 restart amis-homepage   # 重启
-pm2 stop amis-homepage      # 停止
-pm2 delete amis-homepage    # 删除
-
-# 开机自启
+# 6. 设置开机自启
 pm2 startup
 pm2 save
 ```
 
-**方式二：使用 Systemd**
+### 方式四：静态导出
 
-1. 构建项目
+**适合人群：想部署到静态托管（如 GitHub Pages）**
+
 ```bash
+# 构建
 npm run build
+
+# 输出在 .next/standalone 目录
+# 将静态文件上传到任意静态托管服务
 ```
 
-2. 创建服务文件
-```bash
-sudo nano /etc/systemd/system/amis-homepage.service
-```
+---
 
-3. 写入以下内容
-```ini
-[Unit]
-Description=Amis Homepage
-After=network.target
+## Nginx 反向代理配置
 
-[Service]
-Type=simple
-User=www-data
-WorkingDirectory=/path/to/AmisHomepage
-ExecStart=/usr/bin/npm start
-Restart=on-failure
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-```
-
-4. 启动服务
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable amis-homepage
-sudo systemctl start amis-homepage
-sudo systemctl status amis-homepage
-```
-
-**方式三：Nginx 反向代理**
-
-1. 配置 Nginx
 ```nginx
 server {
     listen 80;
@@ -473,19 +381,48 @@ server {
 }
 ```
 
-2. 重启 Nginx
+---
+
+## 常见问题
+
+### Q: 修改配置后没有生效？
+
+A: 重启开发服务器：
 ```bash
-sudo nginx -t
-sudo systemctl restart nginx
+# 停止当前运行的服务（Ctrl+C）
+# 重新启动
+npm run dev
 ```
 
-### 静态导出部署
+### Q: 图片不显示？
 
-```bash
-npm run build
+A: 检查图片路径是否正确：
+- 图片放在 `public/images/` 目录
+- 配置中使用 `/images/xxx.jpg`（注意开头的 `/`）
+
+### Q: 如何修改端口？
+
+A: 编辑 `.env` 文件：
+```
+PORT=8080
 ```
 
-将 `dist` 目录部署到任何静态托管服务。
+### Q: 如何添加新的社交链接？
+
+A: 在 `config.json` 的 `links` 中添加：
+```json
+{
+  "links": {
+    "twitter": {
+      "url": "https://twitter.com/yourusername",
+      "title": { "zh": "Twitter", "en": "Twitter" },
+      "icon": "fab fa-twitter"
+    }
+  }
+}
+```
+
+---
 
 ## License
 
