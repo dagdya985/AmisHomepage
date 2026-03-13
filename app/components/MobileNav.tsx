@@ -57,7 +57,7 @@ export default function MobileNav() {
   }, [t]);
 
   return (
-    <div className={`fixed bottom-4 right-4 z-40 md:hidden transition-all duration-300 ${
+    <div className={`fixed bottom-4 left-4 z-40 md:hidden transition-all duration-300 ${
       isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
     }`}>
       <div className="flex flex-col gap-2">

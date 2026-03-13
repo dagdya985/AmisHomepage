@@ -80,25 +80,47 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/30"></div>
         
         {/* 导航栏 */}
-        <nav className="relative z-10 flex items-center justify-between px-6 py-4 md:px-12">
-          
-          {/* 语言切换 */}
-          <LanguageSwitcher />
+        <nav className="relative z-10 flex items-center justify-end px-6 py-4 md:px-12">
           
           {/* 桌面端导航菜单 */}
           <div id="menus" className="hidden md:flex items-center space-x-6">
-            <a href={linksConfig.blog.url} className="text-white/90 hover:text-white transition-colors flex items-center gap-2">
-              <i className="fas fa-blog fa-fw"></i>
-              <span>{nav.blog}</span>
+            <a 
+              href="#projects" 
+              onClick={(e) => {
+                e.preventDefault();
+                const section = document.getElementById("projects");
+                if (section) section.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="text-white/90 hover:text-white transition-colors flex items-center gap-2"
+            >
+              <i className="fas fa-star fa-fw"></i>
+              <span>{t("featuredProjects")}</span>
             </a>
-            <a href={linksConfig.github.url} target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-white transition-colors flex items-center gap-2">
-              <i className="fab fa-github fa-fw"></i>
-              <span>{nav.github}</span>
+            <a 
+              href="#about" 
+              onClick={(e) => {
+                e.preventDefault();
+                const section = document.getElementById("about");
+                if (section) section.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="text-white/90 hover:text-white transition-colors flex items-center gap-2"
+            >
+              <i className="fas fa-user fa-fw"></i>
+              <span>{t("aboutMe")}</span>
             </a>
-            <a href={linksConfig.gitee.url} target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-white transition-colors flex items-center gap-2">
-              <i className="fab fa-gitee fa-fw"></i>
-              <span>{nav.gitee}</span>
+            <a 
+              href="#skills" 
+              onClick={(e) => {
+                e.preventDefault();
+                const section = document.getElementById("skills");
+                if (section) section.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="text-white/90 hover:text-white transition-colors flex items-center gap-2"
+            >
+              <i className="fas fa-chart-line fa-fw"></i>
+              <span>{t("skills")}</span>
             </a>
+            <LanguageSwitcher />
           </div>
           
           {/* 移动端只显示语言切换 */}
@@ -197,7 +219,7 @@ export default function Home() {
       {/* 移动端底部导航 */}
       <MobileNav />
 
-      {/* 侧边导航 */}
+      {/* 桌面端侧边导航 */}
       <SectionNav />
 
       {/* 返回顶部按钮 */}
@@ -205,7 +227,7 @@ export default function Home() {
         onClick={scrollToTop}
         className={`fixed w-12 h-12 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 z-50 ${
           showBackToTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
-        } md:bottom-8 md:right-8 bottom-4 left-4`}
+        } bottom-8 right-8`}
         aria-label="Back to top"
       >
         <i className="fas fa-arrow-up"></i>
