@@ -228,6 +228,24 @@ export default function Home() {
             </a>
           </div>
         </div>
+        
+        {/* 向下箭头 */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-10">
+          <button
+            onClick={() => {
+              const content = document.getElementById("content");
+              if (content) content.scrollIntoView({ behavior: "smooth" });
+            }}
+            className={`p-2 rounded-full transition-all duration-300 ${
+              theme === "dark" 
+                ? "text-white/60 hover:text-white hover:bg-white/10" 
+                : "text-gray-500 hover:text-gray-700 hover:bg-gray-200"
+            }`}
+            aria-label="Scroll down"
+          >
+            <i className="fas fa-chevron-down text-2xl"></i>
+          </button>
+        </div>
       </header>
       
       {/* 内容区域 - 关于我 */}
