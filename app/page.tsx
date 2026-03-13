@@ -102,12 +102,19 @@ export default function Home() {
                 const section = document.getElementById("projects");
                 if (section) section.scrollIntoView({ behavior: "smooth" });
               }}
-              className={`transition-colors flex items-center gap-2 ${
-                theme === "dark" ? "text-white/90 hover:text-white" : "text-gray-700 hover:text-gray-900"
+              className={`group transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg ${
+                theme === "dark" 
+                  ? "text-white/90 hover:text-white hover:bg-white/10" 
+                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-200/80"
               }`}
             >
-              <i className="fas fa-star fa-fw"></i>
-              <span>{t("featuredProjects")}</span>
+              <i className="fas fa-star fa-fw group-hover:scale-110 transition-transform"></i>
+              <span className="relative">
+                {t("featuredProjects")}
+                <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  theme === "dark" ? "bg-white" : "bg-gray-900"
+                }`}></span>
+              </span>
             </a>
             <a 
               href="#about" 
@@ -116,12 +123,19 @@ export default function Home() {
                 const section = document.getElementById("about");
                 if (section) section.scrollIntoView({ behavior: "smooth" });
               }}
-              className={`transition-colors flex items-center gap-2 ${
-                theme === "dark" ? "text-white/90 hover:text-white" : "text-gray-700 hover:text-gray-900"
+              className={`group transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg ${
+                theme === "dark" 
+                  ? "text-white/90 hover:text-white hover:bg-white/10" 
+                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-200/80"
               }`}
             >
-              <i className="fas fa-user fa-fw"></i>
-              <span>{t("aboutMe")}</span>
+              <i className="fas fa-user fa-fw group-hover:scale-110 transition-transform"></i>
+              <span className="relative">
+                {t("aboutMe")}
+                <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  theme === "dark" ? "bg-white" : "bg-gray-900"
+                }`}></span>
+              </span>
             </a>
             <a 
               href="#skills" 
@@ -130,12 +144,19 @@ export default function Home() {
                 const section = document.getElementById("skills");
                 if (section) section.scrollIntoView({ behavior: "smooth" });
               }}
-              className={`transition-colors flex items-center gap-2 ${
-                theme === "dark" ? "text-white/90 hover:text-white" : "text-gray-700 hover:text-gray-900"
+              className={`group transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg ${
+                theme === "dark" 
+                  ? "text-white/90 hover:text-white hover:bg-white/10" 
+                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-200/80"
               }`}
             >
-              <i className="fas fa-chart-line fa-fw"></i>
-              <span>{t("skills")}</span>
+              <i className="fas fa-chart-line fa-fw group-hover:scale-110 transition-transform"></i>
+              <span className="relative">
+                {t("skills")}
+                <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  theme === "dark" ? "bg-white" : "bg-gray-900"
+                }`}></span>
+              </span>
             </a>
             <LanguageSwitcher />
             <ThemeSwitcher />
