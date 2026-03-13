@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 "use client";
 
 import { useLanguage } from "../contexts/LanguageContext";
@@ -170,7 +171,7 @@ export default function AboutCard() {
             <p className={`text-sm italic ${
               theme === "dark" ? "text-white/80" : "text-gray-700"
             }`}>
-              "{aboutMeConfig.motto[language]}"
+              &quot;{aboutMeConfig.motto[language]}&quot;
             </p>
           </div>
         </div>

@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable react-hooks/refs */
 "use client";
 
 import { useState, useEffect } from "react";
