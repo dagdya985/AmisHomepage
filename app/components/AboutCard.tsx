@@ -1,11 +1,15 @@
 "use client";
 
 import { useLanguage } from "../contexts/LanguageContext";
+import { useTheme } from "../contexts/ThemeContext";
 import { techStackConfig, aboutMeConfig } from "../config";
+import { getThemeColors } from "../config/themeConfig";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 export default function AboutCard() {
   const { language, t } = useLanguage();
+  const { theme } = useTheme();
+  const colors = getThemeColors(theme);
 
   const aboutSection = useScrollAnimation({ threshold: 0.1 });
   const techSection = useScrollAnimation({ threshold: 0.1 });
@@ -21,9 +25,13 @@ export default function AboutCard() {
           aboutSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
-        <div className="relative bg-[#0d0d1a]/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
-          <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
+        <div className={`absolute -inset-1 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500 ${
+          theme === "dark"
+            ? "bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30"
+            : "bg-gradient-to-r from-sky-400/20 via-blue-400/20 to-indigo-400/20"
+        }`}></div>
+        <div className={`relative ${colors.cardBackground}/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border ${colors.border} hover:${colors.borderHover} transition-all duration-300`}>
+          <h3 className={`text-lg font-semibold mb-5 flex items-center gap-2 ${colors.text}`}>
             <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
               <i className="fas fa-rocket text-white text-sm"></i>
             </span>
@@ -39,12 +47,16 @@ export default function AboutCard() {
             ].map((item, index) => (
               <div 
                 key={index}
-                className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:translate-x-1"
+                className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:translate-x-1 ${
+                  theme === "dark" 
+                    ? "bg-white/5 hover:bg-white/10" 
+                    : "bg-gray-50 hover:bg-gray-100 border border-gray-100"
+                }`}
               >
                 <span className={`w-8 h-8 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center shrink-0`}>
                   <i className={`${item.icon} text-white text-xs`}></i>
                 </span>
-                <span className="text-white/80 text-sm">{item.value}</span>
+                <span className={`text-sm ${colors.textSecondary}`}>{item.value}</span>
               </div>
             ))}
           </div>
@@ -58,9 +70,13 @@ export default function AboutCard() {
           techSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/30 via-blue-500/30 to-purple-500/30 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
-        <div className="relative bg-[#0d0d1a]/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
-          <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
+        <div className={`absolute -inset-1 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500 ${
+          theme === "dark"
+            ? "bg-gradient-to-r from-cyan-500/30 via-blue-500/30 to-purple-500/30"
+            : "bg-gradient-to-r from-emerald-400/20 via-teal-400/20 to-cyan-400/20"
+        }`}></div>
+        <div className={`relative ${colors.cardBackground}/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border ${colors.border} hover:${colors.borderHover} transition-all duration-300`}>
+          <h3 className={`text-lg font-semibold mb-5 flex items-center gap-2 ${colors.text}`}>
             <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400 to-violet-600 flex items-center justify-center">
               <i className="fas fa-tools text-white text-sm"></i>
             </span>
@@ -74,7 +90,7 @@ export default function AboutCard() {
               { key: "frontend", data: techStackConfig.frontend, icon: "fas fa-laptop-code", gradient: "from-purple-500 to-pink-500" },
             ].map((category) => (
               <div key={category.key}>
-                <p className="text-white/60 text-xs mb-2 flex items-center gap-2">
+                <p className={`text-xs mb-2 flex items-center gap-2 ${colors.textSecondary}`}>
                   <i className={category.icon}></i>
                   {t(category.key as "backend" | "mobile" | "frontend")}
                 </p>
@@ -108,8 +124,8 @@ export default function AboutCard() {
         }`}
       >
         <div className="absolute -inset-1 bg-gradient-to-r from-green-500/30 via-emerald-500/30 to-teal-500/30 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
-        <div className="relative bg-[#0d0d1a]/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
-          <h3 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
+        <div className={`relative ${colors.cardBackground}/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border ${colors.border} hover:${colors.borderHover} transition-all duration-300`}>
+          <h3 className={`text-lg font-semibold mb-5 flex items-center gap-2 ${colors.text}`}>
             <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-400 to-rose-600 flex items-center justify-center">
               <i className="fas fa-bullseye text-white text-sm"></i>
             </span>
@@ -120,12 +136,16 @@ export default function AboutCard() {
             {aboutMeConfig.currentFocus.map((item, index) => (
               <div 
                 key={index} 
-                className="flex items-start gap-4 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:translate-x-1"
+                className={`flex items-start gap-4 p-3 rounded-xl transition-all duration-300 hover:translate-x-1 ${
+                  theme === "dark" 
+                    ? "bg-white/5 hover:bg-white/10" 
+                    : "bg-gray-50 hover:bg-gray-100 border border-gray-100"
+                }`}
               >
-                <span className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                <span className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${colors.iconBackground}`}>
                   <i className={item.icon}></i>
                 </span>
-                <span className="text-white/80 text-sm leading-relaxed">{item.text[language]}</span>
+                <span className={`text-sm leading-relaxed ${colors.textSecondary}`}>{item.text[language]}</span>
               </div>
             ))}
           </div>
@@ -141,9 +161,15 @@ export default function AboutCard() {
       >
         <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 via-orange-500/10 to-red-500/10 blur-xl"></div>
         <div className="relative text-center py-6 px-8">
-          <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10">
+          <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border ${
+            theme === "dark" 
+              ? "bg-white/5 border-white/10" 
+              : "bg-white/80 border-gray-200 shadow-sm"
+          }`}>
             <span className="text-2xl">💡</span>
-            <p className="text-white/80 text-sm italic">
+            <p className={`text-sm italic ${
+              theme === "dark" ? "text-white/80" : "text-gray-700"
+            }`}>
               "{aboutMeConfig.motto[language]}"
             </p>
           </div>

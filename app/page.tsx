@@ -4,20 +4,25 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { linksConfig, socialConfig } from "./config";
 import { useLanguage } from "./contexts/LanguageContext";
+import { useTheme } from "./contexts/ThemeContext";
 import TypeWriter from "./components/TypeWriter";
 import LanguageSwitcher from "./components/LanguageSwitcher";
+import ThemeSwitcher from "./components/ThemeSwitcher";
 import DrawnTitle from "./components/DrawnTitle";
 import Avatar from "./components/Avatar";
 import AboutCard from "./components/AboutCard";
 import FeaturedProjects from "./components/FeaturedProjects";
 import Skills from "./components/Skills";
 import StarryBackground from "./components/StarryBackground";
+import LightBackground from "./components/LightBackground";
 import LoadingScreen from "./components/LoadingScreen";
 import SectionNav from "./components/SectionNav";
 import MobileNav from "./components/MobileNav";
+import ThemeTransition from "./components/ThemeTransition";
 
 export default function Home() {
   const { language, t } = useLanguage();
+  const { theme } = useTheme();
   const nav = t("nav");
   const [isLoaded, setIsLoaded] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -58,26 +63,32 @@ export default function Home() {
   return (
     <>
       <LoadingScreen />
-      <div className={`min-h-screen font-sans transition-opacity duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`}>
-        {/* 星空动态背景 */}
+      {/* 主题切换过渡动画 */}
+      <ThemeTransition />
+      <div className={`min-h-screen font-sans transition-all duration-500 ease-in-out ${isLoaded ? "opacity-100" : "opacity-0"}`}>
+        {/* 星空动态背景 - 暗色模式 */}
         <StarryBackground />
+        {/* 落叶动态背景 - 亮色模式 */}
+        <LightBackground />
       
       {/* 全屏Header */}
       <header className="relative h-screen w-full">
         {/* 背景图 - 使用Next.js Image优化 */}
         <div className="absolute inset-0">
           <Image
-            src="/images/index.jpg"
+            src={theme === "dark" ? "/images/index.jpg" : "/images/index4.jpg"}
             alt="Background"
             fill
             priority
-            className="object-cover"
+            className="object-cover transition-opacity duration-500"
             sizes="100vw"
           />
         </div>
         
-        {/* 遮罩层 */}
-        <div className="absolute inset-0 bg-black/30"></div>
+        {/* 遮罩层 - 只在暗色模式显示 */}
+        {theme === "dark" && (
+          <div className="absolute inset-0 bg-black/30"></div>
+        )}
         
         {/* 导航栏 */}
         <nav className="relative z-10 flex items-center justify-end px-6 py-4 md:px-12">
@@ -91,7 +102,9 @@ export default function Home() {
                 const section = document.getElementById("projects");
                 if (section) section.scrollIntoView({ behavior: "smooth" });
               }}
-              className="text-white/90 hover:text-white transition-colors flex items-center gap-2"
+              className={`transition-colors flex items-center gap-2 ${
+                theme === "dark" ? "text-white/90 hover:text-white" : "text-gray-700 hover:text-gray-900"
+              }`}
             >
               <i className="fas fa-star fa-fw"></i>
               <span>{t("featuredProjects")}</span>
@@ -103,7 +116,9 @@ export default function Home() {
                 const section = document.getElementById("about");
                 if (section) section.scrollIntoView({ behavior: "smooth" });
               }}
-              className="text-white/90 hover:text-white transition-colors flex items-center gap-2"
+              className={`transition-colors flex items-center gap-2 ${
+                theme === "dark" ? "text-white/90 hover:text-white" : "text-gray-700 hover:text-gray-900"
+              }`}
             >
               <i className="fas fa-user fa-fw"></i>
               <span>{t("aboutMe")}</span>
@@ -115,24 +130,30 @@ export default function Home() {
                 const section = document.getElementById("skills");
                 if (section) section.scrollIntoView({ behavior: "smooth" });
               }}
-              className="text-white/90 hover:text-white transition-colors flex items-center gap-2"
+              className={`transition-colors flex items-center gap-2 ${
+                theme === "dark" ? "text-white/90 hover:text-white" : "text-gray-700 hover:text-gray-900"
+              }`}
             >
               <i className="fas fa-chart-line fa-fw"></i>
               <span>{t("skills")}</span>
             </a>
             <LanguageSwitcher />
+            <ThemeSwitcher />
           </div>
           
-          {/* 移动端只显示语言切换 */}
-          <div className="md:hidden">
+          {/* 移动端显示语言和主题切换 */}
+          <div className="md:hidden flex items-center gap-2">
             <LanguageSwitcher />
+            <ThemeSwitcher />
           </div>
         </nav>
         
         {/* 网站信息 */}
         <div 
           id="site-info" 
-          className={`absolute inset-0 flex flex-col items-center justify-center text-center text-white z-5 overflow-visible px-4 transition-opacity duration-300 ${isLanguageChanging ? 'opacity-0' : 'opacity-100'}`}
+          className={`absolute inset-0 flex flex-col items-center justify-center text-center z-5 overflow-visible px-4 transition-opacity duration-300 ${isLanguageChanging ? 'opacity-0' : 'opacity-100'} ${
+            theme === "dark" ? "text-white" : "text-gray-900"
+          }`}
         >
           {/* 头像 */}
           <Avatar 
@@ -145,7 +166,11 @@ export default function Home() {
           <div className="min-h-[80px] flex items-center justify-center w-[90vw] mb-4">
             <DrawnTitle text={t("siteTitle")} className="w-full" />
           </div>
-          <div id="site-subtitle" className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl px-4">
+          <div id="site-subtitle" className={`text-lg md:text-xl mb-8 max-w-2xl px-4 font-medium ${
+            theme === "dark" 
+              ? "text-white/90" 
+              : "text-gray-900 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]"
+          }`}>
             <TypeWriter 
               key={language}
               texts={[t("typeWriterText"), t("typeWriterText2")]} 
@@ -163,35 +188,43 @@ export default function Home() {
               rel="external nofollow noreferrer" 
               target="_blank" 
               title={linksConfig.email.title[language]}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 hover:scale-110 transition-all duration-300"
+              className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
+                theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
+              }`}
             >
-              <i className="fas fa-envelope text-white"></i>
+              <i className={`fas fa-envelope ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
             </a>
             <a 
               href={linksConfig.github.url}
               target="_blank" 
               rel="noopener noreferrer"
               title={linksConfig.github.title[language]}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 hover:scale-110 transition-all duration-300"
+              className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
+                theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
+              }`}
             >
-              <i className="fab fa-github text-white"></i>
+              <i className={`fab fa-github ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
             </a>
             <a 
               href={linksConfig.gitee.url}
               target="_blank" 
               rel="noopener noreferrer"
               title={linksConfig.gitee.title[language]}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 hover:scale-110 transition-all duration-300"
+              className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
+                theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
+              }`}
             >
-              <i className="fab fa-gitee text-white"></i>
+              <i className={`fab fa-gitee ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
             </a>
             <a 
               href={linksConfig.blog.url}
               target="_blank"
               title={linksConfig.blog.title[language]}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 hover:scale-110 transition-all duration-300"
+              className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
+                theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
+              }`}
             >
-              <i className="fas fa-blog text-white"></i>
+              <i className={`fas fa-blog ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
             </a>
           </div>
         </div>
@@ -199,7 +232,11 @@ export default function Home() {
       
       {/* 内容区域 - 关于我 */}
       <section id="content" className="py-16 px-6 md:px-12 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0f0f23]/80 to-[#1a1a2e]/90"></div>
+        <div className={`absolute inset-0 ${
+          theme === "dark" 
+            ? "bg-gradient-to-b from-[#0a0a0a]/60 via-[#0f0f23]/80 to-[#1a1a2e]/90" 
+            : "bg-gradient-to-b from-white/70 via-white/90 to-gray-50/95"
+        }`}></div>
         <div className="max-w-6xl mx-auto relative z-10 space-y-12">
           <FeaturedProjects />
           <AboutCard />
@@ -208,9 +245,13 @@ export default function Home() {
       </section>
       
       {/* 页脚 */}
-      <footer className="bg-gradient-to-b from-[#1a1a2e]/90 to-[#0f0f23]/95 backdrop-blur-sm text-white py-8 px-6 border-t border-white/10">
+      <footer className={`py-8 px-6 border-t backdrop-blur-sm ${
+        theme === "dark"
+          ? "bg-gradient-to-b from-[#1a1a2e]/90 to-[#0f0f23]/95 text-white border-white/10"
+          : "bg-gradient-to-b from-white/90 to-gray-50/95 text-gray-900 border-gray-200"
+      }`}>
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-white/60">
+          <p className={theme === "dark" ? "text-white/60" : "text-gray-600"}>
             {t("footer")}
           </p>
         </div>

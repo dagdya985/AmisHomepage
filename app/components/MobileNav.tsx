@@ -2,11 +2,15 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useTheme } from "../contexts/ThemeContext";
+import { getThemeColors } from "../config/themeConfig";
 
 type Section = "about" | "projects" | "skills";
 
 export default function MobileNav() {
   const { t } = useLanguage();
+  const { theme } = useTheme();
+  const colors = getThemeColors(theme);
   const [currentSection, setCurrentSection] = useState<Section>("projects");
   const [isVisible, setIsVisible] = useState(false);
   const isScrollingRef = useRef(false);
@@ -65,14 +69,16 @@ export default function MobileNav() {
           <button
             key={section.id}
             onClick={() => scrollToSection(section.id)}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md ${
               currentSection === section.id
                 ? "bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg scale-110"
-                : "bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                : theme === "dark"
+                  ? "bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                  : "bg-white hover:bg-gray-50 border border-gray-200 shadow-lg"
             }`}
             title={section.id}
           >
-            <i className={`${section.icon} text-white text-sm`}></i>
+            <i className={`${section.icon} ${currentSection === section.id ? "text-white" : theme === "dark" ? "text-white" : "text-gray-600"} text-sm`}></i>
           </button>
         ))}
       </div>

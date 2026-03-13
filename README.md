@@ -8,7 +8,7 @@
 
 ## 功能特性
 
-- 🎨 **现代化设计** - 全屏背景图 + 渐变遮罩 + 星空动态背景
+- 🎨 **现代化设计** - 全屏背景图 + 渐变遮罩 + 动态背景（暗色：星空，亮色：落叶）
 - ✍️ **SVG 绘画标题** - 手写风格标题，动态计算 viewBox
 - ⌨️ **打字机效果** - 动态打字机文字效果，支持多文本循环
 - 👤 **头像动画** - 呼吸光圈效果，悬停放大
@@ -17,6 +17,7 @@
 - 🌟 **精选项目** - 展示 Vibe Music Server 和 App 等项目，图片悬停放大效果
 - 📊 **技能可视化** - 进度条展示技术栈，数字动画效果
 - 🌍 **多语言支持** - 支持中文/英文切换，自动检测系统语言
+- 🌓 **主题切换** - 支持亮色/暗色模式切换，默认暗色主题，模糊过渡动画，主题适配所有组件
 - 📱 **响应式布局** - 完美适配桌面端和移动端
 - 🎬 **滚动动画** - 各卡片的淡入/滑入效果
 - 🧭 **桌面端导航** - 右上角导航链接到精选项目、关于我、技能，右侧侧边导航
@@ -84,18 +85,25 @@ pnpm start
 │   │   ├── DrawnTitle.tsx       # SVG 绘画标题组件
 │   │   ├── TypeWriter.tsx       # 打字机效果组件
 │   │   ├── LanguageSwitcher.tsx # 语言切换组件
+│   │   ├── ThemeSwitcher.tsx    # 主题切换组件
 │   │   ├── Avatar.tsx           # 头像组件
 │   │   ├── AboutCard.tsx        # 关于我卡片组件
 │   │   ├── FeaturedProjects.tsx # 精选项目组件
 │   │   ├── Skills.tsx           # 技能可视化组件
-│   │   ├── StarryBackground.tsx # 星空动态背景组件
+│   │   ├── StarryBackground.tsx # 星空动态背景组件（暗色）
+│   │   ├── LightBackground.tsx  # 落叶动态背景组件（亮色）
+│   │   ├── ThemeTransition.tsx  # 主题切换过渡动画组件
 │   │   ├── LoadingScreen.tsx    # 加载动画组件
-│   │   └── SectionNav.tsx       # 侧边导航组件
+│   │   ├── SectionNav.tsx       # 桌面端侧边导航组件
+│   │   └── MobileNav.tsx        # 移动端底部导航组件
 │   ├── contexts/           # React Context
-│   │   └── LanguageContext.tsx # 语言管理
+│   │   ├── LanguageContext.tsx  # 语言管理
+│   │   └── ThemeContext.tsx     # 主题管理
 │   ├── hooks/              # 自定义 Hooks
 │   │   └── useScrollAnimation.ts # 滚动动画 Hook
 │   ├── config.ts           # 链接配置和翻译
+│   ├── config/
+│   │   └── themeConfig.ts       # 主题配色配置
 │   ├── globals.css         # 全局样式
 │   ├── layout.tsx          # 根布局
 │   ├── metadata.ts         # SEO 元数据配置
@@ -103,8 +111,10 @@ pnpm start
 │   └── page.tsx            # 首页
 ├── public/
 │   ├── images/             # 图片资源
-│   │   ├── index.jpg       # 背景图
+│   │   ├── index.jpg       # 暗色主题背景图（银河）
+│   │   ├── index4.jpg      # 亮色主题背景图（迷雾森林）
 │   │   ├── index2.jpg      # 项目图片
+│   │   ├── index3.jpg      # 项目图片
 │   │   ├── avatar.jpg      # 头像
 │   │   └── icon.png        # 网站图标
 │   ├── markdown/           # Markdown 文件

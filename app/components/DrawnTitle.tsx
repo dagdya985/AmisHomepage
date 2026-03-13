@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface DrawnTitleProps {
   text: string;
@@ -8,6 +9,7 @@ interface DrawnTitleProps {
 }
 
 function DrawnTitleInner({ text, className = "" }: DrawnTitleProps) {
+  const { theme } = useTheme();
   const [progress, setProgress] = useState(0);
   const [clipId] = useState(() => `clip-${Math.random().toString(36).slice(2)}`);
   const textRef = useRef<SVGTextElement>(null);
@@ -46,6 +48,12 @@ function DrawnTitleInner({ text, className = "" }: DrawnTitleProps) {
   // 计算文字起始位置，使其居中
   const textX = viewBoxWidth / 2;
 
+  // 根据主题设置颜色 - 亮色模式使用纯黑色确保对比度
+  const gradientStart = theme === "dark" ? "#fff" : "#000000";
+  const gradientMiddle = theme === "dark" ? "#f8f8f8" : "#000000";
+  const gradientEnd = theme === "dark" ? "#fff" : "#000000";
+  const strokeColor = theme === "dark" ? "white" : "#000000";
+
   return (
     <div className={`relative ${className}`}>
       <svg
@@ -55,9 +63,9 @@ function DrawnTitleInner({ text, className = "" }: DrawnTitleProps) {
       >
         <defs>
           <linearGradient id={`textGradient-${clipId}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#fff" />
-            <stop offset="50%" stopColor="#f8f8f8" />
-            <stop offset="100%" stopColor="#fff" />
+            <stop offset="0%" stopColor={gradientStart} />
+            <stop offset="50%" stopColor={gradientMiddle} />
+            <stop offset="100%" stopColor={gradientEnd} />
           </linearGradient>
           <clipPath id={clipId}>
             <rect x="0" y="0" width={`${progress * viewBoxWidth}`} height={viewBoxHeight} />
@@ -70,7 +78,7 @@ function DrawnTitleInner({ text, className = "" }: DrawnTitleProps) {
           textAnchor="middle"
           dominantBaseline="middle"
           fill={`url(#textGradient-${clipId})`}
-          stroke="white"
+          stroke={strokeColor}
           strokeWidth="24"
           fontSize={fontSize}
           fontFamily="var(--font-zcool-qingke), 'PingFang SC', 'Microsoft YaHei', sans-serif"

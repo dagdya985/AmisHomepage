@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface Particle {
   x: number;
@@ -12,9 +13,13 @@ interface Particle {
 }
 
 export default function StarryBackground() {
+  const { theme } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // 只在暗色模式下运行
+    if (theme !== "dark") return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -106,7 +111,10 @@ export default function StarryBackground() {
     return () => {
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, []);
+  }, [theme]);
+
+  // 亮色模式下不渲染
+  if (theme !== "dark") return null;
 
   return (
     <canvas

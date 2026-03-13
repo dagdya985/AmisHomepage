@@ -2,11 +2,15 @@
 
 import Image from "next/image";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useTheme } from "../contexts/ThemeContext";
 import { projectsConfig, moreProjectsConfig } from "../config";
+import { getThemeColors } from "../config/themeConfig";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 export default function FeaturedProjects() {
   const { language, t } = useLanguage();
+  const { theme } = useTheme();
+  const colors = getThemeColors(theme);
 
   const projectsSection = useScrollAnimation({ threshold: 0.1 });
 
@@ -18,9 +22,13 @@ export default function FeaturedProjects() {
           projectsSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <div className="absolute -inset-1 bg-gradient-to-r from-violet-500/30 via-purple-500/30 to-fuchsia-500/30 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
-        <div className="relative bg-[#0d0d1a]/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
-          <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+        <div className={`absolute -inset-1 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500 ${
+          theme === "dark"
+            ? "bg-gradient-to-r from-violet-500/30 via-purple-500/30 to-fuchsia-500/30"
+            : "bg-gradient-to-r from-blue-400/20 via-green-400/20 to-teal-400/20"
+        }`}></div>
+        <div className={`relative ${colors.cardBackground}/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border ${colors.border} hover:${colors.borderHover} transition-all duration-300`}>
+          <h3 className={`text-lg font-semibold mb-6 flex items-center gap-2 ${colors.text}`}>
             <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-400 to-fuchsia-600 flex items-center justify-center">
               <i className="fas fa-star text-white text-sm"></i>
             </span>
@@ -34,7 +42,11 @@ export default function FeaturedProjects() {
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/project relative overflow-hidden rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+                className={`group/project relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-[1.02] ${
+                  theme === "dark" 
+                    ? "bg-white/5 hover:bg-white/10 hover:shadow-2xl" 
+                    : "bg-white shadow-md hover:shadow-xl border border-gray-200 hover:border-gray-300"
+                }`}
               >
                 <div className="relative h-48 overflow-hidden">
                   <Image
@@ -56,20 +68,24 @@ export default function FeaturedProjects() {
                 </div>
 
                 <div className="p-4">
-                  <p className="text-white/70 text-sm mb-4 line-clamp-2">
+                  <p className={`text-sm mb-4 line-clamp-2 ${colors.textSecondary}`}>
                     {project.description[language]}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/80 hover:bg-white/20 transition-colors"
+                        className={`text-xs px-2 py-1 rounded-full transition-colors ${
+                          theme === "dark" 
+                            ? "bg-white/10 text-white/80 hover:bg-white/20" 
+                            : "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                        }`}
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-white/60 group-hover/project:text-white/80 transition-colors">
+                  <div className={`flex items-center gap-2 text-sm transition-colors ${colors.textSecondary} group-hover/project:${theme === "dark" ? "text-white/80" : "text-blue-600"}`}>
                     <span>{t("viewProject")}</span>
                     <i className="fas fa-arrow-right transition-transform group-hover/project:translate-x-1"></i>
                   </div>
