@@ -42,6 +42,87 @@ export const linksConfig = {
   },
 };
 
+// 项目精选配置
+export interface Project {
+  id: string;
+  name: string;
+  description: {
+    zh: string;
+    en: string;
+  };
+  url: string;
+  image: string;
+  tags: string[];
+  icon: string;
+  gradient: string;
+}
+
+export const projectsConfig: Project[] = [
+  {
+    id: "vibe-music-server",
+    name: "Vibe Music Server",
+    description: {
+      zh: "基于 Spring Boot 3 的高性能音乐服务后端系统，支持高并发访问、MinIO 分布式存储、Redis 智能缓存",
+      en: "High-performance music service backend based on Spring Boot 3, supporting high concurrency, MinIO distributed storage, and Redis intelligent caching",
+    },
+    url: "https://github.com/AmisKwok/vibe-music-server",
+    image: "/images/index3.jpg",
+    tags: ["Spring Boot", "Java", "MySQL", "Redis", "MinIO"],
+    icon: "fas fa-server",
+    gradient: "from-blue-500 to-purple-600",
+  },
+  {
+    id: "vibe-music-app",
+    name: "Vibe Music App",
+    description: {
+      zh: "基于 Flutter 的跨平台音乐播放器，支持 Android、iOS、Web 和桌面端",
+      en: "Cross-platform music player based on Flutter, supporting Android, iOS, Web, and desktop",
+    },
+    url: "https://github.com/AmisKwok/vibe-music-app",
+    image: "/images/index2.jpg",
+    tags: ["Flutter", "Dart", "GetX", "Material Design"],
+    icon: "fas fa-music",
+    gradient: "from-pink-500 to-rose-600",
+  },
+];
+
+// 更多项目配置
+export const moreProjectsConfig = {
+  url: "https://github.com/AmisKwok",
+  title: {
+    zh: "查看更多项目",
+    en: "View More Projects",
+  },
+};
+
+// 技能配置
+export interface Skill {
+  name: string;
+  level: number;
+  color: string;
+  icon: string;
+}
+
+export const skillsConfig: Skill[] = [
+  { name: "Java", level: 90, color: "from-orange-500 to-red-500", icon: "fab fa-java" },
+  { name: "Spring Boot", level: 85, color: "from-green-500 to-emerald-600", icon: "fas fa-leaf" },
+  { name: "Flutter", level: 80, color: "from-blue-500 to-cyan-600", icon: "fas fa-mobile-alt" },
+  { name: "Next.js", level: 75, color: "from-gray-700 to-gray-900", icon: "fas fa-bolt" },
+  { name: "MySQL", level: 85, color: "from-blue-600 to-blue-800", icon: "fas fa-database" },
+  { name: "Redis", level: 75, color: "from-red-500 to-red-700", icon: "fas fa-bolt" },
+  { name: "TypeScript", level: 70, color: "from-blue-600 to-indigo-700", icon: "fab fa-js" },
+  { name: "React", level: 70, color: "from-cyan-500 to-blue-600", icon: "fab fa-react" },
+];
+
+// 社交媒体配置
+export const socialConfig = {
+  email: {
+    url: "mailto:amiskwokk@gmail.com",
+    icon: "fas fa-envelope",
+    color: "from-blue-400 to-blue-600",
+  },
+};
+
 // 技术栈配置
 export interface TechItem {
   name: string;
@@ -131,6 +212,10 @@ export const translations = {
     mobile: "移动端",
     frontend: "前端",
     currentFocus: "当前关注",
+    featuredProjects: "精选项目",
+    skills: "技能",
+    viewProject: "查看项目",
+    moreProjects: "更多项目",
   },
   en: {
     siteTitle: "Amis's Homepage",
@@ -149,6 +234,10 @@ export const translations = {
     mobile: "Mobile",
     frontend: "Frontend",
     currentFocus: "Current Focus",
+    featuredProjects: "Featured Projects",
+    skills: "Skills",
+    viewProject: "View Project",
+    moreProjects: "More Projects",
   },
 };
 

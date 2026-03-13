@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 
 export const siteConfig = {
   name: "Amis's Homepage",
-  title: "Amis的主页",
+  title: "Amis's Homepage",
   url: "https://www.amisweb.cn",
   ogImage: "/images/index.jpg",
   author: "AmisKwok",

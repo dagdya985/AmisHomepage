@@ -13,7 +13,7 @@ export default function AboutCard() {
   const mottoSection = useScrollAnimation({ threshold: 0.1 });
 
   return (
-    <div className="w-full max-w-3xl mx-auto space-y-8">
+    <div id="about" className="w-full max-w-3xl mx-auto space-y-8">
       {/* 关于我 */}
       <div 
         ref={aboutSection.ref as React.RefObject<HTMLDivElement>}

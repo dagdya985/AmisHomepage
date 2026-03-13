@@ -20,6 +20,10 @@ type TranslationReturnType = {
   mobile: string;
   frontend: string;
   currentFocus: string;
+  featuredProjects: string;
+  skills: string;
+  viewProject: string;
+  moreProjects: string;
 };
 
 interface LanguageContextType {
