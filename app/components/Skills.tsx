@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-/* eslint-disable react-hooks/refs */
+ 
 "use client";
 
 import { useState, useEffect } from "react";
@@ -8,14 +8,20 @@ import { useTheme } from "../contexts/ThemeContext";
 import { skillsConfig } from "../config";
 import { getThemeColors } from "../config/themeConfig";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
+import { useConfigStore } from "../(home)/stores/config-store";
 
 export default function Skills() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const colors = getThemeColors(theme);
+  const { siteContent } = useConfigStore();
   const [animatedLevels, setAnimatedLevels] = useState<Record<string, number>>({});
 
   const skillsSection = useScrollAnimation({ threshold: 0.1 });
+
+  if (siteContent?.showSkills === false) {
+    return null;
+  }
 
   useEffect(() => {
     if (skillsSection.isVisible) {

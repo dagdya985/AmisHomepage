@@ -7,13 +7,19 @@ import { useTheme } from "../contexts/ThemeContext";
 import { projectsConfig, moreProjectsConfig } from "../config";
 import { getThemeColors } from "../config/themeConfig";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
+import { useConfigStore } from "../(home)/stores/config-store";
 
 export default function FeaturedProjects() {
   const { language, t } = useLanguage();
   const { theme } = useTheme();
   const colors = getThemeColors(theme);
+  const { siteContent } = useConfigStore();
 
   const projectsSection = useScrollAnimation({ threshold: 0.1 });
+
+  if (siteContent?.showProjects === false) {
+    return null;
+  }
 
   return (
     <div id="projects" className="w-full max-w-5xl mx-auto">

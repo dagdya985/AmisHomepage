@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { getThemeColors } from "../config/themeConfig";
+import { useConfigStore } from "../(home)/stores/config-store";
 
 type Section = "about" | "projects" | "skills";
 
@@ -11,14 +12,15 @@ export default function SectionNav() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const colors = getThemeColors(theme);
+  const { siteContent } = useConfigStore();
   const [currentSection, setCurrentSection] = useState<Section>("projects");
   const [isVisible, setIsVisible] = useState(false);
   const isScrollingRef = useRef(false);
 
   const sections: { id: Section; label: string; icon: string }[] = [
-    { id: "projects", label: t("featuredProjects"), icon: "fas fa-star" },
+    ...(siteContent?.showProjects !== false ? [{ id: "projects", label: t("featuredProjects"), icon: "fas fa-star" }] : []),
     { id: "about", label: t("aboutMe"), icon: "fas fa-user" },
-    { id: "skills", label: t("skills"), icon: "fas fa-chart-line" },
+    ...(siteContent?.showSkills !== false ? [{ id: "skills", label: t("skills"), icon: "fas fa-chart-line" }] : []),
   ];
 
   const scrollToSection = (sectionId: Section) => {
@@ -38,8 +40,8 @@ export default function SectionNav() {
     const handleScroll = () => {
       if (isScrollingRef.current) return;
 
-      const sections = ["projects", "about", "skills"];
-      for (const sectionId of sections) {
+      const sectionIds = sections.map(s => s.id);
+      for (const sectionId of sectionIds) {
         const element = document.getElementById(sectionId);
         if (element) {
           const rect = element.getBoundingClientRect();
@@ -58,7 +60,7 @@ export default function SectionNav() {
     window.addEventListener("scroll", handleScroll);
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [t]);
+  }, [t, sections]);
 
   return (
     <div className={`fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden md:block transition-all duration-300 ${

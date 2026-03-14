@@ -6,6 +6,7 @@ import Image from "next/image";
 import { linksConfig, socialConfig } from "./config";
 import { useLanguage } from "./contexts/LanguageContext";
 import { useTheme } from "./contexts/ThemeContext";
+import { useConfigStore } from "./(home)/stores/config-store";
 import TypeWriter from "./components/TypeWriter";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import ThemeSwitcher from "./components/ThemeSwitcher";
@@ -24,6 +25,7 @@ import ThemeTransition from "./components/ThemeTransition";
 export default function Home() {
   const { language, t } = useLanguage();
   const { theme } = useTheme();
+  const { siteContent } = useConfigStore();
   const nav = t("nav");
   const [isLoaded, setIsLoaded] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -96,27 +98,29 @@ export default function Home() {
           
           {/* 桌面端导航菜单 */}
           <div id="menus" className="hidden md:flex items-center space-x-6">
-            <a 
-              href="#projects" 
-              onClick={(e) => {
-                e.preventDefault();
-                const section = document.getElementById("projects");
-                if (section) section.scrollIntoView({ behavior: "smooth" });
-              }}
-              className={`group transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg ${
-                theme === "dark" 
-                  ? "text-white/90 hover:text-white hover:bg-white/10" 
-                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-200/80"
-              }`}
-            >
-              <i className="fas fa-star fa-fw group-hover:scale-110 transition-transform"></i>
-              <span className="relative">
-                {t("featuredProjects")}
-                <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
-                  theme === "dark" ? "bg-white" : "bg-gray-900"
-                }`}></span>
-              </span>
-            </a>
+            {siteContent?.showProjects !== false && (
+              <a 
+                href="#projects" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  const section = document.getElementById("projects");
+                  if (section) section.scrollIntoView({ behavior: "smooth" });
+                }}
+                className={`group transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg ${
+                  theme === "dark" 
+                    ? "text-white/90 hover:text-white hover:bg-white/10" 
+                    : "text-gray-700 hover:text-gray-900 hover:bg-gray-200/80"
+                }`}
+              >
+                <i className="fas fa-star fa-fw group-hover:scale-110 transition-transform"></i>
+                <span className="relative">
+                  {t("featuredProjects")}
+                  <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                    theme === "dark" ? "bg-white" : "bg-gray-900"
+                  }`}></span>
+                </span>
+              </a>
+            )}
             <a 
               href="#about" 
               onClick={(e) => {
@@ -138,27 +142,29 @@ export default function Home() {
                 }`}></span>
               </span>
             </a>
-            <a 
-              href="#skills" 
-              onClick={(e) => {
-                e.preventDefault();
-                const section = document.getElementById("skills");
-                if (section) section.scrollIntoView({ behavior: "smooth" });
-              }}
-              className={`group transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg ${
-                theme === "dark" 
-                  ? "text-white/90 hover:text-white hover:bg-white/10" 
-                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-200/80"
-              }`}
-            >
-              <i className="fas fa-chart-line fa-fw group-hover:scale-110 transition-transform"></i>
-              <span className="relative">
-                {t("skills")}
-                <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
-                  theme === "dark" ? "bg-white" : "bg-gray-900"
-                }`}></span>
-              </span>
-            </a>
+            {siteContent?.showSkills !== false && (
+              <a 
+                href="#skills" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  const section = document.getElementById("skills");
+                  if (section) section.scrollIntoView({ behavior: "smooth" });
+                }}
+                className={`group transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg ${
+                  theme === "dark" 
+                    ? "text-white/90 hover:text-white hover:bg-white/10" 
+                    : "text-gray-700 hover:text-gray-900 hover:bg-gray-200/80"
+                }`}
+              >
+                <i className="fas fa-chart-line fa-fw group-hover:scale-110 transition-transform"></i>
+                <span className="relative">
+                  {t("skills")}
+                  <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                    theme === "dark" ? "bg-white" : "bg-gray-900"
+                  }`}></span>
+                </span>
+              </a>
+            )}
             <LanguageSwitcher />
             <ThemeSwitcher />
           </div>
@@ -294,6 +300,20 @@ export default function Home() {
           <p className={theme === "dark" ? "text-white/60" : "text-gray-600"}>
             {t("footer")}
           </p>
+          <div className="mt-2 hidden md:block">
+            <a
+              href="/config"
+              className={`text-xs transition-all duration-300 ${
+                theme === "dark"
+                  ? "text-white/20 hover:text-white/40"
+                  : "text-gray-300 hover:text-gray-500"
+              }`}
+              title="配置管理"
+            >
+              <i className="fas fa-cog mr-1"></i>
+              Config
+            </a>
+          </div>
         </div>
       </footer>
 

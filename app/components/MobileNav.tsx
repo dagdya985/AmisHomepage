@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { getThemeColors } from "../config/themeConfig";
+import { useConfigStore } from "../(home)/stores/config-store";
 
 type Section = "about" | "projects" | "skills";
 
@@ -11,14 +12,15 @@ export default function MobileNav() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const colors = getThemeColors(theme);
+  const { siteContent } = useConfigStore();
   const [currentSection, setCurrentSection] = useState<Section>("projects");
   const [isVisible, setIsVisible] = useState(false);
   const isScrollingRef = useRef(false);
 
   const sections: { id: Section; icon: string }[] = [
-    { id: "projects", icon: "fas fa-star" },
+    ...(siteContent?.showProjects !== false ? [{ id: "projects", icon: "fas fa-star" }] : []),
     { id: "about", icon: "fas fa-user" },
-    { id: "skills", icon: "fas fa-chart-line" },
+    ...(siteContent?.showSkills !== false ? [{ id: "skills", icon: "fas fa-chart-line" }] : []),
   ];
 
   const scrollToSection = (sectionId: Section) => {
@@ -38,8 +40,8 @@ export default function MobileNav() {
     const handleScroll = () => {
       if (isScrollingRef.current) return;
 
-      const sections = ["projects", "about", "skills"];
-      for (const sectionId of sections) {
+      const sectionIds = sections.map(s => s.id);
+      for (const sectionId of sectionIds) {
         const element = document.getElementById(sectionId);
         if (element) {
           const rect = element.getBoundingClientRect();
@@ -58,7 +60,7 @@ export default function MobileNav() {
     window.addEventListener("scroll", handleScroll);
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [t]);
+  }, [t, sections]);
 
   return (
     <div className={`fixed bottom-4 left-4 z-40 md:hidden transition-all duration-300 ${

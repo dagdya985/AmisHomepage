@@ -1,4 +1,6 @@
 {
+  "showSkills": true,
+  "showProjects": true,
   "site": {
     "name": "Amis's Homepage",
     "title": "Amis's Homepage",
