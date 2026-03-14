@@ -41,11 +41,8 @@ export async function POST(request: NextRequest) {
     const token = await createInstallationToken(jwt, installationId);
 
     const configPath = 'config.json';
-    const existingFile = await getFile(token, owner, repo, configPath, branch);
-    const sha = existingFile?.sha;
-
     const content = Buffer.from(JSON.stringify(config, null, 2)).toString('base64');
-    await putFile(token, owner, repo, configPath, content, 'Update music order', branch, sha);
+    await putFile(token, owner, repo, configPath, content, 'Update music order', branch);
 
     return NextResponse.json({ success: true });
   } catch (error) {
