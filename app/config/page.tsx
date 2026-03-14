@@ -263,13 +263,22 @@ export default function ConfigPage() {
       <Toaster position="top-center" richColors />
       <div className="max-w-7xl mx-auto px-4 py-12">
         <header className="mb-12 text-center">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <i className="fas fa-cog text-white text-xl"></i>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <a
+              href="/"
+              className={`px-4 py-2 rounded-xl border ${colors.card} ${colors.text} hover:bg-blue-500/10 transition-all flex items-center gap-2`}
+            >
+              <i className="fas fa-arrow-left"></i>
+              返回主页
+            </a>
+            <div className="inline-flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <i className="fas fa-cog text-white text-xl"></i>
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+                配置管理
+              </h1>
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-              配置管理
-            </h1>
           </div>
           <p className={`${colors.textSecondary} text-lg max-w-2xl mx-auto`}>
             通过可视化界面管理您的个人主页配置，所有修改将同步到 GitHub
