@@ -24,12 +24,29 @@ export function toBase64Utf8(input: string): string {
  * @returns 签名后的 JWT
  */
 export function signAppJwt(appId: string, privateKeyPem: string): string {
+	console.log('Signing JWT with App ID:', appId)
+	console.log('Private key length:', privateKeyPem.length)
+	
 	const { KJUR, KEYUTIL } = require('jsrsasign')
 	const now = Math.floor(Date.now() / 1000)
 	const header = { alg: 'RS256', typ: 'JWT' }
 	const payload = { iat: now - 60, exp: now + 8 * 60, iss: appId }
-	const prv = KEYUTIL.getKey(privateKeyPem) as unknown as string
-	return KJUR.jws.JWS.sign('RS256', JSON.stringify(header), JSON.stringify(payload), prv)
+	
+	console.log('JWT payload:', payload)
+	
+	try {
+		const prv = KEYUTIL.getKey(privateKeyPem) as unknown as string
+		const jwt = KJUR.jws.JWS.sign('RS256', JSON.stringify(header), JSON.stringify(payload), prv)
+		console.log('JWT signed successfully, length:', jwt.length)
+		return jwt
+	} catch (error) {
+		console.error('Error signing JWT:', error)
+		if (error instanceof Error) {
+			console.error('Error message:', error.message)
+			console.error('Error stack:', error.stack)
+		}
+		throw error
+	}
 }
 
 /**
@@ -40,16 +57,39 @@ export function signAppJwt(appId: string, privateKeyPem: string): string {
  * @returns 安装 ID
  */
 export async function getInstallationId(jwt: string, owner: string, repo: string): Promise<number> {
-	const res = await fetch(`${GH_API}/repos/${owner}/${repo}/installation`, {
-		headers: {
-			Authorization: `Bearer ${jwt}`,
-			Accept: 'application/vnd.github+json',
-			'X-GitHub-Api-Version': '2022-11-28'
+	const url = `${GH_API}/repos/${owner}/${repo}/installation`
+	console.log('Fetching installation ID from:', url)
+	console.log('JWT (first 50 chars):', jwt.substring(0, 50) + '...')
+	
+	try {
+		const res = await fetch(url, {
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+				Accept: 'application/vnd.github+json',
+				'X-GitHub-Api-Version': '2022-11-28'
+			}
+		})
+		
+		console.log('Response status:', res.status)
+		console.log('Response headers:', Object.fromEntries(res.headers.entries()))
+		
+		if (!res.ok) {
+			const errorText = await res.text()
+			console.error('Error response body:', errorText)
+			throw new Error(`installation lookup failed: ${res.status} - ${errorText}`)
 		}
-	})
-	if (!res.ok) throw new Error(`installation lookup failed: ${res.status}`)
-	const data = await res.json()
-	return data.id
+		
+		const data = await res.json()
+		console.log('Response data:', data)
+		return data.id
+	} catch (error) {
+		console.error('Fetch error:', error)
+		if (error instanceof Error) {
+			console.error('Error message:', error.message)
+			console.error('Error stack:', error.stack)
+		}
+		throw error
+	}
 }
 
 /**

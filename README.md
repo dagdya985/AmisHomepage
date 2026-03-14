@@ -24,6 +24,7 @@
 - 📱 **移动端导航** - 移动端左下角简洁的圆形导航按钮
 - ⚡ **性能优化** - Next.js Image 图片优化、页面加载动画
 - 🔝 **返回顶部** - 滚动时显示返回顶部按钮
+- 🔧 **在线配置管理** - 可视化配置界面，无需编辑代码，自动同步到 GitHub
 
 ## 技术栈
 
@@ -293,13 +294,68 @@ config.json
    - 访问 [vercel.com](https://vercel.com/)
    - 使用 GitHub 登录
 
-3. **导入项目**
+3. **配置环境变量（重要！）**
+   
+   在 Vercel 部署前，需要先配置以下环境变量：
+   
+   - 进入 Vercel 控制台
+   - 选择你的项目 → **Settings** → **Environment Variables**
+   - 添加以下变量：
+
+   | 变量名 | 说明 | 示例 |
+   |--------|------|------|
+   | `GITHUB_APP_ID` | GitHub App ID | `123456` |
+   | `GITHUB_REPO_OWNER` | 仓库所有者 | `yourusername` |
+   | `GITHUB_REPO_NAME` | 仓库名称 | `AmisHomepage` |
+   | `GITHUB_REPO_BRANCH` | 分支名称 | `main` |
+
+   > ⚠️ **注意**：`.env` 文件不会被上传到 GitHub，所以必须在 Vercel 控制台手动配置这些环境变量！
+
+4. **导入项目**
    - 点击 `New Project`
    - 选择你 Fork 的仓库
    - 点击 `Deploy`
 
-4. **绑定域名（可选）**
+5. **绑定域名（可选）**
    - 在项目设置中添加自定义域名
+
+---
+
+## 🔧 在线配置管理（推荐）
+
+项目提供了可视化的配置管理界面，无需手动编辑 JSON 文件！
+
+### 访问配置页面
+
+1. 部署完成后，访问 `https://your-domain.com/config`
+2. 上传你的 GitHub App PEM 私钥文件
+3. 在线编辑所有配置项
+4. 点击保存，自动提交到 GitHub
+
+### 支持的配置项
+
+- ✅ 网站基本信息（名称、标题、URL）
+- ✅ 个人资料（头像、姓名、简介）
+- ✅ 背景大标题（中英文）
+- ✅ TypeWriter 动态文字
+- ✅ 页脚版权信息
+- ✅ 社交链接（GitHub、Gitee、博客、邮箱）及显示/隐藏控制
+- ✅ 技能列表（添加、删除、编辑）
+- ✅ 项目展示（添加、删除、编辑）
+- ✅ 模块显示/隐藏控制
+
+### GitHub App 配置步骤
+
+1. 访问 GitHub → Settings → Developer settings → GitHub Apps
+2. 点击 `New GitHub App`
+3. 填写应用名称和描述
+4. **权限设置**：
+   - Contents: **Read and Write**
+5. 创建后，在应用详情页：
+   - 记录 `App ID`
+   - 生成并下载 `Private Key`（.pem 文件）
+6. 将 App 安装到你的仓库
+7. 在配置页面上传 PEM 文件即可使用
 
 ### 方式二：Docker 部署
 

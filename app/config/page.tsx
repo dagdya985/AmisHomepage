@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import { toast, Toaster } from 'sonner';
 
 interface ConfigState {
   config: any;
@@ -62,7 +63,7 @@ export default function ConfigPage() {
 
   const handleFileUpload = async (file: File) => {
     if (!state.privateKey) {
-      alert('请先上传 GitHub App PEM 密钥');
+      toast.error('请先上传 GitHub App PEM 密钥');
       return null;
     }
 
@@ -82,10 +83,11 @@ export default function ConfigPage() {
         throw new Error(data.error || '上传失败');
       }
 
+      toast.success('文件上传成功');
       return data.path;
     } catch (error) {
       console.error('Upload error:', error);
-      alert('上传失败，请重试');
+      toast.error('文件上传失败，请重试');
       return null;
     }
   };
@@ -93,7 +95,7 @@ export default function ConfigPage() {
   const handleSaveConfig = async () => {
     if (!state.config) return;
     if (!state.privateKey) {
-      alert('请先上传 GitHub App PEM 密钥');
+      toast.error('请先上传 GitHub App PEM 密钥');
       return;
     }
 
@@ -119,6 +121,7 @@ export default function ConfigPage() {
 
       savePrivateKey();
       setState(prev => ({ ...prev, isSaving: false, saveSuccess: true }));
+      toast.success('配置保存成功！已提交到 GitHub');
       setTimeout(() => {
         setState(prev => ({ ...prev, saveSuccess: false }));
       }, 3000);
@@ -129,6 +132,7 @@ export default function ConfigPage() {
         isSaving: false,
         error: '保存配置失败'
       }));
+      toast.error('保存配置失败，请检查网络连接和密钥配置');
     }
   };
 
@@ -256,6 +260,7 @@ export default function ConfigPage() {
 
   return (
     <div className={`min-h-screen ${colors.background}`}>
+      <Toaster position="top-center" richColors />
       <div className="max-w-7xl mx-auto px-4 py-12">
         <header className="mb-12 text-center">
           <div className="inline-flex items-center gap-3 mb-4">
@@ -270,13 +275,6 @@ export default function ConfigPage() {
             通过可视化界面管理您的个人主页配置，所有修改将同步到 GitHub
           </p>
         </header>
-
-        {state.saveSuccess && (
-          <div className="mb-8 p-4 bg-green-500/10 border border-green-500/20 rounded-xl text-green-600 dark:text-green-400 text-center">
-            <i className="fas fa-check-circle mr-2"></i>
-            配置保存成功！
-          </div>
-        )}
         
         <div className="space-y-8">
           {state.config ? (
@@ -419,82 +417,223 @@ export default function ConfigPage() {
                   </div>
                 </div>
               </div>
-              
-              {/* 技能配置 */}
+
+              {/* 背景大标题配置 */}
               <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center">
-                      <i className="fas fa-chart-line text-white"></i>
-                    </div>
-                    <h3 className={`text-xl font-semibold ${colors.text}`}>技能配置</h3>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                    <i className="fas fa-heading text-white"></i>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={state.config.showSkills !== false}
-                        onChange={(e) => handleInputChange('showSkills', e.target.checked)}
-                        className={`w-5 h-5 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                      />
-                      <span className={`text-sm ${colors.textSecondary}`}>显示技能模块</span>
-                    </label>
-                    <button
-                      onClick={addSkill}
-                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all"
-                    >
-                      <i className="fas fa-plus mr-2"></i>
-                      添加技能
-                    </button>
+                  <h3 className={`text-xl font-semibold ${colors.text}`}>背景大标题</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>标题（中文）</label>
+                    <input
+                      type="text"
+                      value={state.config.translations?.zh?.siteTitle || ''}
+                      onChange={(e) => handleInputChange('translations.zh.siteTitle', e.target.value)}
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>Title (English)</label>
+                    <input
+                      type="text"
+                      value={state.config.translations?.en?.siteTitle || ''}
+                      onChange={(e) => handleInputChange('translations.en.siteTitle', e.target.value)}
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
                   </div>
                 </div>
+              </div>
+
+              {/* TypeWriter 文字配置 */}
+              <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                    <i className="fas fa-keyboard text-white"></i>
+                  </div>
+                  <h3 className={`text-xl font-semibold ${colors.text}`}>TypeWriter 动态文字</h3>
+                </div>
                 <div className="space-y-4">
-                  {state.config.skills?.map((skill: any, index: number) => (
-                    <div key={index} className={`rounded-xl p-4 border ${colors.card}`}>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className={`text-sm font-medium ${colors.textSecondary}`}>技能 #{index + 1}</span>
-                        <button
-                          onClick={() => removeSkill(index)}
-                          className={`px-3 py-1 rounded-lg ${colors.buttonDelete} transition-all`}
-                        >
-                          <i className="fas fa-trash-alt mr-1"></i>
-                          删除
-                        </button>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>技能名称</label>
-                          <input
-                            type="text"
-                            value={skill.name || ''}
-                            onChange={(e) => handleInputChange(`skills.${index}.name`, e.target.value)}
-                            className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                          />
-                        </div>
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>熟练度 ({skill.level || 0}%)</label>
-                          <input
-                            type="range"
-                            min="0"
-                            max="100"
-                            value={skill.level || 0}
-                            onChange={(e) => handleInputChange(`skills.${index}.level`, parseInt(e.target.value))}
-                            className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                          />
-                        </div>
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>图标类名</label>
-                          <input
-                            type="text"
-                            value={skill.icon || ''}
-                            onChange={(e) => handleInputChange(`skills.${index}.icon`, e.target.value)}
-                            placeholder="fas fa-star"
-                            className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                          />
-                        </div>
-                      </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>动态文字 1（中文）</label>
+                    <input
+                      type="text"
+                      value={state.config.profile?.typeWriterTexts?.zh?.[0] || ''}
+                      onChange={(e) => handleInputChange('profile.typeWriterTexts.zh.0', e.target.value)}
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>动态文字 2（中文）</label>
+                    <input
+                      type="text"
+                      value={state.config.profile?.typeWriterTexts?.zh?.[1] || ''}
+                      onChange={(e) => handleInputChange('profile.typeWriterTexts.zh.1', e.target.value)}
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>TypeWriter Text 1 (English)</label>
+                    <input
+                      type="text"
+                      value={state.config.profile?.typeWriterTexts?.en?.[0] || ''}
+                      onChange={(e) => handleInputChange('profile.typeWriterTexts.en.0', e.target.value)}
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>TypeWriter Text 2 (English)</label>
+                    <input
+                      type="text"
+                      value={state.config.profile?.typeWriterTexts?.en?.[1] || ''}
+                      onChange={(e) => handleInputChange('profile.typeWriterTexts.en.1', e.target.value)}
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer 配置 */}
+              <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-500 to-slate-600 flex items-center justify-center">
+                    <i className="fas fa-copyright text-white"></i>
+                  </div>
+                  <h3 className={`text-xl font-semibold ${colors.text}`}>页脚版权</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>版权信息（中文）</label>
+                    <input
+                      type="text"
+                      value={state.config.site?.footer?.zh || ''}
+                      onChange={(e) => handleInputChange('site.footer.zh', e.target.value)}
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>Copyright (English)</label>
+                    <input
+                      type="text"
+                      value={state.config.site?.footer?.en || ''}
+                      onChange={(e) => handleInputChange('site.footer.en', e.target.value)}
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 社交链接配置 */}
+              <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
+                    <i className="fas fa-share-alt text-white"></i>
+                  </div>
+                  <h3 className={`text-xl font-semibold ${colors.text}`}>社交链接</h3>
+                </div>
+                <div className="space-y-4">
+                  {/* GitHub */}
+                  <div className={`rounded-xl p-4 border ${colors.card}`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <label className={`block text-sm font-medium ${colors.textSecondary}`}>
+                        <i className="fab fa-github mr-2"></i>GitHub
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={state.config.links?.github?.show !== false}
+                          onChange={(e) => handleInputChange('links.github.show', e.target.checked)}
+                          className={`w-4 h-4 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                        />
+                        <span className={`text-xs ${colors.textSecondary}`}>显示</span>
+                      </label>
                     </div>
-                  ))}
+                    <input
+                      type="text"
+                      value={state.config.links?.github?.url || ''}
+                      onChange={(e) => handleInputChange('links.github.url', e.target.value)}
+                      placeholder="https://github.com/username"
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                  
+                  {/* Gitee */}
+                  <div className={`rounded-xl p-4 border ${colors.card}`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <label className={`block text-sm font-medium ${colors.textSecondary}`}>
+                        <i className="fas fa-code-branch mr-2"></i>Gitee
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={state.config.links?.gitee?.show !== false}
+                          onChange={(e) => handleInputChange('links.gitee.show', e.target.checked)}
+                          className={`w-4 h-4 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                        />
+                        <span className={`text-xs ${colors.textSecondary}`}>显示</span>
+                      </label>
+                    </div>
+                    <input
+                      type="text"
+                      value={state.config.links?.gitee?.url || ''}
+                      onChange={(e) => handleInputChange('links.gitee.url', e.target.value)}
+                      placeholder="https://gitee.com/username"
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                  
+                  {/* 博客 */}
+                  <div className={`rounded-xl p-4 border ${colors.card}`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <label className={`block text-sm font-medium ${colors.textSecondary}`}>
+                        <i className="fas fa-blog mr-2"></i>博客
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={state.config.links?.blog?.show !== false}
+                          onChange={(e) => handleInputChange('links.blog.show', e.target.checked)}
+                          className={`w-4 h-4 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                        />
+                        <span className={`text-xs ${colors.textSecondary}`}>显示</span>
+                      </label>
+                    </div>
+                    <input
+                      type="text"
+                      value={state.config.links?.blog?.url || ''}
+                      onChange={(e) => handleInputChange('links.blog.url', e.target.value)}
+                      placeholder="https://yourblog.com"
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
+                  
+                  {/* 邮箱 */}
+                  <div className={`rounded-xl p-4 border ${colors.card}`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <label className={`block text-sm font-medium ${colors.textSecondary}`}>
+                        <i className="fas fa-envelope mr-2"></i>邮箱
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={state.config.links?.email?.show !== false}
+                          onChange={(e) => handleInputChange('links.email.show', e.target.checked)}
+                          className={`w-4 h-4 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                        />
+                        <span className={`text-xs ${colors.textSecondary}`}>显示</span>
+                      </label>
+                    </div>
+                    <input
+                      type="text"
+                      value={state.config.links?.email?.url || ''}
+                      onChange={(e) => handleInputChange('links.email.url', e.target.value)}
+                      placeholder="mailto:your@email.com"
+                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                    />
+                  </div>
                 </div>
               </div>
               
@@ -608,6 +747,84 @@ export default function ConfigPage() {
                             value={project.icon || ''}
                             onChange={(e) => handleInputChange(`projects.featured.${index}.icon`, e.target.value)}
                             placeholder="fas fa-project"
+                            className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* 技能配置 */}
+              <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center">
+                      <i className="fas fa-chart-line text-white"></i>
+                    </div>
+                    <h3 className={`text-xl font-semibold ${colors.text}`}>技能配置</h3>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={state.config.showSkills !== false}
+                        onChange={(e) => handleInputChange('showSkills', e.target.checked)}
+                        className={`w-5 h-5 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                      />
+                      <span className={`text-sm ${colors.textSecondary}`}>显示技能模块</span>
+                    </label>
+                    <button
+                      onClick={addSkill}
+                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all"
+                    >
+                      <i className="fas fa-plus mr-2"></i>
+                      添加技能
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  {state.config.skills?.map((skill: any, index: number) => (
+                    <div key={index} className={`rounded-xl p-4 border ${colors.card}`}>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className={`text-sm font-medium ${colors.textSecondary}`}>技能 #{index + 1}</span>
+                        <button
+                          onClick={() => removeSkill(index)}
+                          className={`px-3 py-1 rounded-lg ${colors.buttonDelete} transition-all`}
+                        >
+                          <i className="fas fa-trash-alt mr-1"></i>
+                          删除
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>技能名称</label>
+                          <input
+                            type="text"
+                            value={skill.name || ''}
+                            onChange={(e) => handleInputChange(`skills.${index}.name`, e.target.value)}
+                            className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                          />
+                        </div>
+                        <div>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>熟练度 ({skill.level || 0}%)</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={skill.level || 0}
+                            onChange={(e) => handleInputChange(`skills.${index}.level`, parseInt(e.target.value))}
+                            className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>图标类名</label>
+                          <input
+                            type="text"
+                            value={skill.icon || ''}
+                            onChange={(e) => handleInputChange(`skills.${index}.icon`, e.target.value)}
+                            placeholder="fas fa-star"
                             className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
                           />
                         </div>

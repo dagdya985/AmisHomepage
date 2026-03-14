@@ -211,49 +211,57 @@ export default function Home() {
           
           {/* 社交图标 */}
           <div id="site_social_icons" className="flex items-center gap-4 flex-wrap justify-center">
-            <a 
-              href={linksConfig.email.url}
-              rel="external nofollow noreferrer" 
-              target="_blank" 
-              title={linksConfig.email.title[language]}
-              className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
-                theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
-              }`}
-            >
-              <i className={`fas fa-envelope ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
-            </a>
-            <a 
-              href={linksConfig.github.url}
-              target="_blank" 
-              rel="noopener noreferrer"
-              title={linksConfig.github.title[language]}
-              className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
-                theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
-              }`}
-            >
-              <i className={`fab fa-github ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
-            </a>
-            <a 
-              href={linksConfig.gitee.url}
-              target="_blank" 
-              rel="noopener noreferrer"
-              title={linksConfig.gitee.title[language]}
-              className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
-                theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
-              }`}
-            >
-              <i className={`fab fa-gitee ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
-            </a>
-            <a 
-              href={linksConfig.blog.url}
-              target="_blank"
-              title={linksConfig.blog.title[language]}
-              className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
-                theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
-              }`}
-            >
-              <i className={`fas fa-blog ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
-            </a>
+            {linksConfig.email?.show !== false && (
+              <a 
+                href={linksConfig.email.url}
+                rel="external nofollow noreferrer" 
+                target="_blank" 
+                title={linksConfig.email.title[language]}
+                className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
+                  theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
+                }`}
+              >
+                <i className={`fas fa-envelope ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
+              </a>
+            )}
+            {linksConfig.github?.show !== false && (
+              <a 
+                href={linksConfig.github.url}
+                target="_blank" 
+                rel="noopener noreferrer"
+                title={linksConfig.github.title[language]}
+                className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
+                  theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
+                }`}
+              >
+                <i className={`fab fa-github ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
+              </a>
+            )}
+            {linksConfig.gitee?.show !== false && (
+              <a 
+                href={linksConfig.gitee.url}
+                target="_blank" 
+                rel="noopener noreferrer"
+                title={linksConfig.gitee.title[language]}
+                className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
+                  theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
+                }`}
+              >
+                <i className={`fab fa-gitee ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
+              </a>
+            )}
+            {linksConfig.blog?.show !== false && (
+              <a 
+                href={linksConfig.blog.url}
+                target="_blank"
+                title={linksConfig.blog.title[language]}
+                className={`w-10 h-10 flex items-center justify-center rounded-full hover:scale-110 transition-all duration-300 ${
+                  theme === "dark" ? "bg-white/20 hover:bg-white/30" : "bg-gray-200 hover:bg-gray-300"
+                }`}
+              >
+                <i className={`fas fa-blog ${theme === "dark" ? "text-white" : "text-gray-700"}`}></i>
+              </a>
+            )}
           </div>
         </div>
         
