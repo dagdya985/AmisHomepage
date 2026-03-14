@@ -37,6 +37,7 @@ export interface ProfileConfig {
 
 export interface LinkConfig {
   url: string;
+  show?: boolean;
   title: I18nText;
   description?: I18nText;
   icon: string;
