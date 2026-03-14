@@ -84,7 +84,7 @@ function DrawnTitleInner({ text, className = "" }: DrawnTitleProps) {
           fontSize={fontSize}
           fontFamily="var(--font-zcool-qingke), 'PingFang SC', 'Microsoft YaHei', sans-serif"
           fontWeight="400"
-          className="drop-shadow-lg"
+          className={theme === "dark" ? "drop-shadow-lg" : "drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]"}
           clipPath={`url(#${clipId})`}
         >
           {text}

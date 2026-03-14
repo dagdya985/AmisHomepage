@@ -146,18 +146,18 @@ export default function MusicPlayer() {
         {!isExpanded ? (
           <button
             onClick={handleToggleExpand}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-full shadow-md flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
               isDark
-                ? "bg-white/5 backdrop-blur-sm hover:bg-white/10"
-                : "bg-white/60 backdrop-blur-sm hover:bg-white/80"
+                ? "bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/20"
+                : "bg-white/20 backdrop-blur-md hover:bg-white/30 border border-white/30"
             }`}
             title="打开音乐播放器"
           >
             <div className="relative">
               {isLoading ? (
-                <i className={`fas fa-spinner fa-spin ${isDark ? "text-white/80" : "text-gray-600"}`}></i>
+                <i className={`fas fa-spinner fa-spin text-lg ${isDark ? "text-white/80" : "text-gray-700"}`}></i>
               ) : (
-                <i className={`fas fa-music ${isDark ? "text-white/80" : "text-gray-600"}`}></i>
+                <i className={`fas fa-music text-lg ${isDark ? "text-white/80" : "text-gray-700"}`}></i>
               )}
               {isPlaying && (
                 <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
