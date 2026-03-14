@@ -146,21 +146,21 @@ export default function MusicPlayer() {
         {!isExpanded ? (
           <button
             onClick={handleToggleExpand}
-            className={`w-12 h-12 md:w-14 md:h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group ${
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-full shadow-md flex items-center justify-center transition-all duration-300 hover:scale-110 ${
               isDark
-                ? "bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20"
-                : "bg-white/80 backdrop-blur-md border border-gray-200 hover:bg-white shadow-xl"
+                ? "bg-white/5 backdrop-blur-sm hover:bg-white/10"
+                : "bg-white/60 backdrop-blur-sm hover:bg-white/80"
             }`}
             title="打开音乐播放器"
           >
             <div className="relative">
               {isLoading ? (
-                <i className={`fas fa-spinner fa-spin text-lg ${isDark ? "text-white" : "text-gray-700"}`}></i>
+                <i className={`fas fa-spinner fa-spin ${isDark ? "text-white/80" : "text-gray-600"}`}></i>
               ) : (
-                <i className={`fas fa-music text-lg ${isDark ? "text-white" : "text-gray-700"}`}></i>
+                <i className={`fas fa-music ${isDark ? "text-white/80" : "text-gray-600"}`}></i>
               )}
               {isPlaying && (
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
               )}
             </div>
           </button>
