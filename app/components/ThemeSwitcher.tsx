@@ -1,9 +1,11 @@
 "use client";
 
 import { useTheme } from "../contexts/ThemeContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function ThemeSwitcher() {
   const { theme, toggleTheme, isTransitioning } = useTheme();
+  const { t } = useLanguage();
 
   return (
     <button
@@ -12,7 +14,7 @@ export default function ThemeSwitcher() {
       className={`relative w-10 h-10 rounded-full transition-all duration-300 hover:scale-110 flex items-center justify-center overflow-hidden ${
         theme === "dark" ? "bg-white/10 hover:bg-white/20" : "bg-gray-200 hover:bg-gray-300"
       } ${isTransitioning ? "opacity-50 cursor-not-allowed" : ""}`}
-      title={theme === "dark" ? "切换到亮色模式" : "切换到暗色模式"}
+      title={theme === "dark" ? t("switchToLightMode") : t("switchToDarkMode")}
     >
       <div className="relative w-full h-full">
         <div 

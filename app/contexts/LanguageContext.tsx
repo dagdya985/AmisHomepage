@@ -25,6 +25,21 @@ type TranslationReturnType = {
   skills: string;
   viewProject: string;
   moreProjects: string;
+  totalMusic: (count: number) => string;
+  openMusicPlayer: string;
+  listLoop: string;
+  listNoLoop: string;
+  singleLoop: string;
+  singleNoLoop: string;
+  noMusicSelected: string;
+  cancelMute: string;
+  mute: string;
+  playlist: string;
+  switchToEnglish: string;
+  switchToChinese: string;
+  switchToLightMode: string;
+  switchToDarkMode: string;
+  configManagement: string;
 };
 
 interface LanguageContextType {

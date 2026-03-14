@@ -316,7 +316,7 @@ export default function Home() {
                   ? "text-white/20 hover:text-white/40"
                   : "text-gray-300 hover:text-gray-500"
               }`}
-              title="配置管理"
+              title={t("configManagement")}
             >
               <i className="fas fa-cog mr-1"></i>
               Config

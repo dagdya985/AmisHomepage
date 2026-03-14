@@ -4,7 +4,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useTheme } from "../contexts/ThemeContext";
 
 export default function LanguageSwitcher() {
-  const { language, toggleLanguage } = useLanguage();
+  const { language, toggleLanguage, t } = useLanguage();
   const { theme } = useTheme();
 
   return (
@@ -13,9 +13,9 @@ export default function LanguageSwitcher() {
       className={`flex items-center gap-2 transition-colors px-3 py-1 rounded-full border ${
         theme === "dark"
           ? "text-white/90 hover:text-white border-white/30 hover:border-white/50"
-          : "text-gray-700 hover:text-gray-900 border-gray-300 hover:border-gray-500"
+          : "text-gray-700 hover:text-gray-90 border-gray-300 hover:border-gray-500"
       }`}
-      title={language === "zh" ? "Switch to English" : "切换到中文"}
+      title={language === "zh" ? t("switchToEnglish") : t("switchToChinese")}
     >
       <i className="fas fa-language"></i>
       <span className="text-sm font-medium">

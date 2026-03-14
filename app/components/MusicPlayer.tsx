@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useMusicPlayer, LoopMode, LOOP_MODES } from "../contexts/MusicPlayerContext";
 import { useTheme } from "../contexts/ThemeContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
-const LOOP_MODE_LABELS: Record<LoopMode, { icon: string; title: string }> = {
-  "list-loop": { icon: "fa-repeat", title: "列表循环" },
-  "list-no-loop": { icon: "fa-angles-right", title: "列表不循环" },
-  "single-loop": { icon: "fa-rotate-right", title: "单曲循环" },
-  "single-no-loop": { icon: "fa-minus", title: "单曲不循环" },
+const LOOP_MODE_LABELS: Record<LoopMode, { icon: string; titleKey: string }> = {
+  "list-loop": { icon: "fa-repeat", titleKey: "listLoop" },
+  "list-no-loop": { icon: "fa-angles-right", titleKey: "listNoLoop" },
+  "single-loop": { icon: "fa-rotate-right", titleKey: "singleLoop" },
+  "single-no-loop": { icon: "fa-minus", titleKey: "singleNoLoop" },
 };
 
 function formatTime(seconds: number): string {
@@ -43,6 +44,7 @@ export default function MusicPlayer() {
   } = useMusicPlayer();
 
   const { theme } = useTheme();
+  const { t } = useLanguage();
   const isDark = theme === "dark";
   const [isMuted, setIsMuted] = useState(false);
   const [previousVolume, setPreviousVolume] = useState(volume);
@@ -125,7 +127,9 @@ export default function MusicPlayer() {
   };
 
   const handlePlaylistScroll = (e: React.WheelEvent) => {
-    e.stopPropagation();
+    if (musicList.length > 5) {
+      e.stopPropagation();
+    }
   };
 
   if (musicList.length === 0) {
@@ -186,9 +190,6 @@ export default function MusicPlayer() {
                     <p className={`text-sm font-medium truncate ${isDark ? "text-white" : "text-gray-900"}`}>
                       {currentMusic?.name || "未选择音乐"}
                     </p>
-                    <p className={`text-xs truncate ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-                      {currentMusic ? `${currentIndex + 1} / ${musicList.length}` : "点击播放开始"}
-                    </p>
                   </div>
                 </div>
                 <button
@@ -237,7 +238,7 @@ export default function MusicPlayer() {
                       ? isDark ? "text-pink-400 bg-pink-500/20" : "text-pink-600 bg-pink-100"
                       : isDark ? "text-gray-400 hover:bg-white/10" : "text-gray-500 hover:bg-gray-100"
                   }`}
-                  title={LOOP_MODE_LABELS[loopMode].title}
+                  title={t(LOOP_MODE_LABELS[loopMode].titleKey as any)}
                 >
                   <i className={`fas ${LOOP_MODE_LABELS[loopMode].icon} text-sm`}></i>
                   {loopMode === "single-loop" && (
@@ -279,7 +280,7 @@ export default function MusicPlayer() {
                       ? isDark ? "text-purple-400 bg-purple-500/20" : "text-purple-600 bg-purple-100"
                       : isDark ? "text-gray-400 hover:bg-white/10" : "text-gray-500 hover:bg-gray-100"
                   }`}
-                  title="播放列表"
+                  title={t("playlist")}
                 >
                   <i className="fas fa-list text-sm"></i>
                 </button>
@@ -332,12 +333,19 @@ export default function MusicPlayer() {
 
             {showPlaylist && (
               <div
-                className={`music-playlist border-t overflow-y-auto backdrop-blur-2xl ${
+                className={`music-playlist border-t backdrop-blur-2xl ${
                   isDark ? "border-white/10 bg-black/20" : "border-gray-200 bg-white/20"
-                }`}
-                style={{ maxHeight: "200px" }}
+                } ${musicList.length > 5 ? "overflow-y-auto" : "overflow-y-visible"}`}
+                style={musicList.length > 5 ? { maxHeight: "200px" } : {}}
                 onWheel={handlePlaylistScroll}
               >
+                <div className={`px-4 py-2 border-b ${
+                  isDark ? "border-white/10" : "border-gray-200"
+                }`}>
+                  <p className={`text-xs font-medium ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+                    {t("totalMusic")(musicList.length)}
+                  </p>
+                </div>
                 {musicList.map((music, index) => (
                   <button
                     key={music.id}
