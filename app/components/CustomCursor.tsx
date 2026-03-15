@@ -19,6 +19,8 @@ export default function CustomCursor() {
 	}, [isVisible]);
 
 	useEffect(() => {
+		if (typeof window !== "undefined" && window.innerWidth < 768) return;
+		
 		if (showCustomCursor && customCursorPath) {
 			const style = document.createElement("style");
 			style.id = "custom-cursor-style";
