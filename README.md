@@ -489,6 +489,28 @@ A: 在 `config.json` 的 `links` 中添加：
 
 ---
 
+## 🐛 问题反馈与建议
+
+如果你在使用过程中遇到 Bug 或有有趣的想法，欢迎在 [GitHub Issues](https://github.com/AmisStella/AmisHomepage/issues) 中反馈：
+
+### Bug 反馈
+
+标题格式：`BUG: xxx`
+
+示例：
+- `BUG: 暗色模式下日历显示异常`
+- `BUG: 移动端导航菜单无法关闭`
+
+### 功能需求
+
+标题格式：`需求: xxx`
+
+示例：
+- `需求: 支持更多社交平台链接`
+- `需求: 添加深色/浅色主题自动切换功能`
+
+---
+
 ## License
 
 本项目采用 [CC BY-NC-SA 4.0](LICENSE) 许可协议。
