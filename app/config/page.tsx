@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useConfigStore } from '../(home)/stores/config-store';
 import { toast, Toaster } from 'sonner';
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -23,6 +26,8 @@ interface MusicFile {
 
 export default function ConfigPage() {
   const { theme } = useTheme();
+  const { t } = useLanguage();
+  const { setSiteContent } = useConfigStore();
   const [state, setState] = useState<ConfigState>({
     config: null,
     loading: true,
@@ -55,7 +60,7 @@ export default function ConfigPage() {
       setState(prev => ({
         ...prev,
         loading: false,
-        error: '加载配置失败'
+        error: t('loadConfigFailed')
       }));
     }
   };
@@ -111,7 +116,7 @@ export default function ConfigPage() {
       }
     } catch (error) {
       console.error('Failed to update music order:', error);
-      toast.error('调整顺序失败');
+      toast.error(t('configSaveFailed'));
       fetchMusicList();
     }
   };
@@ -135,11 +140,11 @@ export default function ConfigPage() {
         throw new Error(data.error || '删除失败');
       }
       
-      toast.success('音乐删除成功');
+      toast.success(t('fileUploadSuccess'));
       fetchMusicList();
     } catch (error) {
       console.error('Failed to delete music:', error);
-      toast.error('删除音乐失败');
+      toast.error(t('fileUploadFailed'));
     }
   };
 
@@ -149,7 +154,7 @@ export default function ConfigPage() {
 
   const handleFileUpload = async (file: File) => {
     if (!state.privateKey) {
-      toast.error('请先上传 GitHub App PEM 密钥');
+      toast.error(t('uploadPemFirst'));
       return null;
     }
 
@@ -169,11 +174,11 @@ export default function ConfigPage() {
         throw new Error(data.error || '上传失败');
       }
 
-      toast.success('文件上传成功');
+      toast.success(t('fileUploadSuccess'));
       return data.path;
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('文件上传失败，请重试');
+      toast.error(t('fileUploadFailed'));
       return null;
     }
   };
@@ -181,7 +186,7 @@ export default function ConfigPage() {
   const handleSaveConfig = async () => {
     if (!state.config) return;
     if (!state.privateKey) {
-      toast.error('请先上传 GitHub App PEM 密钥');
+      toast.error(t('uploadPemFirst'));
       return;
     }
 
@@ -206,8 +211,15 @@ export default function ConfigPage() {
       }
 
       savePrivateKey();
+      setSiteContent({
+        showProjects: state.config.showProjects,
+        showSkills: state.config.showSkills,
+        showLocalTime: state.config.showLocalTime,
+        showCustomCursor: state.config.showCustomCursor,
+        customCursorPath: state.config.customCursorPath
+      });
       setState(prev => ({ ...prev, isSaving: false, saveSuccess: true }));
-      toast.success('配置保存成功！已提交到 GitHub');
+      toast.success(t('configSaveSuccess'));
       setTimeout(() => {
         setState(prev => ({ ...prev, saveSuccess: false }));
       }, 3000);
@@ -216,9 +228,9 @@ export default function ConfigPage() {
       setState(prev => ({
         ...prev,
         isSaving: false,
-        error: '保存配置失败'
+        error: t('configSaveFailed')
       }));
-      toast.error('保存配置失败，请检查网络连接和密钥配置');
+      toast.error(t('configSaveFailed'));
     }
   };
 
@@ -330,7 +342,7 @@ export default function ConfigPage() {
             onClick={() => setState(prev => ({ ...prev, error: null, loading: true }))}
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           >
-            重试
+            {t('retry')}
           </button>
         </div>
       </div>
@@ -348,19 +360,19 @@ export default function ConfigPage() {
               className={`px-4 py-2 rounded-xl border ${colors.card} ${colors.text} hover:bg-blue-500/10 transition-all flex items-center gap-2`}
             >
               <i className="fas fa-arrow-left"></i>
-              返回主页
+              {t('backToHome')}
             </a>
             <div className="inline-flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                 <i className="fas fa-cog text-white text-xl"></i>
               </div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-                配置管理
+                {t('configManagement')}
               </h1>
             </div>
           </div>
           <p className={`${colors.textSecondary} text-lg max-w-2xl mx-auto`}>
-            通过可视化界面管理您的个人主页配置，所有修改将同步到 GitHub
+            {t('configDescription')}
           </p>
         </header>
         
@@ -373,12 +385,12 @@ export default function ConfigPage() {
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                     <i className="fab fa-github text-white"></i>
                   </div>
-                  <h3 className={`text-xl font-semibold ${colors.text}`}>GitHub App 认证</h3>
+                  <h3 className={`text-xl font-semibold ${colors.text}`}>{t('githubAuth')}</h3>
                 </div>
                 <div className="space-y-4">
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>
-                      PEM 密钥文件 <span className="text-red-500">*</span>
+                      {t('pemKeyFile')} <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <input
@@ -389,15 +401,165 @@ export default function ConfigPage() {
                       />
                     </div>
                     <p className={`text-xs mt-2 ${colors.textSecondary}`}>
-                      从 GitHub App 设置页面下载的 .pem 私钥文件
+                      {t('pemKeyHint')}
                     </p>
                   </div>
                   {state.privateKey && (
                     <div className="flex items-center gap-2 text-green-600 dark:text-green-400 p-3 bg-green-500/10 rounded-xl">
                       <i className="fas fa-check-circle"></i>
-                      <span>已加载 PEM 密钥</span>
+                      <span>{t('pemKeyLoaded')}</span>
                     </div>
                   )}
+                </div>
+              </div>
+              
+              {/* 网站组件 */}
+              <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                    <i className="fas fa-puzzle-piece text-white"></i>
+                  </div>
+                  <h3 className={`text-xl font-semibold ${colors.text}`}>{t('siteComponents')}</h3>
+                </div>
+                
+                <div className="space-y-6">
+                  {/* 时间组件 */}
+                  <div className={`p-4 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'}`}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                          <i className="fas fa-clock text-white text-sm"></i>
+                        </div>
+                        <div>
+                          <label className={`block text-sm font-medium ${colors.text}`}>{t('localTimeComponent')}</label>
+                          <p className={`text-xs mt-0.5 ${colors.textSecondary}`}>{t('enableLocalTime')}</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleInputChange('showLocalTime', !state.config.showLocalTime)}
+                        className={`relative w-14 h-7 rounded-full transition-all duration-300 ${
+                          state.config.showLocalTime 
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-600' 
+                            : theme === 'dark' ? 'bg-white/20' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span 
+                          className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${
+                            state.config.showLocalTime ? 'left-8' : 'left-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* 鼠标指针组件 */}
+                  <div className={`p-4 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'}`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                          <i className="fas fa-mouse-pointer text-white text-sm"></i>
+                        </div>
+                        <div>
+                          <label className={`block text-sm font-medium ${colors.text}`}>{t('cursorSettings')}</label>
+                          <p className={`text-xs mt-0.5 ${colors.textSecondary}`}>{t('cursorFileHint')}</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleInputChange('showCustomCursor', !state.config.showCustomCursor)}
+                        className={`relative w-14 h-7 rounded-full transition-all duration-300 ${
+                          state.config.showCustomCursor 
+                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600' 
+                            : theme === 'dark' ? 'bg-white/20' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span 
+                          className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${
+                            state.config.showCustomCursor ? 'left-8' : 'left-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    
+                    {state.config.showCustomCursor && (
+                      <div className="space-y-3 pt-3 border-t border-white/10">
+                        <div>
+                          <label className={`block text-xs font-medium mb-2 ${colors.textSecondary}`}>
+                            {t('cursorFile')}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={state.config.customCursorPath || '/cursors/watermelon.cur'}
+                              onChange={(e) => handleInputChange('customCursorPath', e.target.value)}
+                              className={`flex-1 px-3 py-2 rounded-lg border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm`}
+                            />
+                            <input
+                              type="file"
+                              accept=".cur"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                
+                                if (!file.name.toLowerCase().endsWith('.cur')) {
+                                  toast.error(t('cursorFileError'));
+                                  return;
+                                }
+                                
+                                if (!state.privateKey) {
+                                  toast.error(t('uploadPemFirst'));
+                                  return;
+                                }
+                                
+                                try {
+                                  const formData = new FormData();
+                                  formData.append('file', file);
+                                  formData.append('privateKey', state.privateKey);
+                                  formData.append('targetDir', 'cursors');
+
+                                  const response = await fetch('/api/upload', {
+                                    method: 'POST',
+                                    body: formData
+                                  });
+
+                                  const data = await response.json();
+
+                                  if (!response.ok) {
+                                    throw new Error(data.error || '上传失败');
+                                  }
+
+                                  handleInputChange('customCursorPath', data.path);
+                                  toast.success(t('cursorUploadSuccess'));
+                                } catch (error) {
+                                  console.error('Cursor upload error:', error);
+                                  toast.error(t('cursorUploadError'));
+                                }
+                              }}
+                              className={`px-3 py-2 rounded-lg border ${colors.input} file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-gradient-to-r file:from-cyan-500 file:to-blue-600 file:text-white file:cursor-pointer text-sm`}
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <div 
+                            className={`w-10 h-10 rounded-lg border ${colors.card} flex items-center justify-center`}
+                            style={{ cursor: `url('${state.config.customCursorPath || '/cursors/watermelon.cur'}'), auto` }}
+                          >
+                            <i className={`fas fa-mouse-pointer ${colors.textSecondary}`}></i>
+                          </div>
+                          <span className={`text-xs ${colors.textSecondary} flex-1`}>
+                            {t('cursorPreviewHint')}
+                          </span>
+                          <button
+                            onClick={() => handleInputChange('customCursorPath', '/cursors/watermelon.cur')}
+                            className={`px-3 py-1.5 rounded-lg border ${colors.card} ${colors.text} hover:bg-red-500/10 hover:border-red-500/30 transition-all text-xs`}
+                          >
+                            <i className="fas fa-undo mr-1"></i>
+                            {t('resetCursor')}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               
@@ -407,11 +569,11 @@ export default function ConfigPage() {
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                     <i className="fas fa-globe text-white"></i>
                   </div>
-                  <h3 className={`text-xl font-semibold ${colors.text}`}>网站信息</h3>
+                  <h3 className={`text-xl font-semibold ${colors.text}`}>{t('siteInfo')}</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>网站名称</label>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('siteName')}</label>
                     <input
                       type="text"
                       value={state.config.site?.name || ''}
@@ -420,7 +582,7 @@ export default function ConfigPage() {
                     />
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>网站标题</label>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('siteTitleLabel')}</label>
                     <input
                       type="text"
                       value={state.config.site?.title || ''}
@@ -429,7 +591,7 @@ export default function ConfigPage() {
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>网站 URL</label>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('siteUrl')}</label>
                     <input
                       type="text"
                       value={state.config.site?.url || ''}
@@ -446,12 +608,12 @@ export default function ConfigPage() {
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center">
                     <i className="fas fa-user text-white"></i>
                   </div>
-                  <h3 className={`text-xl font-semibold ${colors.text}`}>个人资料</h3>
+                  <h3 className={`text-xl font-semibold ${colors.text}`}>{t('profile')}</h3>
                 </div>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>姓名</label>
+                      <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('name')}</label>
                       <input
                         type="text"
                         value={state.config.profile?.name || ''}
@@ -460,7 +622,7 @@ export default function ConfigPage() {
                       />
                     </div>
                     <div>
-                      <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>头像</label>
+                      <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('avatar')}</label>
                       <div className="flex items-center gap-3">
                         <input
                           type="text"
@@ -486,7 +648,7 @@ export default function ConfigPage() {
                     </div>
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>个人简介（中文）</label>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('bioChinese')}</label>
                     <textarea
                       value={state.config.profile?.currentFocus?.[0]?.text?.zh || ''}
                       onChange={(e) => handleInputChange('profile.currentFocus.0.text.zh', e.target.value)}
@@ -495,7 +657,7 @@ export default function ConfigPage() {
                     />
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>Personal Bio (English)</label>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('bioEnglish')}</label>
                     <textarea
                       value={state.config.profile?.currentFocus?.[0]?.text?.en || ''}
                       onChange={(e) => handleInputChange('profile.currentFocus.0.text.en', e.target.value)}
@@ -512,11 +674,11 @@ export default function ConfigPage() {
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
                     <i className="fas fa-heading text-white"></i>
                   </div>
-                  <h3 className={`text-xl font-semibold ${colors.text}`}>背景大标题</h3>
+                  <h3 className={`text-xl font-semibold ${colors.text}`}>{t('bgTitle')}</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>标题（中文）</label>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('titleChinese')}</label>
                     <input
                       type="text"
                       value={state.config.translations?.zh?.siteTitle || ''}
@@ -525,7 +687,7 @@ export default function ConfigPage() {
                     />
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>Title (English)</label>
+                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('titleEnglish')}</label>
                     <input
                       type="text"
                       value={state.config.translations?.en?.siteTitle || ''}
@@ -536,305 +698,86 @@ export default function ConfigPage() {
                 </div>
               </div>
 
-              {/* TypeWriter 文字配置 */}
-              <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-                    <i className="fas fa-keyboard text-white"></i>
-                  </div>
-                  <h3 className={`text-xl font-semibold ${colors.text}`}>TypeWriter 动态文字</h3>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>动态文字 1（中文）</label>
-                    <input
-                      type="text"
-                      value={state.config.profile?.typeWriterTexts?.zh?.[0] || ''}
-                      onChange={(e) => handleInputChange('profile.typeWriterTexts.zh.0', e.target.value)}
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>动态文字 2（中文）</label>
-                    <input
-                      type="text"
-                      value={state.config.profile?.typeWriterTexts?.zh?.[1] || ''}
-                      onChange={(e) => handleInputChange('profile.typeWriterTexts.zh.1', e.target.value)}
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>TypeWriter Text 1 (English)</label>
-                    <input
-                      type="text"
-                      value={state.config.profile?.typeWriterTexts?.en?.[0] || ''}
-                      onChange={(e) => handleInputChange('profile.typeWriterTexts.en.0', e.target.value)}
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>TypeWriter Text 2 (English)</label>
-                    <input
-                      type="text"
-                      value={state.config.profile?.typeWriterTexts?.en?.[1] || ''}
-                      onChange={(e) => handleInputChange('profile.typeWriterTexts.en.1', e.target.value)}
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Footer 配置 */}
-              <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-500 to-slate-600 flex items-center justify-center">
-                    <i className="fas fa-copyright text-white"></i>
-                  </div>
-                  <h3 className={`text-xl font-semibold ${colors.text}`}>页脚版权</h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>版权信息（中文）</label>
-                    <input
-                      type="text"
-                      value={state.config.site?.footer?.zh || ''}
-                      onChange={(e) => handleInputChange('site.footer.zh', e.target.value)}
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>Copyright (English)</label>
-                    <input
-                      type="text"
-                      value={state.config.site?.footer?.en || ''}
-                      onChange={(e) => handleInputChange('site.footer.en', e.target.value)}
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* 社交链接配置 */}
-              <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
-                    <i className="fas fa-share-alt text-white"></i>
-                  </div>
-                  <h3 className={`text-xl font-semibold ${colors.text}`}>社交链接</h3>
-                </div>
-                <div className="space-y-4">
-                  {/* GitHub */}
-                  <div className={`rounded-xl p-4 border ${colors.card}`}>
-                    <div className="flex items-center justify-between mb-4">
-                      <label className={`block text-sm font-medium ${colors.textSecondary}`}>
-                        <i className="fab fa-github mr-2"></i>GitHub
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={state.config.links?.github?.show !== false}
-                          onChange={(e) => handleInputChange('links.github.show', e.target.checked)}
-                          className={`w-4 h-4 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                        />
-                        <span className={`text-xs ${colors.textSecondary}`}>显示</span>
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      value={state.config.links?.github?.url || ''}
-                      onChange={(e) => handleInputChange('links.github.url', e.target.value)}
-                      placeholder="https://github.com/username"
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                  
-                  {/* Gitee */}
-                  <div className={`rounded-xl p-4 border ${colors.card}`}>
-                    <div className="flex items-center justify-between mb-4">
-                      <label className={`block text-sm font-medium ${colors.textSecondary}`}>
-                        <i className="fas fa-code-branch mr-2"></i>Gitee
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={state.config.links?.gitee?.show !== false}
-                          onChange={(e) => handleInputChange('links.gitee.show', e.target.checked)}
-                          className={`w-4 h-4 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                        />
-                        <span className={`text-xs ${colors.textSecondary}`}>显示</span>
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      value={state.config.links?.gitee?.url || ''}
-                      onChange={(e) => handleInputChange('links.gitee.url', e.target.value)}
-                      placeholder="https://gitee.com/username"
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                  
-                  {/* 博客 */}
-                  <div className={`rounded-xl p-4 border ${colors.card}`}>
-                    <div className="flex items-center justify-between mb-4">
-                      <label className={`block text-sm font-medium ${colors.textSecondary}`}>
-                        <i className="fas fa-blog mr-2"></i>博客
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={state.config.links?.blog?.show !== false}
-                          onChange={(e) => handleInputChange('links.blog.show', e.target.checked)}
-                          className={`w-4 h-4 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                        />
-                        <span className={`text-xs ${colors.textSecondary}`}>显示</span>
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      value={state.config.links?.blog?.url || ''}
-                      onChange={(e) => handleInputChange('links.blog.url', e.target.value)}
-                      placeholder="https://yourblog.com"
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                  
-                  {/* 邮箱 */}
-                  <div className={`rounded-xl p-4 border ${colors.card}`}>
-                    <div className="flex items-center justify-between mb-4">
-                      <label className={`block text-sm font-medium ${colors.textSecondary}`}>
-                        <i className="fas fa-envelope mr-2"></i>邮箱
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={state.config.links?.email?.show !== false}
-                          onChange={(e) => handleInputChange('links.email.show', e.target.checked)}
-                          className={`w-4 h-4 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                        />
-                        <span className={`text-xs ${colors.textSecondary}`}>显示</span>
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      value={state.config.links?.email?.url || ''}
-                      onChange={(e) => handleInputChange('links.email.url', e.target.value)}
-                      placeholder="mailto:your@email.com"
-                      className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                    />
-                  </div>
-                </div>
-              </div>
-              
               {/* 项目配置 */}
               <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-                      <i className="fas fa-star text-white"></i>
+                      <i className="fas fa-folder-open text-white"></i>
                     </div>
-                    <h3 className={`text-xl font-semibold ${colors.text}`}>项目配置</h3>
+                    <h3 className={`text-xl font-semibold ${colors.text}`}>{t('featuredProjects')}</h3>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={state.config.showProjects !== false}
-                        onChange={(e) => handleInputChange('showProjects', e.target.checked)}
-                        className={`w-5 h-5 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                      />
-                      <span className={`text-sm ${colors.textSecondary}`}>显示项目模块</span>
-                    </label>
-                    <button
-                      onClick={addProject}
-                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all"
-                    >
-                      <i className="fas fa-plus mr-2"></i>
-                      添加项目
-                    </button>
-                  </div>
+                  <button
+                    onClick={addProject}
+                    className={`px-4 py-2 rounded-xl ${colors.button} text-white transition-all`}
+                  >
+                    <i className="fas fa-plus mr-2"></i>
+                    {t('addProject')}
+                  </button>
                 </div>
                 <div className="space-y-4">
                   {state.config.projects?.featured?.map((project: any, index: number) => (
-                    <div key={project.id} className={`rounded-xl p-4 border ${colors.card}`}>
+                    <div key={project.id} className={`p-4 rounded-xl border ${colors.card}`}>
                       <div className="flex items-center justify-between mb-4">
-                        <span className={`text-sm font-medium ${colors.textSecondary}`}>项目 #{index + 1}</span>
+                        <span className={`font-medium ${colors.text}`}>{project.name}</span>
                         <button
                           onClick={() => removeProject(index)}
                           className={`px-3 py-1 rounded-lg ${colors.buttonDelete} transition-all`}
                         >
                           <i className="fas fa-trash-alt mr-1"></i>
-                          删除
+                          {t('delete')}
                         </button>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>项目名称</label>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('name')}</label>
                           <input
                             type="text"
-                            value={project.name || ''}
-                            onChange={(e) => handleInputChange(`projects.featured.${index}.name`, e.target.value)}
+                            value={project.name}
+                            onChange={(e) => {
+                              const newProjects = [...state.config.projects.featured];
+                              newProjects[index].name = e.target.value;
+                              handleInputChange('projects.featured', newProjects);
+                            }}
                             className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
                           />
                         </div>
                         <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>项目图片</label>
-                          <div className="flex items-center gap-3">
-                            <input
-                              type="text"
-                              value={project.image || ''}
-                              onChange={(e) => handleInputChange(`projects.featured.${index}.image`, e.target.value)}
-                              className={`flex-1 px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                            />
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={async (e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                  const path = await handleFileUpload(file);
-                                  if (path) {
-                                    handleInputChange(`projects.featured.${index}.image`, path);
-                                  }
-                                }
-                              }}
-                              className={`px-4 py-3 rounded-xl border ${colors.input} file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-gradient-to-r file:from-blue-500 file:to-purple-600 file:text-white file:cursor-pointer`}
-                            />
-                          </div>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>URL</label>
+                          <input
+                            type="text"
+                            value={project.url}
+                            onChange={(e) => {
+                              const newProjects = [...state.config.projects.featured];
+                              newProjects[index].url = e.target.value;
+                              handleInputChange('projects.featured', newProjects);
+                            }}
+                            className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                          />
                         </div>
-                        <div className="md:col-span-2">
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>项目描述（中文）</label>
-                          <textarea
+                        <div>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('description')} ({t('chinese')})</label>
+                          <input
+                            type="text"
                             value={project.description?.zh || ''}
-                            onChange={(e) => handleInputChange(`projects.featured.${index}.description.zh`, e.target.value)}
-                            rows={2}
+                            onChange={(e) => {
+                              const newProjects = [...state.config.projects.featured];
+                              newProjects[index].description.zh = e.target.value;
+                              handleInputChange('projects.featured', newProjects);
+                            }}
                             className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
                           />
                         </div>
-                        <div className="md:col-span-2">
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>Project Description (English)</label>
-                          <textarea
+                        <div>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('description')} ({t('english')})</label>
+                          <input
+                            type="text"
                             value={project.description?.en || ''}
-                            onChange={(e) => handleInputChange(`projects.featured.${index}.description.en`, e.target.value)}
-                            rows={2}
-                            className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                          />
-                        </div>
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>项目 URL</label>
-                          <input
-                            type="text"
-                            value={project.url || ''}
-                            onChange={(e) => handleInputChange(`projects.featured.${index}.url`, e.target.value)}
-                            className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                          />
-                        </div>
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>图标类名</label>
-                          <input
-                            type="text"
-                            value={project.icon || ''}
-                            onChange={(e) => handleInputChange(`projects.featured.${index}.icon`, e.target.value)}
-                            placeholder="fas fa-project"
+                            onChange={(e) => {
+                              const newProjects = [...state.config.projects.featured];
+                              newProjects[index].description.en = e.target.value;
+                              handleInputChange('projects.featured', newProjects);
+                            }}
                             className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
                           />
                         </div>
@@ -843,77 +786,78 @@ export default function ConfigPage() {
                   ))}
                 </div>
               </div>
-              
+
               {/* 技能配置 */}
               <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
                       <i className="fas fa-chart-line text-white"></i>
                     </div>
-                    <h3 className={`text-xl font-semibold ${colors.text}`}>技能配置</h3>
+                    <h3 className={`text-xl font-semibold ${colors.text}`}>{t('skills')}</h3>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={state.config.showSkills !== false}
-                        onChange={(e) => handleInputChange('showSkills', e.target.checked)}
-                        className={`w-5 h-5 rounded ${colors.checkbox} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                      />
-                      <span className={`text-sm ${colors.textSecondary}`}>显示技能模块</span>
-                    </label>
-                    <button
-                      onClick={addSkill}
-                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all"
-                    >
-                      <i className="fas fa-plus mr-2"></i>
-                      添加技能
-                    </button>
-                  </div>
+                  <button
+                    onClick={addSkill}
+                    className={`px-4 py-2 rounded-xl ${colors.button} text-white transition-all`}
+                  >
+                    <i className="fas fa-plus mr-2"></i>
+                    {t('addSkill')}
+                  </button>
                 </div>
                 <div className="space-y-4">
                   {state.config.skills?.map((skill: any, index: number) => (
-                    <div key={index} className={`rounded-xl p-4 border ${colors.card}`}>
+                    <div key={index} className={`p-4 rounded-xl border ${colors.card}`}>
                       <div className="flex items-center justify-between mb-4">
-                        <span className={`text-sm font-medium ${colors.textSecondary}`}>技能 #{index + 1}</span>
+                        <span className={`font-medium ${colors.text}`}>{skill.name}</span>
                         <button
                           onClick={() => removeSkill(index)}
                           className={`px-3 py-1 rounded-lg ${colors.buttonDelete} transition-all`}
                         >
                           <i className="fas fa-trash-alt mr-1"></i>
-                          删除
+                          {t('delete')}
                         </button>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>技能名称</label>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('name')}</label>
                           <input
                             type="text"
-                            value={skill.name || ''}
-                            onChange={(e) => handleInputChange(`skills.${index}.name`, e.target.value)}
+                            value={skill.name}
+                            onChange={(e) => {
+                              const newSkills = [...state.config.skills];
+                              newSkills[index].name = e.target.value;
+                              handleInputChange('skills', newSkills);
+                            }}
                             className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
                           />
                         </div>
                         <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>熟练度 ({skill.level || 0}%)</label>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('level')} (0-100)</label>
                           <input
-                            type="range"
+                            type="number"
                             min="0"
                             max="100"
-                            value={skill.level || 0}
-                            onChange={(e) => handleInputChange(`skills.${index}.level`, parseInt(e.target.value))}
-                            className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                            value={skill.level}
+                            onChange={(e) => {
+                              const newSkills = [...state.config.skills];
+                              newSkills[index].level = parseInt(e.target.value) || 0;
+                              handleInputChange('skills', newSkills);
+                            }}
+                            className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
                           />
                         </div>
                         <div>
-                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>图标类名</label>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('icon')}</label>
                           <input
                             type="text"
-                            value={skill.icon || ''}
-                            onChange={(e) => handleInputChange(`skills.${index}.icon`, e.target.value)}
-                            placeholder="fas fa-star"
+                            value={skill.icon}
+                            onChange={(e) => {
+                              const newSkills = [...state.config.skills];
+                              newSkills[index].icon = e.target.value;
+                              handleInputChange('skills', newSkills);
+                            }}
                             className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                            placeholder="fas fa-star"
                           />
                         </div>
                       </div>
@@ -921,7 +865,7 @@ export default function ConfigPage() {
                   ))}
                 </div>
               </div>
-              
+
               {/* 音乐管理 */}
               <div className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md`}>
                 <div className="flex items-center justify-between mb-6">
@@ -929,38 +873,42 @@ export default function ConfigPage() {
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center">
                       <i className="fas fa-music text-white"></i>
                     </div>
-                    <h3 className={`text-xl font-semibold ${colors.text}`}>音乐管理</h3>
+                    <h3 className={`text-xl font-semibold ${colors.text}`}>{t('playlist')}</h3>
                   </div>
                   <button
-                    onClick={async () => {
+                    onClick={() => {
                       const input = document.createElement('input');
                       input.type = 'file';
-                      input.accept = 'audio/*';
-                      input.onchange = async (e) => {
-                        const file = (e.target as HTMLInputElement).files?.[0];
+                      input.accept = '.mp3,.wav,.ogg,.m4a,.flac';
+                      input.onchange = async (e: any) => {
+                        const file = e.target?.files?.[0];
                         if (file) {
                           if (!state.privateKey) {
-                            toast.error('请先上传 GitHub App PEM 密钥');
+                            toast.error(t('uploadPemFirst'));
                             return;
                           }
-                          toast.info('正在上传音乐...');
                           try {
                             const formData = new FormData();
                             formData.append('file', file);
                             formData.append('privateKey', state.privateKey);
-                            const response = await fetch('/api/music/upload', {
+                            formData.append('targetDir', 'music');
+
+                            const response = await fetch('/api/upload', {
                               method: 'POST',
                               body: formData
                             });
+
                             const data = await response.json();
+
                             if (!response.ok) {
                               throw new Error(data.error || '上传失败');
                             }
-                            toast.success('音乐上传成功');
+
+                            toast.success(t('fileUploadSuccess'));
                             fetchMusicList();
                           } catch (error) {
                             console.error('Upload error:', error);
-                            toast.error('音乐上传失败');
+                            toast.error(t('fileUploadFailed'));
                           }
                         }
                       };
@@ -969,17 +917,17 @@ export default function ConfigPage() {
                     className="px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-xl hover:from-pink-600 hover:to-rose-700 transition-all"
                   >
                     <i className="fas fa-upload mr-2"></i>
-                    上传音乐
+                    {t('uploadMusic')}
                   </button>
                 </div>
                 <p className={`text-sm mb-4 ${colors.textSecondary}`}>
-                  上传的音乐将保存到 public/music 目录，支持 MP3、WAV、OGG、M4A、FLAC 格式，最大 20MB
+                  {t('musicUploadHint')}
                 </p>
                 <div className="space-y-2">
                   {musicList.length === 0 ? (
                     <div className={`text-center py-8 rounded-xl border ${colors.card}`}>
                       <i className={`fas fa-music text-4xl mb-3 ${colors.textSecondary}`}></i>
-                      <p className={colors.textSecondary}>暂无音乐，点击上方按钮上传</p>
+                      <p className={colors.textSecondary}>{t('noMusic')}</p>
                     </div>
                   ) : (
                     musicList.map((music: any, index: number) => (
@@ -1038,12 +986,12 @@ export default function ConfigPage() {
                   {state.isSaving ? (
                     <>
                       <i className="fas fa-spinner fa-spin mr-2"></i>
-                      保存中...
+                      {t('saving')}
                     </>
                   ) : (
                     <>
                       <i className="fas fa-save mr-2"></i>
-                      保存配置并提交到 GitHub
+                      {t('saveToGithub')}
                     </>
                   )}
                 </button>
@@ -1052,7 +1000,7 @@ export default function ConfigPage() {
           ) : (
             <div className="text-center py-12">
               <h2 className={`text-2xl font-semibold mb-4 ${colors.text}`}>
-                加载配置中...
+                {t('loading')}
               </h2>
             </div>
           )}

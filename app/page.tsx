@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { linksConfig, socialConfig } from "./config";
+import { linksConfig } from "./config";
 import { useLanguage } from "./contexts/LanguageContext";
 import { useTheme } from "./contexts/ThemeContext";
 import { useConfigStore } from "./(home)/stores/config-store";
@@ -27,12 +27,32 @@ import CustomCursor from "./components/CustomCursor";
 export default function Home() {
   const { language, t } = useLanguage();
   const { theme } = useTheme();
-  const { siteContent } = useConfigStore();
-  const nav = t("nav");
+  const { siteContent, setSiteContent } = useConfigStore();
   const [isLoaded, setIsLoaded] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [isLanguageChanging, setIsLanguageChanging] = useState(false);
+  const [isLanguageChanging, setIsLanguageChanging]
+   = useState(false);
   const [prevLanguage, setPrevLanguage] = useState(language);
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch('/api/config');
+        const data = await response.json();
+        const config = data.config || data;
+        setSiteContent({
+          showProjects: config.showProjects,
+          showSkills: config.showSkills,
+          showLocalTime: config.showLocalTime,
+          showCustomCursor: config.showCustomCursor,
+          customCursorPath: config.customCursorPath
+        });
+      } catch (error) {
+        console.error('Failed to load config:', error);
+      }
+    };
+    loadConfig();
+  }, [setSiteContent]);
 
   // 语言切换时的淡出淡入效果
   useEffect(() => {

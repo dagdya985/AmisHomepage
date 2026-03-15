@@ -8,18 +8,20 @@ import { create } from 'zustand'
  * 配置内容接口
  */
 interface SiteContent {
-	isCachePem?: boolean // 是否缓存私钥
-	showProjects?: boolean // 是否显示项目模块
-	showSkills?: boolean // 是否显示技能模块
-	showLocalTime?: boolean // 是否显示时间组件
+	isCachePem?: boolean
+	showProjects?: boolean
+	showSkills?: boolean
+	showLocalTime?: boolean
+	showCustomCursor?: boolean
+	customCursorPath?: string
 }
 
 /**
  * 配置状态接口
  */
 interface ConfigStore {
-	siteContent: SiteContent | null // 网站配置内容
-	setSiteContent: (content: SiteContent) => void // 设置配置内容
+	siteContent: SiteContent | null
+	setSiteContent: (content: SiteContent) => void
 }
 
 /**
@@ -28,10 +30,6 @@ interface ConfigStore {
 export const useConfigStore = create<ConfigStore>((set) => ({
 	siteContent: null,
 
-	/**
-	 * 设置配置内容
-	 * @param content 配置内容
-	 */
 	setSiteContent: (content: SiteContent) => {
 		set({ siteContent: content })
 	}

@@ -2,6 +2,8 @@
   "showSkills": true,
   "showProjects": true,
   "showLocalTime": true,
+  "showCustomCursor": true,
+  "customCursorPath": "/cursors/watermelon.cur",
   "site": {
     "name": "Amis's Homepage",
     "title": "Amis's Homepage",
