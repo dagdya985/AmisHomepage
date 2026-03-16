@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useConfigStore } from '../(home)/stores/config-store';
@@ -31,6 +31,95 @@ interface SectionConfig {
   gradient: string;
   expanded: boolean;
 }
+
+interface ColorPickerProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  colors: { input: string; textSecondary: string };
+  defaultColor?: string;
+}
+
+const ColorPicker = ({ label, value, onChange, placeholder, colors, defaultColor = '#ffffff' }: ColorPickerProps) => (
+  <div>
+    <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{label}</label>
+    <div className="flex gap-2">
+      <input
+        type="color"
+        value={value?.startsWith('#') ? value : defaultColor}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-12 h-10 rounded-lg border cursor-pointer"
+      />
+      <input
+        type="text"
+        value={value || ''}
+        onChange={(e) => onChange(e.target.value)}
+        className={`flex-1 px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+        placeholder={placeholder}
+      />
+    </div>
+  </div>
+);
+
+interface BilingualInputProps {
+  label: string;
+  valueZh: string;
+  valueEn: string;
+  onChangeZh: (value: string) => void;
+  onChangeEn: (value: string) => void;
+  colors: { input: string; textSecondary: string };
+  placeholderZh?: string;
+  placeholderEn?: string;
+  multiline?: boolean;
+  rows?: number;
+}
+
+const BilingualInput = ({ label, valueZh, valueEn, onChangeZh, onChangeEn, colors, placeholderZh, placeholderEn, multiline = false, rows = 2 }: BilingualInputProps) => (
+  <div className="space-y-3">
+    <label className={`block text-sm font-medium mb-3 ${colors.textSecondary}`}>{label}</label>
+    <div>
+      <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>中文</label>
+      {multiline ? (
+        <textarea
+          value={valueZh || ''}
+          onChange={(e) => onChangeZh(e.target.value)}
+          rows={rows}
+          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+          placeholder={placeholderZh}
+        />
+      ) : (
+        <input
+          type="text"
+          value={valueZh || ''}
+          onChange={(e) => onChangeZh(e.target.value)}
+          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+          placeholder={placeholderZh}
+        />
+      )}
+    </div>
+    <div>
+      <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>English</label>
+      {multiline ? (
+        <textarea
+          value={valueEn || ''}
+          onChange={(e) => onChangeEn(e.target.value)}
+          rows={rows}
+          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+          placeholder={placeholderEn}
+        />
+      ) : (
+        <input
+          type="text"
+          value={valueEn || ''}
+          onChange={(e) => onChangeEn(e.target.value)}
+          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+          placeholder={placeholderEn}
+        />
+      )}
+    </div>
+  </div>
+);
 
 export default function ConfigPage() {
   const { theme } = useTheme();
@@ -65,24 +154,24 @@ export default function ConfigPage() {
     fetchMusicList();
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = useCallback((sectionId: string) => {
     setActiveSection(sectionId);
     sectionsRef.current[sectionId]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+  }, []);
 
-  const toggleSection = (sectionId: string) => {
+  const toggleSection = useCallback((sectionId: string) => {
     setSections(prev => prev.map(s => 
       s.id === sectionId ? { ...s, expanded: !s.expanded } : s
     ));
-  };
+  }, []);
 
-  const expandAll = () => {
+  const expandAll = useCallback(() => {
     setSections(prev => prev.map(s => ({ ...s, expanded: true })));
-  };
+  }, []);
 
-  const collapseAll = () => {
+  const collapseAll = useCallback(() => {
     setSections(prev => prev.map(s => ({ ...s, expanded: false })));
-  };
+  }, []);
 
   const fetchConfig = async () => {
     try {
@@ -274,7 +363,7 @@ export default function ConfigPage() {
     }
   };
 
-  const handleInputChange = (path: string, value: any) => {
+  const handleInputChange = useCallback((path: string, value: any) => {
     setState(prev => {
       const newConfig = { ...prev.config };
       const keys = path.split('.');
@@ -290,7 +379,7 @@ export default function ConfigPage() {
       current[keys[keys.length - 1]] = value;
       return { ...prev, config: newConfig };
     });
-  };
+  }, []);
 
   const handlePemUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -361,7 +450,7 @@ export default function ConfigPage() {
     });
   };
 
-  const colors = {
+  const colors = useMemo(() => ({
     background: theme === 'dark' ? 'bg-gradient-to-br from-[#0a0a0a] via-[#0f0f23] to-[#1a1a2e]' : 'bg-gradient-to-br from-gray-50 via-white to-gray-100',
     card: theme === 'dark' ? 'bg-white/5 backdrop-blur-md border border-white/10' : 'bg-white/80 backdrop-blur-md border border-gray-200',
     text: theme === 'dark' ? 'text-white' : 'text-gray-900',
@@ -372,7 +461,7 @@ export default function ConfigPage() {
     checkbox: theme === 'dark' ? 'border-white/20' : 'border-gray-300',
     sidebar: theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-gray-200',
     activeNav: theme === 'dark' ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-50 text-blue-600'
-  };
+  }), [theme]);
 
   if (state.loading) {
     return <LoadingScreen />;
@@ -731,154 +820,77 @@ export default function ConfigPage() {
                       <div className="md:col-span-2">
                         <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('textColor')}</label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          <div>
-                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('darkTheme')}</label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={state.config.site?.textColor?.dark || '#ffffff'}
-                                onChange={(e) => handleInputChange('site.textColor.dark', e.target.value)}
-                                className="w-12 h-10 rounded-lg border cursor-pointer"
-                              />
-                              <input
-                                type="text"
-                                value={state.config.site?.textColor?.dark || '#ffffff'}
-                                onChange={(e) => handleInputChange('site.textColor.dark', e.target.value)}
-                                className={`flex-1 px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                                placeholder="#ffffff"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('lightTheme')}</label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={state.config.site?.textColor?.light || '#1f2937'}
-                                onChange={(e) => handleInputChange('site.textColor.light', e.target.value)}
-                                className="w-12 h-10 rounded-lg border cursor-pointer"
-                              />
-                              <input
-                                type="text"
-                                value={state.config.site?.textColor?.light || '#1f2937'}
-                                onChange={(e) => handleInputChange('site.textColor.light', e.target.value)}
-                                className={`flex-1 px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                                placeholder="#1f2937"
-                              />
-                            </div>
-                          </div>
+                          <ColorPicker
+                            label={t('darkTheme')}
+                            value={state.config.site?.textColor?.dark || '#ffffff'}
+                            onChange={(value) => handleInputChange('site.textColor.dark', value)}
+                            placeholder="#ffffff"
+                            colors={colors}
+                            defaultColor="#ffffff"
+                          />
+                          <ColorPicker
+                            label={t('lightTheme')}
+                            value={state.config.site?.textColor?.light || '#1f2937'}
+                            onChange={(value) => handleInputChange('site.textColor.light', value)}
+                            placeholder="#1f2937"
+                            colors={colors}
+                            defaultColor="#1f2937"
+                          />
                         </div>
                       </div>
                       <div className="md:col-span-2">
                         <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('textSecondaryColor')}</label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          <div>
-                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('darkTheme')}</label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={state.config.site?.textSecondaryColor?.dark?.startsWith('#') ? state.config.site?.textSecondaryColor?.dark : '#ffffff'}
-                                onChange={(e) => handleInputChange('site.textSecondaryColor.dark', e.target.value)}
-                                className="w-12 h-10 rounded-lg border cursor-pointer"
-                              />
-                              <input
-                                type="text"
-                                value={state.config.site?.textSecondaryColor?.dark || ''}
-                                onChange={(e) => handleInputChange('site.textSecondaryColor.dark', e.target.value)}
-                                className={`flex-1 px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                                placeholder="rgba(255, 255, 255, 0.9)"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('lightTheme')}</label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={state.config.site?.textSecondaryColor?.light?.startsWith('#') ? state.config.site?.textSecondaryColor?.light : '#1f2937'}
-                                onChange={(e) => handleInputChange('site.textSecondaryColor.light', e.target.value)}
-                                className="w-12 h-10 rounded-lg border cursor-pointer"
-                              />
-                              <input
-                                type="text"
-                                value={state.config.site?.textSecondaryColor?.light || ''}
-                                onChange={(e) => handleInputChange('site.textSecondaryColor.light', e.target.value)}
-                                className={`flex-1 px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                                placeholder="rgba(31, 41, 55, 0.9)"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="pt-2 border-t border-white/10">
-                      <label className={`block text-sm font-medium mb-3 ${colors.text}`}>{t('typeWriterText1Label')}</label>
-                      <div className="space-y-3">
-                        <div>
-                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('chinese')}</label>
-                          <input
-                            type="text"
-                            value={state.config.profile?.typeWriterTexts?.zh?.[0] || ''}
-                            onChange={(e) => handleInputChange('profile.typeWriterTexts.zh.0', e.target.value)}
-                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          <ColorPicker
+                            label={t('darkTheme')}
+                            value={state.config.site?.textSecondaryColor?.dark || ''}
+                            onChange={(value) => handleInputChange('site.textSecondaryColor.dark', value)}
+                            placeholder="rgba(255, 255, 255, 0.9)"
+                            colors={colors}
+                            defaultColor="#ffffff"
                           />
-                        </div>
-                        <div>
-                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('english')}</label>
-                          <input
-                            type="text"
-                            value={state.config.profile?.typeWriterTexts?.en?.[0] || ''}
-                            onChange={(e) => handleInputChange('profile.typeWriterTexts.en.0', e.target.value)}
-                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          <ColorPicker
+                            label={t('lightTheme')}
+                            value={state.config.site?.textSecondaryColor?.light || ''}
+                            onChange={(value) => handleInputChange('site.textSecondaryColor.light', value)}
+                            placeholder="rgba(31, 41, 55, 0.9)"
+                            colors={colors}
+                            defaultColor="#1f2937"
                           />
                         </div>
                       </div>
                     </div>
                     <div className="pt-2 border-t border-white/10">
-                      <label className={`block text-sm font-medium mb-3 ${colors.text}`}>{t('typeWriterText2Label')}</label>
-                      <div className="space-y-3">
-                        <div>
-                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('chinese')}</label>
-                          <input
-                            type="text"
-                            value={state.config.profile?.typeWriterTexts?.zh?.[1] || ''}
-                            onChange={(e) => handleInputChange('profile.typeWriterTexts.zh.1', e.target.value)}
-                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                          />
-                        </div>
-                        <div>
-                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('english')}</label>
-                          <input
-                            type="text"
-                            value={state.config.profile?.typeWriterTexts?.en?.[1] || ''}
-                            onChange={(e) => handleInputChange('profile.typeWriterTexts.en.1', e.target.value)}
-                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                          />
-                        </div>
-                      </div>
+                      <BilingualInput
+                        label={t('typeWriterText1Label')}
+                        valueZh={state.config.profile?.typeWriterTexts?.zh?.[0] || ''}
+                        valueEn={state.config.profile?.typeWriterTexts?.en?.[0] || ''}
+                        onChangeZh={(value) => handleInputChange('profile.typeWriterTexts.zh.0', value)}
+                        onChangeEn={(value) => handleInputChange('profile.typeWriterTexts.en.0', value)}
+                        colors={colors}
+                      />
                     </div>
                     <div className="pt-2 border-t border-white/10">
-                      <label className={`block text-sm font-medium mb-3 ${colors.text}`}>{t('siteDescription')}</label>
-                      <div className="space-y-3">
-                        <div>
-                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('chinese')}</label>
-                          <textarea
-                            value={state.config.site?.description?.zh || ''}
-                            onChange={(e) => handleInputChange('site.description.zh', e.target.value)}
-                            rows={2}
-                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                          />
-                        </div>
-                        <div>
-                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('english')}</label>
-                          <textarea
-                            value={state.config.site?.description?.en || ''}
-                            onChange={(e) => handleInputChange('site.description.en', e.target.value)}
-                            rows={2}
-                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                          />
-                        </div>
-                      </div>
+                      <BilingualInput
+                        label={t('typeWriterText2Label')}
+                        valueZh={state.config.profile?.typeWriterTexts?.zh?.[1] || ''}
+                        valueEn={state.config.profile?.typeWriterTexts?.en?.[1] || ''}
+                        onChangeZh={(value) => handleInputChange('profile.typeWriterTexts.zh.1', value)}
+                        onChangeEn={(value) => handleInputChange('profile.typeWriterTexts.en.1', value)}
+                        colors={colors}
+                      />
+                    </div>
+                    <div className="pt-2 border-t border-white/10">
+                      <BilingualInput
+                        label={t('siteDescription')}
+                        valueZh={state.config.site?.description?.zh || ''}
+                        valueEn={state.config.site?.description?.en || ''}
+                        onChangeZh={(value) => handleInputChange('site.description.zh', value)}
+                        onChangeEn={(value) => handleInputChange('site.description.en', value)}
+                        colors={colors}
+                        multiline
+                        rows={2}
+                      />
                     </div>
                     <div className="pt-2 border-t border-white/10">
                       <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('keywords')}</label>
@@ -891,27 +903,14 @@ export default function ConfigPage() {
                       />
                     </div>
                     <div className="pt-2 border-t border-white/10">
-                      <label className={`block text-sm font-medium mb-3 ${colors.text}`}>{t('footerSettings')}</label>
-                      <div className="space-y-3">
-                        <div>
-                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('footerText')} ({t('chinese')})</label>
-                          <input
-                            type="text"
-                            value={state.config.site?.footer?.zh || ''}
-                            onChange={(e) => handleInputChange('site.footer.zh', e.target.value)}
-                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                          />
-                        </div>
-                        <div>
-                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('footerText')} ({t('english')})</label>
-                          <input
-                            type="text"
-                            value={state.config.site?.footer?.en || ''}
-                            onChange={(e) => handleInputChange('site.footer.en', e.target.value)}
-                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
-                          />
-                        </div>
-                      </div>
+                      <BilingualInput
+                        label={t('footerSettings')}
+                        valueZh={state.config.site?.footer?.zh || ''}
+                        valueEn={state.config.site?.footer?.en || ''}
+                        onChangeZh={(value) => handleInputChange('site.footer.zh', value)}
+                        onChangeEn={(value) => handleInputChange('site.footer.en', value)}
+                        colors={colors}
+                      />
                     </div>
                   </div>
                 )}

@@ -137,6 +137,33 @@ export default function MusicPlayer() {
     return null;
   }
 
+  const themeColors = {
+    dark: {
+      primary: 'violet',
+      secondary: 'indigo',
+      tertiary: 'purple',
+      gradient: 'from-violet-500 to-indigo-500',
+      gradientHover: 'from-violet-600 to-indigo-600',
+      bgLight: 'bg-violet-500/20',
+      textLight: 'text-violet-400',
+      scrollbar: 'rgba(139, 92, 246, 0.3)',
+      scrollbarHover: 'rgba(139, 92, 246, 0.5)',
+    },
+    light: {
+      primary: 'stone',
+      secondary: 'amber',
+      tertiary: 'orange',
+      gradient: 'from-stone-500 to-orange-500',
+      gradientHover: 'from-stone-600 to-orange-600',
+      bgLight: 'bg-stone-100',
+      textLight: 'text-stone-600',
+      scrollbar: 'rgba(120, 113, 108, 0.3)',
+      scrollbarHover: 'rgba(120, 113, 108, 0.5)',
+    }
+  };
+
+  const colors = isDark ? themeColors.dark : themeColors.light;
+
   return (
     <>
       <div
@@ -151,21 +178,40 @@ export default function MusicPlayer() {
         {!isExpanded ? (
           <button
             onClick={handleToggleExpand}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+            className={`relative w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
               isDark
                 ? "bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/20"
                 : "bg-white/20 backdrop-blur-md hover:bg-white/30 border border-white/30"
             }`}
             title="打开音乐播放器"
           >
-            <div className="relative">
+            {isPlaying && (
+              <>
+                {(isDark ? [
+                  { delay: 0, bg: 'bg-violet-500', opacity: 0.2 },
+                  { delay: 500, bg: 'bg-indigo-500', opacity: 0.15 },
+                  { delay: 1000, bg: 'bg-purple-500', opacity: 0.1 },
+                ] : [
+                  { delay: 0, bg: 'bg-stone-500', opacity: 0.2 },
+                  { delay: 500, bg: 'bg-amber-500', opacity: 0.15 },
+                  { delay: 1000, bg: 'bg-orange-500', opacity: 0.1 },
+                ]).map((ripple, i) => (
+                  <span
+                    key={i}
+                    className={`absolute w-10 h-10 md:w-12 md:h-12 rounded-full ${ripple.bg} animate-ripple`}
+                    style={{ animationDelay: `${ripple.delay}ms`, willChange: 'transform, opacity', opacity: ripple.opacity }}
+                  />
+                ))}
+              </>
+            )}
+            <div className="relative z-10">
               {isLoading ? (
                 <i className={`fas fa-spinner fa-spin text-lg ${isDark ? "text-white/80" : "text-gray-700"}`}></i>
               ) : (
                 <i className={`fas fa-music text-lg ${isDark ? "text-white/80" : "text-gray-700"}`}></i>
               )}
               {isPlaying && (
-                <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                <span className={`absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full animate-pulse md:hidden bg-gradient-to-r ${colors.gradient}`}></span>
               )}
             </div>
           </button>
@@ -182,9 +228,7 @@ export default function MusicPlayer() {
             <div className="p-4 md:p-5 min-w-[280px] md:min-w-[320px]">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                    isDark ? "bg-gradient-to-br from-purple-500 to-pink-500" : "bg-gradient-to-br from-blue-500 to-purple-500"
-                  }`}>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-gradient-to-br ${colors.gradient}`}>
                     <i className="fas fa-music text-white text-sm"></i>
                   </div>
                   <div className="flex-1 min-w-0">
@@ -211,9 +255,7 @@ export default function MusicPlayer() {
                   onClick={handleProgressClick}
                 >
                   <div
-                    className={`h-full rounded-full transition-all ${
-                      isDark ? "bg-gradient-to-r from-purple-500 to-pink-500" : "bg-gradient-to-r from-blue-500 to-purple-500"
-                    }`}
+                    className={`h-full rounded-full transition-all bg-gradient-to-r ${colors.gradient}`}
                     style={{ width: duration > 0 ? `${(progress / duration) * 100}%` : "0%" }}
                   ></div>
                 </div>
@@ -232,18 +274,20 @@ export default function MusicPlayer() {
                   onClick={cycleLoopMode}
                   className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors relative ${
                     loopMode === "list-loop"
-                      ? isDark ? "text-purple-400 bg-purple-500/20" : "text-purple-600 bg-purple-100"
+                      ? `${colors.textLight} ${colors.bgLight}`
                       : loopMode === "list-no-loop"
-                      ? isDark ? "text-blue-400 bg-blue-500/20" : "text-blue-600 bg-blue-100"
+                      ? isDark ? "text-indigo-400 bg-indigo-500/20" : "text-amber-600 bg-amber-100"
                       : loopMode === "single-loop"
-                      ? isDark ? "text-pink-400 bg-pink-500/20" : "text-pink-600 bg-pink-100"
+                      ? isDark ? "text-purple-400 bg-purple-500/20" : "text-emerald-600 bg-emerald-100"
                       : isDark ? "text-gray-400 hover:bg-white/10" : "text-gray-500 hover:bg-gray-100"
                   }`}
                   title={t(LOOP_MODE_LABELS[loopMode].titleKey as any)}
                 >
                   <i className={`fas ${LOOP_MODE_LABELS[loopMode].icon} text-sm`}></i>
                   {loopMode === "single-loop" && (
-                    <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-pink-500 rounded-full flex items-center justify-center">
+                    <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center ${
+                      isDark ? 'bg-purple-500' : 'bg-orange-500'
+                    }`}>
                       <span className="text-[8px] font-bold text-white">1</span>
                     </span>
                   )}
@@ -270,7 +314,11 @@ export default function MusicPlayer() {
                     onChange={handleVolumeChange}
                     className={`flex-1 h-1 rounded-full appearance-none cursor-pointer ${
                       isDark ? "bg-white/20" : "bg-gray-200"
-                    } [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gradient-to-r [&::-webkit-slider-thumb]:from-purple-500 [&::-webkit-slider-thumb]:to-pink-500`}
+                    } [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full ${
+                      isDark 
+                        ? '[&::-webkit-slider-thumb]:bg-gradient-to-r [&::-webkit-slider-thumb]:from-violet-500 [&::-webkit-slider-thumb]:to-indigo-500'
+                        : '[&::-webkit-slider-thumb]:bg-gradient-to-r [&::-webkit-slider-thumb]:from-stone-500 [&::-webkit-slider-thumb]:to-orange-500'
+                    }`}
                   />
                 </div>
 
@@ -278,7 +326,7 @@ export default function MusicPlayer() {
                   onClick={togglePlaylist}
                   className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
                     showPlaylist
-                      ? isDark ? "text-purple-400 bg-purple-500/20" : "text-purple-600 bg-purple-100"
+                      ? `${colors.textLight} ${colors.bgLight}`
                       : isDark ? "text-gray-400 hover:bg-white/10" : "text-gray-500 hover:bg-gray-100"
                   }`}
                   title={t("playlist")}
@@ -303,11 +351,11 @@ export default function MusicPlayer() {
                 <button
                   onClick={togglePlay}
                   disabled={musicList.length === 0}
-                  className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all shadow-lg ${
-                    isDark
-                      ? "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-                      : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
-                  } disabled:opacity-50`}
+                  className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all shadow-lg text-white disabled:opacity-50 ${
+                    isDark 
+                      ? 'bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600'
+                      : 'bg-gradient-to-r from-stone-500 to-orange-500 hover:from-stone-600 hover:to-orange-600'
+                  }`}
                 >
                   {isLoading ? (
                     <i className="fas fa-spinner fa-spin text-xl"></i>
@@ -354,8 +402,8 @@ export default function MusicPlayer() {
                     className={`w-full px-4 py-2.5 flex items-center gap-3 text-left transition-colors ${
                       currentIndex === index
                         ? isDark
-                          ? "bg-purple-500/20 text-purple-400"
-                          : "bg-purple-100 text-purple-600"
+                          ? `${colors.bgLight} ${colors.textLight}`
+                          : "bg-orange-100 text-orange-600"
                         : isDark
                           ? "hover:bg-white/5 text-gray-300"
                           : "hover:bg-gray-100 text-gray-700"
@@ -401,11 +449,38 @@ export default function MusicPlayer() {
             opacity: 1;
           }
         }
+        @keyframes ripple {
+          0% {
+            transform: scale(1);
+          }
+          100% {
+            transform: scale(2.5);
+            opacity: 0;
+          }
+        }
         .animation-delay-100 {
           animation-delay: 100ms;
         }
         .animation-delay-200 {
           animation-delay: 200ms;
+        }
+        .animation-delay-300 {
+          animation-delay: 300ms;
+        }
+        .animation-delay-500 {
+          animation-delay: 500ms;
+        }
+        .animation-delay-1000 {
+          animation-delay: 1000ms;
+        }
+        .animate-ripple {
+          animation: ripple 1.5s ease-out infinite;
+        }
+        .opacity-15 {
+          opacity: 0.15;
+        }
+        .opacity-10 {
+          opacity: 0.1;
         }
       `}</style>
       <style jsx global>{`
@@ -416,17 +491,11 @@ export default function MusicPlayer() {
           background: transparent;
         }
         .music-playlist::-webkit-scrollbar-thumb {
-          background: rgba(139, 92, 246, 0.3);
+          background: ${colors.scrollbar};
           border-radius: 3px;
         }
         .music-playlist::-webkit-scrollbar-thumb:hover {
-          background: rgba(139, 92, 246, 0.5);
-        }
-        .dark .music-playlist::-webkit-scrollbar-thumb {
-          background: rgba(167, 139, 250, 0.3);
-        }
-        .dark .music-playlist::-webkit-scrollbar-thumb:hover {
-          background: rgba(167, 139, 250, 0.5);
+          background: ${colors.scrollbarHover};
         }
       `}</style>
     </>
