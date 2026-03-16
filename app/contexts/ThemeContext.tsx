@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from "react";
 
 type Theme = "dark" | "light";
 
@@ -12,14 +13,20 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const THEME_TRANSITION_TOTAL = 500;
+const THEME_STORAGE_KEY = "theme";
+const DARK_THEME_CLASS = "dark";
+const LIGHT_THEME_CLASS = "light";
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setMounted(true);
-    const savedTheme = localStorage.getItem("theme") as Theme;
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) as Theme;
     if (savedTheme) {
       setTheme(savedTheme);
     } else {
@@ -30,26 +37,39 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem("theme", theme);
-      document.documentElement.classList.remove("dark", "light");
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+      document.documentElement.classList.remove(DARK_THEME_CLASS, LIGHT_THEME_CLASS);
       document.documentElement.classList.add(theme);
     }
   }, [theme, mounted]);
 
-  const toggleTheme = () => {
-    // 第一步：开始过渡，显示模糊遮罩
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    if (isTransitioning) return;
+
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+    }
+
     setIsTransitioning(true);
-    
-    // 第二步：等待模糊效果达到最大后切换主题
-    setTimeout(() => {
+
+    requestAnimationFrame(() => {
       setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-      
-      // 第三步：等待主题切换完成后，移除模糊遮罩
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, 300);
-    }, 200);
-  };
+
+      transitionTimeoutRef.current = setTimeout(() => {
+        requestAnimationFrame(() => {
+          setIsTransitioning(false);
+        });
+      }, THEME_TRANSITION_TOTAL);
+    });
+  }, [isTransitioning]);
 
   if (!mounted) {
     return <>{children}</>;
