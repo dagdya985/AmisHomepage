@@ -211,6 +211,16 @@ export default function LocalTime() {
               setHolidayData(data);
               setLastFetchedYear(year);
               localStorage.setItem(storageKey, JSON.stringify(data));
+              
+              for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('holiday-data-')) {
+                  const keyYear = parseInt(key.replace('holiday-data-', ''));
+                  if (!isNaN(keyYear) && keyYear < year - 2) {
+                    localStorage.removeItem(key);
+                  }
+                }
+              }
             }
           } catch (error) {
             console.error('Failed to fetch holiday data:', error);

@@ -151,7 +151,10 @@ export default function ConfigPage() {
 
   useEffect(() => {
     fetchConfig();
-    loadPrivateKey();
+    const init = async () => {
+      await loadPrivateKey();
+    };
+    init();
     fetchMusicList();
   }, []);
 
@@ -195,10 +198,24 @@ export default function ConfigPage() {
     }
   };
 
-  const loadPrivateKey = () => {
+  const loadPrivateKey = async () => {
     const saved = localStorage.getItem('github_private_key');
     if (saved) {
-      setState(prev => ({ ...prev, privateKey: saved }));
+      try {
+        const response = await fetch('/api/decrypt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ encrypted: saved })
+        });
+        const data = await response.json();
+        if (data.success) {
+          setState(prev => ({ ...prev, privateKey: data.decrypted }));
+        } else {
+          setState(prev => ({ ...prev, privateKey: saved }));
+        }
+      } catch {
+        setState(prev => ({ ...prev, privateKey: saved }));
+      }
     }
   };
 
@@ -278,8 +295,21 @@ export default function ConfigPage() {
     }
   };
 
-  const savePrivateKey = () => {
-    localStorage.setItem('github_private_key', state.privateKey);
+  const savePrivateKey = async () => {
+    if (!state.privateKey) return;
+    try {
+      const response = await fetch('/api/encrypt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: state.privateKey })
+      });
+      const data = await response.json();
+      if (data.success) {
+        localStorage.setItem('github_private_key', data.encrypted);
+      }
+    } catch {
+      localStorage.setItem('github_private_key', state.privateKey);
+    }
   };
 
   const handleFileUpload = async (file: File) => {
