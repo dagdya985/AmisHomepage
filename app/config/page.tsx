@@ -53,6 +53,7 @@ export default function ConfigPage() {
     { id: 'components', title: 'siteComponents', icon: 'fas fa-puzzle-piece', gradient: 'from-cyan-500 to-blue-600', expanded: true },
     { id: 'site', title: 'siteInfo', icon: 'fas fa-globe', gradient: 'from-violet-500 to-purple-600', expanded: true },
     { id: 'profile', title: 'profile', icon: 'fas fa-user', gradient: 'from-pink-500 to-rose-600', expanded: true },
+    { id: 'links', title: 'links', icon: 'fas fa-link', gradient: 'from-indigo-500 to-blue-600', expanded: true },
     { id: 'projects', title: 'featuredProjects', icon: 'fas fa-star', gradient: 'from-amber-500 to-orange-600', expanded: true },
     { id: 'skills', title: 'skills', icon: 'fas fa-chart-line', gradient: 'from-emerald-500 to-teal-600', expanded: true },
     { id: 'music', title: 'uploadMusic', icon: 'fas fa-music', gradient: 'from-pink-500 to-purple-600', expanded: true },
@@ -664,33 +665,171 @@ export default function ConfigPage() {
               >
                 {renderSectionHeader(sections[2])}
                 {sections[2].expanded && (
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('siteName')}</label>
+                  <div className="mt-6 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('siteName')}</label>
+                        <input
+                          type="text"
+                          value={state.config.site?.name || ''}
+                          onChange={(e) => handleInputChange('site.name', e.target.value)}
+                          className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('siteTitleLabel')}</label>
+                        <input
+                          type="text"
+                          value={state.config.site?.title || ''}
+                          onChange={(e) => handleInputChange('site.title', e.target.value)}
+                          className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('siteUrl')}</label>
+                        <input
+                          type="text"
+                          value={state.config.site?.url || ''}
+                          onChange={(e) => handleInputChange('site.url', e.target.value)}
+                          className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('author')}</label>
+                        <input
+                          type="text"
+                          value={state.config.site?.author || ''}
+                          onChange={(e) => handleInputChange('site.author', e.target.value)}
+                          className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('backgroundImage')}</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('darkTheme')}</label>
+                            <input
+                              type="text"
+                              value={state.config.site?.backgroundImage?.dark || ''}
+                              onChange={(e) => handleInputChange('site.backgroundImage.dark', e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                              placeholder="/images/index.jpg"
+                            />
+                          </div>
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('lightTheme')}</label>
+                            <input
+                              type="text"
+                              value={state.config.site?.backgroundImage?.light || ''}
+                              onChange={(e) => handleInputChange('site.backgroundImage.light', e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                              placeholder="/images/index4.jpg"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-white/10">
+                      <label className={`block text-sm font-medium mb-3 ${colors.text}`}>{t('typeWriterText1Label')}</label>
+                      <div className="space-y-3">
+                        <div>
+                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('chinese')}</label>
+                          <input
+                            type="text"
+                            value={state.config.profile?.typeWriterTexts?.zh?.[0] || ''}
+                            onChange={(e) => handleInputChange('profile.typeWriterTexts.zh.0', e.target.value)}
+                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          />
+                        </div>
+                        <div>
+                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('english')}</label>
+                          <input
+                            type="text"
+                            value={state.config.profile?.typeWriterTexts?.en?.[0] || ''}
+                            onChange={(e) => handleInputChange('profile.typeWriterTexts.en.0', e.target.value)}
+                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-white/10">
+                      <label className={`block text-sm font-medium mb-3 ${colors.text}`}>{t('typeWriterText2Label')}</label>
+                      <div className="space-y-3">
+                        <div>
+                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('chinese')}</label>
+                          <input
+                            type="text"
+                            value={state.config.profile?.typeWriterTexts?.zh?.[1] || ''}
+                            onChange={(e) => handleInputChange('profile.typeWriterTexts.zh.1', e.target.value)}
+                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          />
+                        </div>
+                        <div>
+                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('english')}</label>
+                          <input
+                            type="text"
+                            value={state.config.profile?.typeWriterTexts?.en?.[1] || ''}
+                            onChange={(e) => handleInputChange('profile.typeWriterTexts.en.1', e.target.value)}
+                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-white/10">
+                      <label className={`block text-sm font-medium mb-3 ${colors.text}`}>{t('siteDescription')}</label>
+                      <div className="space-y-3">
+                        <div>
+                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('chinese')}</label>
+                          <textarea
+                            value={state.config.site?.description?.zh || ''}
+                            onChange={(e) => handleInputChange('site.description.zh', e.target.value)}
+                            rows={2}
+                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          />
+                        </div>
+                        <div>
+                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('english')}</label>
+                          <textarea
+                            value={state.config.site?.description?.en || ''}
+                            onChange={(e) => handleInputChange('site.description.en', e.target.value)}
+                            rows={2}
+                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-white/10">
+                      <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('keywords')}</label>
                       <input
                         type="text"
-                        value={state.config.site?.name || ''}
-                        onChange={(e) => handleInputChange('site.name', e.target.value)}
-                        className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                        value={state.config.site?.keywords?.join(', ') || ''}
+                        onChange={(e) => handleInputChange('site.keywords', e.target.value.split(',').map((k: string) => k.trim()).filter(Boolean))}
+                        className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                        placeholder="Amis, AmisKwok, Java, Spring Boot"
                       />
                     </div>
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('siteTitleLabel')}</label>
-                      <input
-                        type="text"
-                        value={state.config.site?.title || ''}
-                        onChange={(e) => handleInputChange('site.title', e.target.value)}
-                        className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('siteUrl')}</label>
-                      <input
-                        type="text"
-                        value={state.config.site?.url || ''}
-                        onChange={(e) => handleInputChange('site.url', e.target.value)}
-                        className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                      />
+                    <div className="pt-2 border-t border-white/10">
+                      <label className={`block text-sm font-medium mb-3 ${colors.text}`}>{t('footerSettings')}</label>
+                      <div className="space-y-3">
+                        <div>
+                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('footerText')} ({t('chinese')})</label>
+                          <input
+                            type="text"
+                            value={state.config.site?.footer?.zh || ''}
+                            onChange={(e) => handleInputChange('site.footer.zh', e.target.value)}
+                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          />
+                        </div>
+                        <div>
+                          <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('footerText')} ({t('english')})</label>
+                          <input
+                            type="text"
+                            value={state.config.site?.footer?.en || ''}
+                            onChange={(e) => handleInputChange('site.footer.en', e.target.value)}
+                            className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -737,7 +876,164 @@ export default function ConfigPage() {
                           />
                         </div>
                       </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('location')} ({t('chinese')})</label>
+                        <input
+                          type="text"
+                          value={state.config.profile?.location?.zh || ''}
+                          onChange={(e) => handleInputChange('profile.location.zh', e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('location')} ({t('english')})</label>
+                        <input
+                          type="text"
+                          value={state.config.profile?.location?.en || ''}
+                          onChange={(e) => handleInputChange('profile.location.en', e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('focus')} ({t('chinese')})</label>
+                        <input
+                          type="text"
+                          value={state.config.profile?.focus?.zh || ''}
+                          onChange={(e) => handleInputChange('profile.focus.zh', e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('focus')} ({t('english')})</label>
+                        <input
+                          type="text"
+                          value={state.config.profile?.focus?.en || ''}
+                          onChange={(e) => handleInputChange('profile.focus.en', e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('hobbies')} ({t('chinese')})</label>
+                        <input
+                          type="text"
+                          value={state.config.profile?.hobbies?.zh || ''}
+                          onChange={(e) => handleInputChange('profile.hobbies.zh', e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('hobbies')} ({t('english')})</label>
+                        <input
+                          type="text"
+                          value={state.config.profile?.hobbies?.en || ''}
+                          onChange={(e) => handleInputChange('profile.hobbies.en', e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('motto')} ({t('chinese')})</label>
+                        <input
+                          type="text"
+                          value={state.config.profile?.motto?.zh || ''}
+                          onChange={(e) => handleInputChange('profile.motto.zh', e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('motto')} ({t('english')})</label>
+                        <input
+                          type="text"
+                          value={state.config.profile?.motto?.en || ''}
+                          onChange={(e) => handleInputChange('profile.motto.en', e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                        />
+                      </div>
                     </div>
+                  </div>
+                )}
+              </section>
+              
+              <section 
+                ref={el => { sectionsRef.current['links'] = el; }}
+                id="links"
+                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+              >
+                {renderSectionHeader(sections[4])}
+                {sections[4].expanded && (
+                  <div className="mt-6 space-y-4">
+                    {['blog', 'github', 'gitee', 'email'].map((linkKey) => (
+                      <div key={linkKey} className={`p-4 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'} space-y-3`}>
+                        <div className="flex items-center justify-between">
+                          <span className={`font-semibold ${colors.text} capitalize`}>{linkKey}</span>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <span className={`text-xs ${colors.textSecondary}`}>{t('showLink')}</span>
+                            <input
+                              type="checkbox"
+                              checked={state.config.links?.[linkKey]?.show ?? true}
+                              onChange={(e) => handleInputChange(`links.${linkKey}.show`, e.target.checked)}
+                              className="w-4 h-4 rounded"
+                            />
+                          </label>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('linkUrl')}</label>
+                            <input
+                              type="text"
+                              value={state.config.links?.[linkKey]?.url || ''}
+                              onChange={(e) => handleInputChange(`links.${linkKey}.url`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                            />
+                          </div>
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('linkIcon')}</label>
+                            <input
+                              type="text"
+                              value={state.config.links?.[linkKey]?.icon || ''}
+                              onChange={(e) => handleInputChange(`links.${linkKey}.icon`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                              placeholder="fab fa-github"
+                            />
+                          </div>
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('linkTitle')} ({t('chinese')})</label>
+                            <input
+                              type="text"
+                              value={state.config.links?.[linkKey]?.title?.zh || ''}
+                              onChange={(e) => handleInputChange(`links.${linkKey}.title.zh`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                            />
+                          </div>
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('linkTitle')} ({t('english')})</label>
+                            <input
+                              type="text"
+                              value={state.config.links?.[linkKey]?.title?.en || ''}
+                              onChange={(e) => handleInputChange(`links.${linkKey}.title.en`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                            />
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('linkDescription')} ({t('chinese')})</label>
+                            <input
+                              type="text"
+                              value={state.config.links?.[linkKey]?.description?.zh || ''}
+                              onChange={(e) => handleInputChange(`links.${linkKey}.description.zh`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                            />
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('linkDescription')} ({t('english')})</label>
+                            <input
+                              type="text"
+                              value={state.config.links?.[linkKey]?.description?.en || ''}
+                              onChange={(e) => handleInputChange(`links.${linkKey}.description.en`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </section>
@@ -747,8 +1043,8 @@ export default function ConfigPage() {
                 id="projects"
                 className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
-                {renderSectionHeader(sections[4])}
-                {sections[4].expanded && (
+                {renderSectionHeader(sections[5])}
+                {sections[5].expanded && (
                   <div className="mt-6 space-y-4">
                     <button
                       onClick={addProject}
@@ -856,8 +1152,8 @@ export default function ConfigPage() {
                 id="skills"
                 className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
-                {renderSectionHeader(sections[5])}
-                {sections[5].expanded && (
+                {renderSectionHeader(sections[6])}
+                {sections[6].expanded && (
                   <div className="mt-6 space-y-4">
                     <button
                       onClick={addSkill}
@@ -867,27 +1163,57 @@ export default function ConfigPage() {
                       {t('addSkill')}
                     </button>
                     {state.config.skills?.map((skill: any, index: number) => (
-                      <div key={index} className={`p-4 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'} flex items-center gap-4`}>
-                        <input
-                          type="text"
-                          value={skill.name}
-                          onChange={(e) => handleInputChange(`skills.${index}.name`, e.target.value)}
-                          className={`flex-1 px-3 py-2 rounded-lg border ${colors.input}`}
-                        />
-                        <input
-                          type="number"
-                          value={skill.level}
-                          onChange={(e) => handleInputChange(`skills.${index}.level`, parseInt(e.target.value))}
-                          min="0"
-                          max="100"
-                          className={`w-20 px-3 py-2 rounded-lg border ${colors.input}`}
-                        />
-                        <button
-                          onClick={() => removeSkill(index)}
-                          className={`p-2 rounded-lg ${colors.buttonDelete}`}
-                        >
-                          <i className="fas fa-trash-alt"></i>
-                        </button>
+                      <div key={index} className={`p-4 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'} space-y-3`}>
+                        <div className="flex items-center gap-3">
+                          <div className="flex-1">
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('projectName')}</label>
+                            <input
+                              type="text"
+                              value={skill.name}
+                              onChange={(e) => handleInputChange(`skills.${index}.name`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                            />
+                          </div>
+                          <div className="w-24">
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('level')}</label>
+                            <input
+                              type="number"
+                              value={skill.level}
+                              onChange={(e) => handleInputChange(`skills.${index}.level`, parseInt(e.target.value))}
+                              min="0"
+                              max="100"
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                            />
+                          </div>
+                          <button
+                            onClick={() => removeSkill(index)}
+                            className={`p-2 rounded-lg ${colors.buttonDelete} mt-5`}
+                          >
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('skillColor')}</label>
+                            <input
+                              type="text"
+                              value={skill.color || ''}
+                              onChange={(e) => handleInputChange(`skills.${index}.color`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                              placeholder="from-blue-500 to-purple-600"
+                            />
+                          </div>
+                          <div>
+                            <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('skillIcon')}</label>
+                            <input
+                              type="text"
+                              value={skill.icon || ''}
+                              onChange={(e) => handleInputChange(`skills.${index}.icon`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                              placeholder="fab fa-java"
+                            />
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -899,8 +1225,8 @@ export default function ConfigPage() {
                 id="music"
                 className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
-                {renderSectionHeader(sections[6])}
-                {sections[6].expanded && (
+                {renderSectionHeader(sections[7])}
+                {sections[7].expanded && (
                   <div className="mt-6 space-y-4">
                     <p className={`text-sm ${colors.textSecondary}`}>{t('musicUploadHint')}</p>
                     <input

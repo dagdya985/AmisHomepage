@@ -14,6 +14,12 @@ interface SiteContent {
 	showLocalTime?: boolean
 	showCustomCursor?: boolean
 	customCursorPath?: string
+	site?: {
+		backgroundImage?: {
+			dark?: string
+			light?: string
+		}
+	}
 }
 
 /**

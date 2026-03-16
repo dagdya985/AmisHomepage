@@ -45,7 +45,10 @@ export default function Home() {
           showSkills: config.showSkills,
           showLocalTime: config.showLocalTime,
           showCustomCursor: config.showCustomCursor,
-          customCursorPath: config.customCursorPath
+          customCursorPath: config.customCursorPath,
+          site: {
+            backgroundImage: config.site?.backgroundImage
+          }
         });
       } catch (error) {
         console.error('Failed to load config:', error);
@@ -103,7 +106,9 @@ export default function Home() {
         {/* 背景图 - 使用Next.js Image优化 */}
         <div className="absolute inset-0">
           <Image
-            src={theme === "dark" ? "/images/index.jpg" : "/images/index4.jpg"}
+            src={theme === "dark" 
+              ? (siteContent?.site?.backgroundImage?.dark || "/images/index.jpg")
+              : (siteContent?.site?.backgroundImage?.light || "/images/index4.jpg")}
             alt="Background"
             fill
             priority
