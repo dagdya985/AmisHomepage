@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
-import { signAppJwt, getInstallationId, createInstallationToken, getFile, deleteFile } from '@/api/auth/github/github-client';
+import { signAppJwt, getInstallationId, createInstallationToken, deleteFile } from '@/api/auth/github/github-client';
 import fs from 'fs';
 import path from 'path';
 
@@ -13,14 +14,10 @@ interface MusicFile {
   order: number;
 }
 
-function ensureMusicDir() {
-  if (!fs.existsSync(MUSIC_DIR)) {
-    fs.mkdirSync(MUSIC_DIR, { recursive: true });
-  }
-}
-
 function getMusicList(): MusicFile[] {
-  ensureMusicDir();
+  if (!fs.existsSync(MUSIC_DIR)) {
+    return [];
+  }
   
   let config: any = {};
   if (fs.existsSync(MUSIC_CONFIG_FILE)) {
@@ -79,12 +76,7 @@ export async function DELETE(request: NextRequest) {
     const branch = process.env.GITHUB_REPO_BRANCH;
 
     if (!appId || !owner || !repo || !branch) {
-      ensureMusicDir();
-      const filePath = path.join(MUSIC_DIR, filename);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ error: 'GitHub configuration not set' }, { status: 500 });
     }
 
     const jwt = signAppJwt(appId, privateKey);

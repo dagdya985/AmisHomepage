@@ -1,15 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { signAppJwt, getInstallationId, createInstallationToken, putFile } from '@/api/auth/github/github-client';
-import fs from 'fs';
-import path from 'path';
-
-const MUSIC_DIR = path.join(process.cwd(), 'public', 'music');
-
-function ensureMusicDir() {
-  if (!fs.existsSync(MUSIC_DIR)) {
-    fs.mkdirSync(MUSIC_DIR, { recursive: true });
-  }
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,8 +16,8 @@ export async function POST(request: NextRequest) {
     }
 
     const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp4', 'audio/flac', 'audio/x-m4a'];
-    const ext = path.extname(file.name).toLowerCase();
-    if (!['.mp3', '.wav', '.ogg', '.m4a', '.flac'].includes(ext)) {
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    if (!['mp3', 'wav', 'ogg', 'm4a', 'flac'].includes(ext || '')) {
       return NextResponse.json({ error: 'Invalid file type. Only audio files are allowed.' }, { status: 400 });
     }
 
@@ -40,17 +30,12 @@ export async function POST(request: NextRequest) {
     const repo = process.env.GITHUB_REPO_NAME;
     const branch = process.env.GITHUB_REPO_BRANCH;
 
-    const filename = `${Date.now()}_${file.name}`;
-    const relativePath = `/music/${filename}`;
-
     if (!appId || !owner || !repo || !branch) {
-      ensureMusicDir();
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const filePath = path.join(MUSIC_DIR, filename);
-      fs.writeFileSync(filePath, buffer);
-      return NextResponse.json({ success: true, path: relativePath, name: file.name });
+      return NextResponse.json({ error: 'GitHub configuration not set' }, { status: 500 });
     }
 
+    const filename = `${Date.now()}_${file.name}`;
+    const relativePath = `/music/${filename}`;
     const githubPath = `public/music/${filename}`;
     const buffer = Buffer.from(await file.arrayBuffer());
     const content = buffer.toString('base64');

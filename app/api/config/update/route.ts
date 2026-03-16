@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
 import { signAppJwt, getInstallationId, createInstallationToken, putFile } from '@/api/auth/github/github-client';
 
 export async function POST(request: NextRequest) {
@@ -38,11 +36,7 @@ export async function POST(request: NextRequest) {
     const token = await createInstallationToken(jwt, installationId);
     console.log('Token created successfully');
 
-    console.log('Step 4: Updating local config file...');
-    const configPath = path.join(process.cwd(), 'config.json');
-    await fs.writeFile(configPath, JSON.stringify(config, null, 2));
-
-    console.log('Step 5: Committing to GitHub...');
+    console.log('Step 4: Committing to GitHub...');
     const content = Buffer.from(JSON.stringify(config, null, 2)).toString('base64');
     await putFile(token, owner, repo, 'config.json', content, 'Update config.json', branch);
 
