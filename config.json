@@ -1,7 +1,7 @@
 {
   "showSkills": true,
   "showProjects": true,
-  "showLocalTime": false,
+  "showLocalTime": true,
   "showCustomCursor": true,
   "customCursorPath": "/cursors/watermelon.cur",
   "site": {
