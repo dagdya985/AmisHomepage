@@ -9,5 +9,13 @@ export const initScript = `
     const savedLang = localStorage.getItem('language');
     const lang = savedLang || (navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en');
     document.documentElement.setAttribute('data-lang', lang);
+    
+    // Fix mobile 100vh issue
+    function setVH() {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', vh + 'px');
+    }
+    setVH();
+    window.addEventListener('resize', setVH);
   })();
 `;

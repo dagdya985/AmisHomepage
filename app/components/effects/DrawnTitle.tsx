@@ -56,10 +56,10 @@ function DrawnTitleInner({ text, className = "" }: DrawnTitleProps) {
   const strokeColor = theme === "dark" ? "white" : "#000000";
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative overflow-hidden ${className}`}>
       <svg
         viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-        className="w-full h-auto"
+        className="w-full h-auto max-w-full"
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>

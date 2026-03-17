@@ -57,11 +57,11 @@ export default function Home() {
       <LoadingScreen />
       <CustomCursor />
       <ThemeTransition />
-      <div className={`min-h-screen font-sans transition-all duration-500 ease-in-out ${isLoaded ? "opacity-100" : "opacity-0"}`}>
+      <div className={`min-h-screen font-sans transition-all duration-500 ease-in-out overflow-x-hidden ${isLoaded ? "opacity-100" : "opacity-0"}`}>
         <StarryBackground />
         <LightBackground />
       
-      <header className="relative h-screen w-full">
+      <header className="relative w-full" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
         <div className="absolute inset-0">
           <Image
             src={theme === "dark" 

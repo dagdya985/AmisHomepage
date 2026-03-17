@@ -3,6 +3,11 @@
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
+  --vh: 1vh;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 html.light {
@@ -28,6 +33,9 @@ html.light body {
 body {
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 
 /* 自定义动画 */
