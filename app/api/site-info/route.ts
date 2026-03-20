@@ -1,5 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 
+function decodeHtmlEntities(text: string): string {
+  const entities: { [key: string]: string } = {
+    '&#x27;': "'",
+    '&#39;': "'",
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&nbsp;': ' ',
+  };
+  
+  let decoded = text;
+  for (const [entity, char] of Object.entries(entities)) {
+    decoded = decoded.split(entity).join(char);
+  }
+  
+  decoded = decoded.replace(/&#x([0-9a-fA-F]+);/gi, (_, hex) => 
+    String.fromCharCode(parseInt(hex, 16))
+  );
+  decoded = decoded.replace(/&#(\d+);/g, (_, num) => 
+    String.fromCharCode(parseInt(num, 10))
+  );
+  
+  return decoded;
+}
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const url = searchParams.get("url");
@@ -55,8 +81,8 @@ export async function GET(request: NextRequest) {
       faviconUrl = `${urlObj.origin}/favicon.ico`;
     }
 
-    const siteName = ogTitle || title || urlObj.hostname;
-    const siteDescription = ogDescription || description || "";
+    const siteName = decodeHtmlEntities(ogTitle || title || urlObj.hostname);
+    const siteDescription = decodeHtmlEntities(ogDescription || description || "");
     const siteAvatar = ogImage || faviconUrl;
 
     return NextResponse.json({
