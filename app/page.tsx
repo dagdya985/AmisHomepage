@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { linksConfig } from "./site-config";
+import { linksConfig, guestbookConfig, friendLinksConfig } from "./site-config";
 import { useLanguageStore } from "./stores/language-store";
 import { useThemeStore } from "./stores/theme-store";
 import { useSiteConfig } from "./hooks/useSiteConfig";
@@ -141,6 +141,38 @@ export default function Home() {
                   ></span>
                 </span>
               </a>
+            )}
+            {guestbookConfig?.enabled && (
+              <Link 
+                href="/guestbook"
+                className="group transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10"
+                style={{ color: textSecondaryColor }}
+              >
+                <i className="fas fa-comments fa-fw group-hover:scale-110 transition-transform"></i>
+                <span className="relative">
+                  {t("guestbook")}
+                  <span 
+                    className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
+                    style={{ backgroundColor: textColor }}
+                  ></span>
+                </span>
+              </Link>
+            )}
+            {friendLinksConfig?.enabled && (
+              <Link 
+                href="/friends"
+                className="group transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10"
+                style={{ color: textSecondaryColor }}
+              >
+                <i className="fas fa-link fa-fw group-hover:scale-110 transition-transform"></i>
+                <span className="relative">
+                  {t("friendLinks")}
+                  <span 
+                    className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
+                    style={{ backgroundColor: textColor }}
+                  ></span>
+                </span>
+              </Link>
             )}
             <LanguageSwitcher />
             <ThemeSwitcher />

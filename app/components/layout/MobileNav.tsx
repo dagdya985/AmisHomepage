@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import Link from "next/link";
 import { useThemeStore } from "../../stores/theme-store";
 import { useConfigStore } from "../../stores/config-store";
+import { guestbookConfig, friendLinksConfig } from "../../site-config";
 
 type Section = "about" | "projects" | "skills";
 
@@ -79,6 +81,32 @@ export default function MobileNav() {
             <i className={`${section.icon} ${currentSection === section.id ? "text-white" : theme === "dark" ? "text-white" : "text-gray-600"} text-sm`}></i>
           </button>
         ))}
+        {guestbookConfig?.enabled && (
+          <Link
+            href="/guestbook"
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md ${
+              theme === "dark"
+                ? "bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                : "bg-white hover:bg-gray-50 border border-gray-200 shadow-lg"
+            }`}
+            title="guestbook"
+          >
+            <i className={`fas fa-comments ${theme === "dark" ? "text-white" : "text-gray-600"} text-sm`}></i>
+          </Link>
+        )}
+        {friendLinksConfig?.enabled && (
+          <Link
+            href="/friends"
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md ${
+              theme === "dark"
+                ? "bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                : "bg-white hover:bg-gray-50 border border-gray-200 shadow-lg"
+            }`}
+            title="friends"
+          >
+            <i className={`fas fa-link ${theme === "dark" ? "text-white" : "text-gray-600"} text-sm`}></i>
+          </Link>
+        )}
       </div>
     </div>
   );

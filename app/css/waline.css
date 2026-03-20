@@ -1,0 +1,773 @@
+/* src/styles/waline.css */
+/* 使用官方排版，只修改颜色风格和添加毛玻璃效果 */
+
+/* 自定义 Waline 样式以匹配您的博客主题 */
+:root {
+  /* 字体大小 */
+  --waline-font-size: 1rem;
+
+  /* 常规颜色 */
+  --waline-white: #fff;
+  --waline-light-grey: #999;
+  --waline-dark-grey: #666;
+
+  /* 主题色 - 使用蓝色到紫色渐变 */
+  --waline-theme-color: #3b82f6;
+  --waline-active-color: #8b5cf6;
+
+  /* 布局颜色 - 暗色主题 */
+  --waline-color: #ffffff;
+  --waline-bg-color: rgba(255, 255, 255, 0.05);
+  --waline-bg-color-light: rgba(255, 255, 255, 0.03);
+  --waline-bg-color-hover: rgba(255, 255, 255, 0.08);
+  --waline-border-color: rgba(255, 255, 255, 0.1);
+  --waline-disable-bg-color: rgba(255, 255, 255, 0.05);
+  --waline-disable-color: #666;
+  --waline-code-bg-color: #1e1e2e;
+
+  /* 特殊颜色 */
+  --waline-bq-color: rgba(255, 255, 255, 0.05);
+
+  /* 头像 */
+  --waline-avatar-size: 3.25rem;
+  --waline-m-avatar-size: calc(var(--waline-avatar-size) * 9 / 13);
+
+  /* 徽章 */
+  --waline-badge-color: #3b82f6;
+  --waline-badge-font-size: 0.775em;
+
+  /* 信息 */
+  --waline-info-bg-color: rgba(59, 130, 246, 0.1);
+  --waline-info-color: #9ca3af;
+  --waline-info-font-size: 0.625em;
+
+  /* 渲染选择 */
+  --waline-border: 1px solid var(--waline-border-color);
+  --waline-avatar-radius: 50%;
+  --waline-box-shadow: none;
+}
+
+/* 亮色主题适配 */
+html.light {
+  --waline-color: #1f2937;
+  --waline-bg-color: rgba(0, 0, 0, 0.02);
+  --waline-bg-color-light: rgba(0, 0, 0, 0.01);
+  --waline-bg-color-hover: rgba(0, 0, 0, 0.04);
+  --waline-border-color: rgba(0, 0, 0, 0.1);
+  --waline-disable-bg-color: rgba(0, 0, 0, 0.02);
+  --waline-disable-color: #9ca3af;
+  --waline-code-bg-color: #f3f4f6;
+  --waline-bq-color: rgba(0, 0, 0, 0.03);
+  --waline-info-bg-color: rgba(59, 130, 246, 0.08);
+  --waline-info-color: #6b7280;
+}
+
+/* Waline 容器样式 */
+.waline-comments {
+  min-height: 300px;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 容器内部样式 */
+.waline-container {
+  width: 100%;
+}
+
+/* 编辑器样式 */
+.waline-editor {
+  margin-bottom: 20px;
+}
+
+/* 表单字段布局 */
+.waline-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.waline-meta-item {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* 输入框样式 */
+.waline-input,
+.waline-editor input,
+.waline-editor textarea,
+.wl-input,
+.wl-editor input,
+.wl-editor textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  color: var(--waline-color);
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+html.light .waline-input,
+html.light .waline-editor input,
+html.light .waline-editor textarea,
+html.light .wl-input,
+html.light .wl-editor input,
+html.light .wl-editor textarea {
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* 输入框聚焦效果 */
+.waline-input:focus,
+.waline-editor input:focus,
+.waline-editor textarea:focus,
+.wl-input:focus,
+.wl-editor input:focus,
+.wl-editor textarea:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(25px);
+}
+
+html.light .waline-input:focus,
+html.light .waline-editor input:focus,
+html.light .waline-editor textarea:focus,
+html.light .wl-input:focus,
+html.light .wl-editor input:focus,
+html.light .wl-editor textarea:focus {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* 面板样式 - 保留官方排版，仅修改背景和毛玻璃效果 */
+.wl-panel {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(15px) !important;
+  transition: all 0.3s ease !important;
+  border-radius: 12px !important;
+}
+
+.wl-panel:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+html.light .wl-panel {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light .wl-panel:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* 确保输入框样式优先级 */
+.wl-input,
+.wl-editor input,
+.wl-editor textarea {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+.wl-input:focus,
+.wl-editor input:focus,
+.wl-editor textarea:focus {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(25px) !important;
+}
+
+html.light .wl-input,
+html.light .wl-editor input,
+html.light .wl-editor textarea {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light .wl-input:focus,
+html.light .wl-editor input:focus,
+html.light .wl-editor textarea:focus {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* 操作系统和浏览器标签样式 - 设置为透明 */
+span.wl-os,
+span.wl-browser {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+
+/* 头部输入框样式 - 只修改颜色，保留官方排版 */
+.wl-header input {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(15px) !important;
+  border-radius: 8px !important;
+}
+
+html.light .wl-header input {
+  background: rgba(0, 0, 0, 0.02) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 文本域样式 */
+.waline-editor textarea {
+  min-height: 120px;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+/* 提交按钮样式 */
+.waline-submit {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.waline-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* 评论列表样式 */
+.waline-comment-list {
+  margin-top: 20px;
+}
+
+/* 评论项样式 */
+.waline-comment-item,
+.wl-comment {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.waline-comment-item:hover,
+.wl-comment:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+  backdrop-filter: blur(12px);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+html.light .waline-comment-item,
+html.light .wl-comment {
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+html.light .waline-comment-item:hover,
+html.light .wl-comment:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* 评论头部样式 */
+.waline-comment-header,
+.wl-comment-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+/* 评论作者样式 */
+.waline-comment-author,
+.wl-comment-author {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--waline-theme-color);
+}
+
+/* 评论元信息样式 */
+.waline-comment-meta,
+.wl-comment-meta {
+  font-size: var(--waline-info-font-size);
+  color: var(--waline-info-color);
+  margin-bottom: 10px;
+}
+
+/* 评论内容样式 */
+.waline-comment-content,
+.wl-comment-content {
+  color: var(--waline-color);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+/* 评论操作样式 */
+.waline-comment-actions,
+.wl-comment-actions {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+}
+
+/* 回复按钮样式 */
+.waline-comment-reply,
+.wl-comment-reply {
+  color: var(--waline-theme-color);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.waline-comment-reply:hover,
+.wl-comment-reply:hover {
+  color: var(--waline-active-color);
+}
+
+/* 点赞按钮样式 */
+.waline-comment-like,
+.wl-comment-like {
+  color: var(--waline-info-color);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.waline-comment-like:hover,
+.wl-comment-like:hover {
+  color: #f43f5e;
+}
+
+.waline-comment-like.liked,
+.wl-comment-like.liked {
+  color: #f43f5e;
+}
+
+/* 评论头部样式 */
+.waline-comment-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+/* 头像样式 */
+.waline-avatar {
+  width: var(--waline-avatar-size);
+  height: var(--waline-avatar-size);
+  border-radius: var(--waline-avatar-radius);
+  margin-right: 15px;
+  flex-shrink: 0;
+  border: 2px solid var(--waline-theme-color);
+}
+
+/* 评论作者样式 */
+.waline-comment-author {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--waline-theme-color);
+}
+
+/* 评论元信息样式 */
+.waline-comment-meta {
+  font-size: var(--waline-info-font-size);
+  color: var(--waline-info-color);
+  margin-bottom: 10px;
+}
+
+/* 评论内容样式 */
+.waline-comment-content {
+  color: var(--waline-color);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+/* 评论操作样式 */
+.waline-comment-actions {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+}
+
+/* 回复按钮样式 */
+.waline-comment-reply {
+  color: var(--waline-theme-color);
+  cursor: pointer;
+}
+
+/* 点赞按钮样式 */
+.waline-comment-like {
+  color: var(--waline-info-color);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.waline-comment-like:hover {
+  color: #f43f5e;
+}
+
+.waline-comment-like.liked {
+  color: #f43f5e;
+}
+
+/* 回复框样式 */
+.waline-reply {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid var(--waline-border-color);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(4px);
+}
+
+html.light .waline-reply {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+
+/* 回复内容容器样式 */
+.wl-content,
+.waline-content {
+  display: inline-block;
+  position: relative;
+  min-height: 24px;
+}
+
+/* 回复目标样式 */
+.wl-reply-to,
+.waline-reply-to {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  background-color: rgba(59, 130, 246, 0.1);
+  border-radius: 4px;
+  line-height: 20px;
+  margin-bottom: 0;
+  font-size: 14px;
+  vertical-align: middle;
+  height: 20px;
+  box-sizing: border-box;
+}
+
+/* 回复目标中的链接样式 */
+.wl-reply-to a,
+.waline-reply-to a {
+  display: inline-block;
+  line-height: 20px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  vertical-align: middle;
+  height: 33px;
+  box-sizing: border-box;
+}
+
+/* 回复目标中的 span 样式 */
+.wl-reply-to span,
+.waline-reply-to span {
+  display: inline-block;
+  line-height: 32px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  vertical-align: middle;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+/* 回复内容文本样式 */
+.wl-content > div:not(.wl-reply-to),
+.waline-content > div:not(.waline-reply-to) {
+  display: inline-block;
+  line-height: 20px;
+  margin-top: 0;
+  margin-left: 8px;
+  font-size: 14px;
+  padding: 0;
+  margin: 0 0 0 8px;
+  vertical-align: middle;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+/* 回复内容中的段落样式 */
+.wl-content > div:not(.wl-reply-to) p,
+.waline-content > div:not(.waline-reply-to) p {
+  display: inline-block;
+  line-height: 20px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  vertical-align: middle;
+  height: 0px;
+  box-sizing: border-box;
+}
+
+.wl-reply-to a,
+.waline-reply-to a {
+  color: var(--waline-theme-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.wl-reply-to a:hover,
+.waline-reply-to a:hover {
+  text-decoration: underline;
+  color: var(--waline-active-color);
+}
+
+/* 分页样式 */
+.waline-pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.waline-pagination button {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  color: var(--waline-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin: 0 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.waline-pagination button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--waline-theme-color);
+}
+
+.waline-pagination button.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  border-color: transparent;
+}
+
+html.light .waline-pagination button {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+html.light .waline-pagination button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* 评论计数样式 */
+.waline-comment-count {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: var(--waline-color);
+}
+
+/* 排序选项样式 */
+.waline-sort {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.waline-sort-item {
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--waline-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+}
+
+.waline-sort-item.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  border-color: transparent;
+}
+
+html.light .waline-sort-item {
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* 信息提示样式 */
+.waline-info {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--waline-info-color);
+  background-color: var(--waline-info-bg-color);
+  backdrop-filter: blur(4px);
+  margin: 10px 0;
+}
+
+/* 代码块样式 */
+.waline-comments pre {
+  background-color: var(--waline-code-bg-color);
+  border-radius: 8px;
+  padding: 12px;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+.waline-comments code {
+  background-color: var(--waline-code-bg-color);
+  color: #f8f8f2;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.waline-comments pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* 引用样式 */
+.waline-comments blockquote {
+  border-left: 4px solid var(--waline-theme-color);
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 0 8px 8px 0;
+  background-color: var(--waline-bq-color);
+  backdrop-filter: blur(4px);
+}
+
+/* 字数统计样式 */
+.waline-word-count {
+  font-size: 12px;
+  color: var(--waline-info-color);
+  margin: 5px 0;
+}
+
+/* 文件上传区域样式 */
+.waline-upload-area {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(4px);
+}
+
+html.light .waline-upload-area {
+  border-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* GIF 搜索按钮样式 */
+.waline-gif {
+  margin: 10px 0;
+}
+
+/* 自定义光标样式 */
+.waline-input,
+.waline-editor textarea,
+.waline-editor input,
+.waline-container input,
+.waline-container textarea,
+.waline-container [contenteditable="true"] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='6' x2='12' y2='18'/%3E%3C/svg%3E"), text;
+}
+
+/* 占位符样式 */
+.waline-input::placeholder,
+.waline-editor textarea::placeholder {
+  color: var(--waline-info-color);
+}
+
+/* 表情选择器样式 - 确保置顶显示 */
+.wl-emoji,
+.waline-emoji,
+.wl-emoji-popover,
+.waline-emoji-popover,
+.wl-emoji-popup,
+.waline-emoji-popup,
+.wl-tab-wrapper,
+.waline-tab-wrapper {
+  z-index: 9999 !important;
+  position: relative !important;
+}
+
+/* 确保表情选择器容器的层级 */
+.wl-emoji-container,
+.waline-emoji-container {
+  z-index: 9999 !important;
+  position: relative !important;
+}
+
+/* 确保表情预览图像的层级 */
+.wl-emoji-preview,
+.waline-emoji-preview {
+  z-index: 10000 !important;
+  position: absolute !important;
+}
+
+/* 隐藏 RSS 链接 */
+.wl-rss {
+  display: none !important;
+}
+
+/* 隐藏版权信息 */
+.wl-power {
+  display: none !important;
+}
+
+/* 隐藏 meta-foot */
+.wl-meta-foot {
+  display: none !important;
+}
+
+/* 滚动条样式 */
+.waline-container ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.waline-container ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.waline-container ::-webkit-scrollbar-thumb {
+  background: var(--waline-info-color);
+  border-radius: 3px;
+}
+
+.waline-container ::-webkit-scrollbar-thumb:hover {
+  background: var(--waline-theme-color);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .waline-meta {
+    flex-direction: column;
+  }
+  
+  .waline-meta-item {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .waline-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .waline-comment-header {
+    flex-direction: column;
+  }
+  
+  .waline-avatar {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}

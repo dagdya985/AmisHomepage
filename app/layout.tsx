@@ -35,8 +35,8 @@ export default function RootLayout({
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
         <SEOHead />
-        <script dangerouslySetInnerHTML={{ __html: initScript }} />
-        <script dangerouslySetInnerHTML={{ __html: seoScripts }} />
+        <script dangerouslySetInnerHTML={{ __html: initScript }} suppressHydrationWarning />
+        <script dangerouslySetInnerHTML={{ __html: seoScripts }} suppressHydrationWarning />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${zcoolQingKeHuangYou.variable} antialiased`}

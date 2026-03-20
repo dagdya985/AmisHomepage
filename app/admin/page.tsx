@@ -146,8 +146,12 @@ export default function ConfigPage() {
     { id: 'links', title: 'links', icon: 'fas fa-link', gradient: 'from-indigo-500 to-blue-600', expanded: true },
     { id: 'projects', title: 'featuredProjects', icon: 'fas fa-star', gradient: 'from-amber-500 to-orange-600', expanded: true },
     { id: 'skills', title: 'skills', icon: 'fas fa-chart-line', gradient: 'from-emerald-500 to-teal-600', expanded: true },
+    { id: 'guestbook', title: 'guestbookSettings', icon: 'fas fa-comments', gradient: 'from-pink-500 to-rose-600', expanded: true },
+    { id: 'friendLinks', title: 'friendLinksSettings', icon: 'fas fa-user-friends', gradient: 'from-violet-500 to-purple-600', expanded: true },
     { id: 'music', title: 'uploadMusic', icon: 'fas fa-music', gradient: 'from-pink-500 to-purple-600', expanded: true },
   ]);
+  
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     fetchConfig();
@@ -495,6 +499,72 @@ export default function ConfigPage() {
     });
   };
 
+  const addFriendLink = () => {
+    setState(prev => {
+      const newConfig = { ...prev.config };
+      if (!newConfig.friendLinks) {
+        newConfig.friendLinks = { enabled: true, title: { zh: '友情链接', en: 'Friend Links' }, links: [] };
+      }
+      if (!newConfig.friendLinks.links) {
+        newConfig.friendLinks.links = [];
+      }
+      const newLink = {
+        id: `friend-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        url: '',
+        name: '',
+        avatar: '',
+        description: { zh: '', en: '' }
+      };
+      newConfig.friendLinks.links = [...newConfig.friendLinks.links, newLink];
+      return { ...prev, config: newConfig };
+    });
+  };
+
+  const removeFriendLink = (index: number) => {
+    setState(prev => {
+      const newConfig = { ...prev.config };
+      newConfig.friendLinks.links = newConfig.friendLinks.links.filter((_: any, i: number) => i !== index);
+      return { ...prev, config: newConfig };
+    });
+  };
+
+  const fetchSiteInfo = async (url: string, index: number) => {
+    if (!url) {
+      toast.error(t('friendLinkUrl'));
+      return;
+    }
+    
+    toast.loading(t('fetchingSiteInfo'));
+    
+    try {
+      const response = await fetch(`/api/site-info?url=${encodeURIComponent(url)}`);
+      const data = await response.json();
+      
+      if (data.success && data.data) {
+        setState(prev => {
+          const newConfig = { ...prev.config };
+          if (newConfig.friendLinks?.links?.[index]) {
+            newConfig.friendLinks.links[index].name = data.data.name || '';
+            newConfig.friendLinks.links[index].avatar = data.data.avatar || data.data.favicon || '';
+            if (data.data.description) {
+              newConfig.friendLinks.links[index].description = {
+                zh: data.data.description,
+                en: data.data.description
+              };
+            }
+          }
+          return { ...prev, config: newConfig };
+        });
+        toast.success(t('fetchSiteInfoSuccess'));
+      } else {
+        toast.error(t('fetchSiteInfoFailed'));
+      }
+    } catch (error) {
+      console.error('Failed to fetch site info:', error);
+      toast.error(t('fetchSiteInfoFailed'));
+    }
+  };
+
   const colors = useMemo(() => ({
     background: theme === 'dark' ? 'bg-gradient-to-br from-[#0a0a0a] via-[#0f0f23] to-[#1a1a2e]' : 'bg-gradient-to-br from-gray-50 via-white to-gray-100',
     card: theme === 'dark' ? 'bg-white/5 backdrop-blur-md border border-white/10' : 'bg-white/80 backdrop-blur-md border border-gray-200',
@@ -547,40 +617,53 @@ export default function ConfigPage() {
     <div className={`min-h-screen ${colors.background}`}>
       <Toaster position="top-center" richColors />
       
-      <aside className={`fixed left-4 top-1/2 -translate-y-1/2 w-56 ${colors.sidebar} backdrop-blur-md border rounded-2xl p-4 hidden lg:block z-40`}>
+      <aside className={`fixed left-4 top-1/2 -translate-y-1/2 ${sidebarCollapsed ? 'w-14' : 'w-56'} ${colors.sidebar} backdrop-blur-md border rounded-2xl p-4 hidden lg:block z-40 transition-all duration-300`}>
         <div className="flex items-center justify-between mb-4">
-          <h4 className={`text-sm font-semibold ${colors.text}`}>{t('quickNav')}</h4>
+          {!sidebarCollapsed && <h4 className={`text-sm font-semibold ${colors.text}`}>{t('quickNav')}</h4>}
           <div className="flex gap-1">
+            {!sidebarCollapsed && (
+              <>
+                <button
+                  onClick={expandAll}
+                  className={`p-1.5 rounded-lg hover:bg-white/10 transition-colors ${colors.textSecondary}`}
+                  title={t('expandAll')}
+                >
+                  <i className="fas fa-expand-alt text-xs"></i>
+                </button>
+                <button
+                  onClick={collapseAll}
+                  className={`p-1.5 rounded-lg hover:bg-white/10 transition-colors ${colors.textSecondary}`}
+                  title={t('collapseAll')}
+                >
+                  <i className="fas fa-compress-alt text-xs"></i>
+                </button>
+              </>
+            )}
             <button
-              onClick={expandAll}
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               className={`p-1.5 rounded-lg hover:bg-white/10 transition-colors ${colors.textSecondary}`}
-              title={t('expandAll')}
+              title={sidebarCollapsed ? t('sidebarExpand') : t('sidebarCollapse')}
             >
-              <i className="fas fa-expand-alt text-xs"></i>
-            </button>
-            <button
-              onClick={collapseAll}
-              className={`p-1.5 rounded-lg hover:bg-white/10 transition-colors ${colors.textSecondary}`}
-              title={t('collapseAll')}
-            >
-              <i className="fas fa-compress-alt text-xs"></i>
+              <i className={`fas ${sidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'} text-xs`}></i>
             </button>
           </div>
         </div>
-        <nav className="space-y-1">
-          {sections.map(section => (
-            <button
-              key={section.id}
-              onClick={() => scrollToSection(section.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-left ${
-                activeSection === section.id ? colors.activeNav : `hover:bg-white/5 ${colors.textSecondary}`
-              }`}
-            >
-              <i className={`${section.icon} text-sm w-5`}></i>
-              <span className="text-sm">{t(section.title as any)}</span>
-            </button>
-          ))}
-        </nav>
+        {!sidebarCollapsed && (
+          <nav className="space-y-1">
+            {sections.map(section => (
+              <button
+                key={section.id}
+                onClick={() => scrollToSection(section.id)}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-left ${
+                  activeSection === section.id ? colors.activeNav : `hover:bg-white/5 ${colors.textSecondary}`
+                }`}
+              >
+                <i className={`${section.icon} text-sm w-5`}></i>
+                <span className="text-sm">{t(section.title as any)}</span>
+              </button>
+            ))}
+          </nav>
+        )}
       </aside>
 
       <div className={`fixed right-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-3 z-40`}>
@@ -1347,12 +1430,203 @@ export default function ConfigPage() {
               </section>
               
               <section 
-                ref={el => { sectionsRef.current['music'] = el; }}
-                id="music"
+                ref={el => { sectionsRef.current['guestbook'] = el; }}
+                id="guestbook"
                 className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[7])}
                 {sections[7].expanded && (
+                  <div className="mt-6 space-y-4">
+                    <div className={`p-4 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'}`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center">
+                            <i className="fas fa-comments text-white text-sm"></i>
+                          </div>
+                          <div>
+                            <label className={`block text-sm font-medium ${colors.text}`}>{t('guestbookSettings')}</label>
+                            <p className={`text-xs ${colors.textSecondary}`}>{t('enableGuestbook')}</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleInputChange('guestbook.enabled', !state.config.guestbook?.enabled)}
+                          className={`relative w-14 h-7 rounded-full transition-all duration-300 ${
+                            state.config.guestbook?.enabled 
+                              ? 'bg-gradient-to-r from-pink-500 to-rose-600' 
+                              : theme === 'dark' ? 'bg-white/20' : 'bg-gray-300'
+                          }`}
+                        >
+                          <span className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${state.config.guestbook?.enabled ? 'left-8' : 'left-1'}`} />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {state.config.guestbook?.enabled && (
+                      <div className="space-y-4 pt-2">
+                        <div>
+                          <label className={`block text-sm font-medium mb-2 ${colors.textSecondary}`}>{t('walineUrl')}</label>
+                          <input
+                            type="text"
+                            value={state.config.guestbook?.walineUrl || ''}
+                            onChange={(e) => handleInputChange('guestbook.walineUrl', e.target.value)}
+                            className={`w-full px-4 py-3 rounded-xl border ${colors.input} focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+                            placeholder="https://your-waline-server.vercel.app"
+                          />
+                          <p className={`text-xs mt-2 ${colors.textSecondary}`}>{t('walineUrlHint')}</p>
+                        </div>
+                        <BilingualInput
+                          label={t('linkTitle')}
+                          valueZh={state.config.guestbook?.title?.zh || ''}
+                          valueEn={state.config.guestbook?.title?.en || ''}
+                          onChangeZh={(value) => handleInputChange('guestbook.title.zh', value)}
+                          onChangeEn={(value) => handleInputChange('guestbook.title.en', value)}
+                          colors={colors}
+                          placeholderZh="留言板"
+                          placeholderEn="Guestbook"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </section>
+              
+              <section 
+                ref={el => { sectionsRef.current['friendLinks'] = el; }}
+                id="friendLinks"
+                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+              >
+                {renderSectionHeader(sections[8])}
+                {sections[8].expanded && (
+                  <div className="mt-6 space-y-4">
+                    <div className={`p-4 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'}`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                            <i className="fas fa-user-friends text-white text-sm"></i>
+                          </div>
+                          <div>
+                            <label className={`block text-sm font-medium ${colors.text}`}>{t('friendLinksSettings')}</label>
+                            <p className={`text-xs ${colors.textSecondary}`}>{t('enableFriendLinks')}</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleInputChange('friendLinks.enabled', !state.config.friendLinks?.enabled)}
+                          className={`relative w-14 h-7 rounded-full transition-all duration-300 ${
+                            state.config.friendLinks?.enabled 
+                              ? 'bg-gradient-to-r from-violet-500 to-purple-600' 
+                              : theme === 'dark' ? 'bg-white/20' : 'bg-gray-300'
+                          }`}
+                        >
+                          <span className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${state.config.friendLinks?.enabled ? 'left-8' : 'left-1'}`} />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {state.config.friendLinks?.enabled && (
+                      <div className="space-y-4">
+                        <BilingualInput
+                          label={t('linkTitle')}
+                          valueZh={state.config.friendLinks?.title?.zh || ''}
+                          valueEn={state.config.friendLinks?.title?.en || ''}
+                          onChangeZh={(value) => handleInputChange('friendLinks.title.zh', value)}
+                          onChangeEn={(value) => handleInputChange('friendLinks.title.en', value)}
+                          colors={colors}
+                          placeholderZh="友情链接"
+                          placeholderEn="Friend Links"
+                        />
+                        
+                        <button
+                          onClick={addFriendLink}
+                          className={`w-full py-3 rounded-xl border-2 border-dashed ${theme === 'dark' ? 'border-white/20 hover:border-white/40' : 'border-gray-300 hover:border-gray-400'} ${colors.text} transition-all flex items-center justify-center gap-2`}
+                        >
+                          <i className="fas fa-plus"></i>
+                          {t('addFriendLink')}
+                        </button>
+                        
+                        {state.config.friendLinks?.links?.map((link: any, index: number) => (
+                          <div key={link.id || index} className={`p-4 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'} space-y-3`}>
+                            <div className="flex items-center justify-between">
+                              <span className={`font-semibold ${colors.text}`}>#{index + 1}</span>
+                              <button
+                                onClick={() => removeFriendLink(index)}
+                                className={`p-2 rounded-lg ${colors.buttonDelete}`}
+                              >
+                                <i className="fas fa-trash-alt"></i>
+                              </button>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              <div className="md:col-span-2">
+                                <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('friendLinkUrl')}</label>
+                                <div className="flex gap-2">
+                                  <input
+                                    type="text"
+                                    value={link.url || ''}
+                                    onChange={(e) => handleInputChange(`friendLinks.links.${index}.url`, e.target.value)}
+                                    className={`flex-1 px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                                    placeholder="https://example.com"
+                                  />
+                                  <button
+                                    onClick={() => fetchSiteInfo(link.url, index)}
+                                    className={`px-4 py-2 rounded-lg ${colors.button} text-white text-sm whitespace-nowrap`}
+                                    title={t('fetchSiteInfo')}
+                                  >
+                                    <i className="fas fa-download mr-1"></i>
+                                    {t('fetchSiteInfo')}
+                                  </button>
+                                </div>
+                              </div>
+                              <div>
+                                <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('friendLinkName')}</label>
+                                <input
+                                  type="text"
+                                  value={link.name || ''}
+                                  onChange={(e) => handleInputChange(`friendLinks.links.${index}.name`, e.target.value)}
+                                  className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                                />
+                              </div>
+                              <div>
+                                <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('friendLinkAvatar')}</label>
+                                <input
+                                  type="text"
+                                  value={link.avatar || ''}
+                                  onChange={(e) => handleInputChange(`friendLinks.links.${index}.avatar`, e.target.value)}
+                                  className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                                />
+                              </div>
+                              <div className="md:col-span-2">
+                                <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('friendLinkDescription')} ({t('chinese')})</label>
+                                <input
+                                  type="text"
+                                  value={link.description?.zh || ''}
+                                  onChange={(e) => handleInputChange(`friendLinks.links.${index}.description.zh`, e.target.value)}
+                                  className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                                />
+                              </div>
+                              <div className="md:col-span-2">
+                                <label className={`block text-xs font-medium mb-1 ${colors.textSecondary}`}>{t('friendLinkDescription')} ({t('english')})</label>
+                                <input
+                                  type="text"
+                                  value={link.description?.en || ''}
+                                  onChange={(e) => handleInputChange(`friendLinks.links.${index}.description.en`, e.target.value)}
+                                  className={`w-full px-3 py-2 rounded-lg border ${colors.input} text-sm`}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </section>
+              
+              <section 
+                ref={el => { sectionsRef.current['music'] = el; }}
+                id="music"
+                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+              >
+                {renderSectionHeader(sections[9])}
+                {sections[9].expanded && (
                   <div className="mt-6 space-y-4">
                     <p className={`text-sm ${colors.textSecondary}`}>{t('musicUploadHint')}</p>
                     <input

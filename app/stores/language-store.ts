@@ -122,6 +122,32 @@ type TranslationReturnType = {
 	loading: string
 	weekdays: string[]
 	months: string[]
+	guestbook: string
+	friendLinks: string
+	visitSite: string
+	noFriendLinks: string
+	addFriendLink: string
+	friendLinkUrl: string
+	friendLinkName: string
+	friendLinkAvatar: string
+	friendLinkDescription: string
+	fetchSiteInfo: string
+	fetchingSiteInfo: string
+	fetchSiteInfoSuccess: string
+	fetchSiteInfoFailed: string
+	guestbookSettings: string
+	enableGuestbook: string
+	walineUrl: string
+	walineUrlHint: string
+	walineNick: string
+	walineMail: string
+	walinePlaceholder: string
+	walineNickPlaceholder: string
+	walineMailPlaceholder: string
+	friendLinksSettings: string
+	enableFriendLinks: string
+	sidebarCollapse: string
+	sidebarExpand: string
 }
 
 interface LanguageStore {

@@ -1,5 +1,5 @@
 import configData from "../config.json";
-import type { SiteConfig, ProfileConfig, LinkConfig, Project, Skill, TechItem, Language, I18nText } from "../types";
+import type { SiteConfig, ProfileConfig, LinkConfig, Project, Skill, TechItem, Language, I18nText, GuestbookConfig, FriendLinksConfig } from "../types";
 
 interface AppConfig {
   site: SiteConfig;
@@ -19,6 +19,8 @@ interface AppConfig {
     zh: Record<string, string>;
     en: Record<string, string>;
   };
+  guestbook?: GuestbookConfig;
+  friendLinks?: FriendLinksConfig;
 }
 
 const appConfig: AppConfig = configData as AppConfig;
@@ -58,6 +60,18 @@ export const aboutMeConfig = {
   hobbies: appConfig.profile.hobbies,
   currentFocus: appConfig.profile.currentFocus,
   motto: appConfig.profile.motto,
+};
+
+export const guestbookConfig = appConfig.guestbook || {
+  enabled: false,
+  walineUrl: "",
+  title: { zh: "留言板", en: "Guestbook" }
+};
+
+export const friendLinksConfig = appConfig.friendLinks || {
+  enabled: false,
+  title: { zh: "友情链接", en: "Friend Links" },
+  links: []
 };
 
 export const translations = {
@@ -183,6 +197,32 @@ export const translations = {
     loading: "加载中...",
     weekdays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+    guestbook: appConfig.translations.zh.guestbook || "留言板",
+    friendLinks: appConfig.translations.zh.friendLinks || "友情链接",
+    visitSite: appConfig.translations.zh.visitSite || "访问网站",
+    noFriendLinks: appConfig.translations.zh.noFriendLinks || "暂无友情链接",
+    addFriendLink: appConfig.translations.zh.addFriendLink || "添加友链",
+    friendLinkUrl: appConfig.translations.zh.friendLinkUrl || "网站地址",
+    friendLinkName: appConfig.translations.zh.friendLinkName || "网站名称",
+    friendLinkAvatar: appConfig.translations.zh.friendLinkAvatar || "网站图标",
+    friendLinkDescription: appConfig.translations.zh.friendLinkDescription || "网站描述",
+    fetchSiteInfo: appConfig.translations.zh.fetchSiteInfo || "获取网站信息",
+    fetchingSiteInfo: appConfig.translations.zh.fetchingSiteInfo || "正在获取网站信息...",
+    fetchSiteInfoSuccess: appConfig.translations.zh.fetchSiteInfoSuccess || "网站信息获取成功",
+    fetchSiteInfoFailed: appConfig.translations.zh.fetchSiteInfoFailed || "网站信息获取失败，请手动填写",
+    guestbookSettings: "留言板设置",
+    enableGuestbook: "启用留言板",
+    walineUrl: "Waline 服务端地址",
+    walineUrlHint: "填写 Waline 评论系统的服务端地址",
+    walineNick: "昵称",
+    walineMail: "邮箱",
+    walinePlaceholder: "欢迎留下你的评论...",
+    walineNickPlaceholder: "请输入昵称",
+    walineMailPlaceholder: "请输入邮箱",
+    friendLinksSettings: "友情链接设置",
+    enableFriendLinks: "启用友情链接",
+    sidebarCollapse: "收起导航",
+    sidebarExpand: "展开导航",
   },
   en: {
     siteTitle: appConfig.translations.en.siteTitle || appConfig.site.title,
@@ -306,6 +346,32 @@ export const translations = {
     loading: "Loading...",
     weekdays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    guestbook: appConfig.translations.en.guestbook || "Guestbook",
+    friendLinks: appConfig.translations.en.friendLinks || "Friend Links",
+    visitSite: appConfig.translations.en.visitSite || "Visit Site",
+    noFriendLinks: appConfig.translations.en.noFriendLinks || "No friend links yet",
+    addFriendLink: appConfig.translations.en.addFriendLink || "Add Friend Link",
+    friendLinkUrl: appConfig.translations.en.friendLinkUrl || "Website URL",
+    friendLinkName: appConfig.translations.en.friendLinkName || "Website Name",
+    friendLinkAvatar: appConfig.translations.en.friendLinkAvatar || "Website Icon",
+    friendLinkDescription: appConfig.translations.en.friendLinkDescription || "Website Description",
+    fetchSiteInfo: appConfig.translations.en.fetchSiteInfo || "Fetch Site Info",
+    fetchingSiteInfo: appConfig.translations.en.fetchingSiteInfo || "Fetching site info...",
+    fetchSiteInfoSuccess: appConfig.translations.en.fetchSiteInfoSuccess || "Site info fetched successfully",
+    fetchSiteInfoFailed: appConfig.translations.en.fetchSiteInfoFailed || "Failed to fetch site info, please fill manually",
+    guestbookSettings: "Guestbook Settings",
+    enableGuestbook: "Enable Guestbook",
+    walineUrl: "Waline Server URL",
+    walineUrlHint: "Enter the Waline comment system server URL",
+    walineNick: "Nickname",
+    walineMail: "Email",
+    walinePlaceholder: "Leave your comment here...",
+    walineNickPlaceholder: "Enter your nickname",
+    walineMailPlaceholder: "Enter your email",
+    friendLinksSettings: "Friend Links Settings",
+    enableFriendLinks: "Enable Friend Links",
+    sidebarCollapse: "Collapse Sidebar",
+    sidebarExpand: "Expand Sidebar",
   },
 };
 

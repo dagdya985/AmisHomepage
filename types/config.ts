@@ -64,3 +64,23 @@ export interface TechItem {
   color: string;
   icon: string;
 }
+
+export interface GuestbookConfig {
+  enabled: boolean;
+  walineUrl: string;
+  title: I18nText;
+}
+
+export interface FriendLink {
+  id: string;
+  url: string;
+  name: string;
+  avatar: string;
+  description: I18nText;
+}
+
+export interface FriendLinksConfig {
+  enabled: boolean;
+  title: I18nText;
+  links: FriendLink[];
+}
