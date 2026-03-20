@@ -70,7 +70,7 @@ export const guestbookConfig = appConfig.guestbook || {
 
 export const friendLinksConfig = appConfig.friendLinks || {
   enabled: false,
-  title: { zh: "友情链接", en: "Friend Links" },
+  title: { zh: "友链", en: "Friend Links" },
   links: []
 };
 
@@ -198,9 +198,9 @@ export const translations = {
     weekdays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
     months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     guestbook: appConfig.translations.zh.guestbook || "留言板",
-    friendLinks: appConfig.translations.zh.friendLinks || "友情链接",
+    friendLinks: appConfig.translations.zh.friendLinks || "友链",
     visitSite: appConfig.translations.zh.visitSite || "访问网站",
-    noFriendLinks: appConfig.translations.zh.noFriendLinks || "暂无友情链接",
+    noFriendLinks: appConfig.translations.zh.noFriendLinks || "暂无友链",
     addFriendLink: appConfig.translations.zh.addFriendLink || "添加友链",
     friendLinkUrl: appConfig.translations.zh.friendLinkUrl || "网站地址",
     friendLinkName: appConfig.translations.zh.friendLinkName || "网站名称",
@@ -219,8 +219,8 @@ export const translations = {
     walinePlaceholder: "欢迎留下你的评论...",
     walineNickPlaceholder: "请输入昵称",
     walineMailPlaceholder: "请输入邮箱",
-    friendLinksSettings: "友情链接设置",
-    enableFriendLinks: "启用友情链接",
+    friendLinksSettings: "友链设置",
+    enableFriendLinks: "启用友链",
     sidebarCollapse: "收起导航",
     sidebarExpand: "展开导航",
   },

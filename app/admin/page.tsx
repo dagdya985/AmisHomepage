@@ -503,7 +503,7 @@ export default function ConfigPage() {
     setState(prev => {
       const newConfig = { ...prev.config };
       if (!newConfig.friendLinks) {
-        newConfig.friendLinks = { enabled: true, title: { zh: '友情链接', en: 'Friend Links' }, links: [] };
+        newConfig.friendLinks = { enabled: true, title: { zh: '友链', en: 'Friend Links' }, links: [] };
       }
       if (!newConfig.friendLinks.links) {
         newConfig.friendLinks.links = [];
@@ -1531,7 +1531,7 @@ export default function ConfigPage() {
                           onChangeZh={(value) => handleInputChange('friendLinks.title.zh', value)}
                           onChangeEn={(value) => handleInputChange('friendLinks.title.en', value)}
                           colors={colors}
-                          placeholderZh="友情链接"
+                          placeholderZh="友链"
                           placeholderEn="Friend Links"
                         />
                         

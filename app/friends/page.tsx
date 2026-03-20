@@ -137,7 +137,7 @@ export default function FriendLinksPage() {
               </h3>
               <p className={colors.textSecondary}>
                 {language === "zh" 
-                  ? "暂无友情链接，请在配置页面添加" 
+                  ? "暂无友链，请在配置页面添加" 
                   : "No friend links yet, please add in the admin page"}
               </p>
             </div>
