@@ -155,6 +155,9 @@ export default function ConfigPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    // Hydrate language store from localStorage
+    useLanguageStore.getState().hydrate();
+    
     fetchConfig();
     const init = async () => {
       await loadPrivateKey();
