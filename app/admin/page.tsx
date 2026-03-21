@@ -152,6 +152,7 @@ export default function ConfigPage() {
   ]);
   
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     fetchConfig();
@@ -606,11 +607,11 @@ export default function ConfigPage() {
       className="flex items-center justify-between cursor-pointer select-none"
       onClick={() => toggleSection(section.id)}
     >
-      <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${section.gradient} flex items-center justify-center`}>
-          <i className={`${section.icon} text-white`}></i>
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br ${section.gradient} flex items-center justify-center flex-shrink-0`}>
+          <i className={`${section.icon} text-white text-sm sm:text-base`}></i>
         </div>
-        <h3 className={`text-xl font-semibold ${colors.text}`}>{t(section.title as any)}</h3>
+        <h3 className={`text-lg sm:text-xl font-semibold ${colors.text}`}>{t(section.title as any)}</h3>
       </div>
       <i className={`fas fa-chevron-down ${colors.textSecondary} transition-transform duration-300 ${section.expanded ? 'rotate-180' : ''}`}></i>
     </div>
@@ -620,6 +621,58 @@ export default function ConfigPage() {
     <div className={`min-h-screen ${colors.background}`}>
       <Toaster position="top-center" richColors />
       
+      {/* 移动端顶部导航栏 */}
+      <div className="fixed top-0 left-0 right-0 z-50 lg:hidden bg-white/80 dark:bg-white/10 backdrop-blur-md border-b border-gray-200 dark:border-white/10 px-4 py-3">
+        <Link
+          href="/"
+          className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl border ${colors.card} ${colors.text} hover:bg-blue-500/10 transition-all`}
+        >
+          <i className="fas fa-arrow-left"></i>
+          <span className="text-sm">{t('backToHome')}</span>
+        </Link>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className={`ml-auto px-4 py-2 rounded-xl ${colors.card} ${colors.text} hover:bg-blue-500/10 transition-all`}
+        >
+          <i className="fas fa-bars"></i>
+        </button>
+      </div>
+
+      {/* 移动端菜单 */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden bg-black/50 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
+          <div className="absolute top-16 left-4 right-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <div className={`${colors.card} rounded-2xl p-4 space-y-2`}>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className={`text-sm font-semibold ${colors.text}`}>{t('quickNav')}</h4>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`p-1.5 rounded-lg hover:bg-white/10 transition-colors ${colors.textSecondary}`}
+                >
+                  <i className="fas fa-times text-xs"></i>
+                </button>
+              </div>
+              {sections.map(section => (
+                <button
+                  key={section.id}
+                  onClick={() => {
+                    scrollToSection(section.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-left ${
+                    activeSection === section.id ? colors.activeNav : `hover:bg-white/5 ${colors.textSecondary}`
+                  }`}
+                >
+                  <i className={`${section.icon} text-sm w-5`}></i>
+                  <span className="text-sm">{t(section.title as any)}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 桌面端侧边栏 */}
       <aside className={`fixed left-4 top-1/2 -translate-y-1/2 ${sidebarCollapsed ? 'w-14' : 'w-56'} ${colors.sidebar} backdrop-blur-md border rounded-2xl p-4 hidden lg:block z-40 transition-all duration-300`}>
         <div className="flex items-center justify-between mb-4">
           {!sidebarCollapsed && <h4 className={`text-sm font-semibold ${colors.text}`}>{t('quickNav')}</h4>}
@@ -669,6 +722,30 @@ export default function ConfigPage() {
         )}
       </aside>
 
+      {/* 移动端底部浮动按钮 */}
+      <div className="fixed bottom-4 right-4 lg:hidden flex gap-3 z-40">
+        <button
+          onClick={handleSaveConfig}
+          disabled={state.isSaving || !state.config}
+          className={`w-14 h-14 rounded-xl text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-110 shadow-lg ${colors.button} flex items-center justify-center`}
+          title={t('saveToGithub')}
+        >
+          {state.isSaving ? (
+            <i className="fas fa-spinner fa-spin"></i>
+          ) : (
+            <i className="fas fa-save"></i>
+          )}
+        </button>
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className={`w-14 h-14 rounded-xl font-medium transition-all hover:scale-110 shadow-lg ${colors.card} ${colors.text} border border-white/10 flex items-center justify-center`}
+          title={t('backToTop')}
+        >
+          <i className="fas fa-arrow-up"></i>
+        </button>
+      </div>
+
+      {/* 桌面端右侧按钮 */}
       <div className={`fixed right-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-3 z-40`}>
         <button
           onClick={handleSaveConfig}
@@ -694,26 +771,26 @@ export default function ConfigPage() {
         <span className={`text-xs ${colors.textSecondary} writing-mode-vertical`}>{t('backToTop')}</span>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8 lg:px-28 xl:px-36">
-        <header className="mb-8 text-center">
+      <div className="max-w-6xl mx-auto px-4 py-8 lg:px-28 xl:px-36 pt-20 lg:pt-8">
+        <header className="mb-8 text-center hidden lg:block">
           <div className="flex items-center justify-center gap-4 mb-4">
             <Link
               href="/"
-              className={`px-4 py-2 rounded-xl border ${colors.card} ${colors.text} hover:bg-blue-500/10 transition-all flex items-center gap-2`}
+              className={`px-3 sm:px-4 py-2 rounded-xl border ${colors.card} ${colors.text} hover:bg-blue-500/10 transition-all flex items-center gap-2 text-sm sm:text-base`}
             >
               <i className="fas fa-arrow-left"></i>
-              {t('backToHome')}
+              <span className="hidden sm:inline">{t('backToHome')}</span>
             </Link>
-            <div className="inline-flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                <i className="fas fa-cog text-white text-xl"></i>
+            <div className="inline-flex items-center gap-2 sm:gap-3">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <i className="fas fa-cog text-white text-lg sm:text-xl"></i>
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
                 {t('configManagement')}
               </h1>
             </div>
           </div>
-          <p className={`${colors.textSecondary} max-w-2xl mx-auto`}>
+          <p className={`${colors.textSecondary} max-w-2xl mx-auto text-sm sm:text-base px-4`}>
             {t('configDescription')}
           </p>
         </header>
@@ -724,7 +801,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['github'] = el; }}
                 id="github"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[0])}
                 {sections[0].expanded && (
@@ -768,7 +845,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['components'] = el; }}
                 id="components"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[1])}
                 {sections[1].expanded && (
@@ -890,7 +967,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['site'] = el; }}
                 id="site"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[2])}
                 {sections[2].expanded && (
@@ -1059,7 +1136,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['profile'] = el; }}
                 id="profile"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[3])}
                 {sections[3].expanded && (
@@ -1177,7 +1254,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['links'] = el; }}
                 id="links"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[4])}
                 {sections[4].expanded && (
@@ -1262,7 +1339,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['projects'] = el; }}
                 id="projects"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[5])}
                 {sections[5].expanded && (
@@ -1371,7 +1448,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['skills'] = el; }}
                 id="skills"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[6])}
                 {sections[6].expanded && (
@@ -1444,7 +1521,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['guestbook'] = el; }}
                 id="guestbook"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[7])}
                 {sections[7].expanded && (
@@ -1505,7 +1582,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['friendLinks'] = el; }}
                 id="friendLinks"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[8])}
                 {sections[8].expanded && (
@@ -1635,7 +1712,7 @@ export default function ConfigPage() {
               <section 
                 ref={el => { sectionsRef.current['music'] = el; }}
                 id="music"
-                className={`rounded-2xl p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
+                className={`rounded-xl sm:rounded-2xl p-4 sm:p-6 ${colors.card} backdrop-blur-md scroll-mt-4 overflow-hidden`}
               >
                 {renderSectionHeader(sections[9])}
                 {sections[9].expanded && (
@@ -1704,6 +1781,7 @@ export default function ConfigPage() {
             </div>
           )}
         </div>
+        <div className="h-40 lg:hidden"></div>
       </div>
     </div>
   );
