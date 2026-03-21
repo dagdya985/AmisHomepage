@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const token = await createInstallationToken(jwt, installationId);
 
     const configContent = await readTextFileFromRepo(token, owner, repo, 'config.json', branch);
-    let config: any = {};
+    let config: Record<string, unknown> = {};
     
     if (configContent) {
       try {

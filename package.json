@@ -1,12 +1,12 @@
 {
   "name": "Amis's Homepage",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 9998",
     "build": "next build",
     "start": "next start -p 9998",
-    "lint": "eslint"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",
