@@ -5,6 +5,8 @@ import { useLanguageStore } from '../../stores/language-store';
 import { useThemeStore } from '../../stores/theme-store';
 import { guestbookConfig } from '../../site-config';
 
+import '@waline/client/style';
+
 export default function WalineComments({ path = '/guestbook' }) {
   const walineInstanceRef = useRef(null);
   const containerRef = useRef(null);
