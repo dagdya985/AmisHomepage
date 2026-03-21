@@ -93,6 +93,7 @@ type TranslationReturnType = {
 	skillColor: string
 	skillIcon: string
 	retry: string
+	backToConfig: string
 	uploadPemFirst: string
 	fileUploadSuccess: string
 	fileUploadFailed: string

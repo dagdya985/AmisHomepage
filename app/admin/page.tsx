@@ -594,12 +594,20 @@ export default function ConfigPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
         <div className="text-center">
           <p className="text-red-500 mb-4">{state.error}</p>
-          <button
-            onClick={() => setState(prev => ({ ...prev, error: null, loading: true }))}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
-            {t('retry')}
-          </button>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={() => setState(prev => ({ ...prev, error: null, loading: true }))}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              {t('retry')}
+            </button>
+            <button
+              onClick={() => setState(prev => ({ ...prev, error: null, loading: false }))}
+              className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+            >
+              {t('backToConfig')}
+            </button>
+          </div>
         </div>
       </div>
     );
