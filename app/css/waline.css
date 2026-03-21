@@ -200,6 +200,34 @@ span.wl-browser {
   backdrop-filter: none !important;
 }
 
+/* 博主徽章样式 */
+.wl-badge {
+  display: inline-block !important;
+  padding: 2px 8px !important;
+  margin-left: 8px !important;
+  font-size: var(--waline-badge-font-size) !important;
+  font-weight: 500 !important;
+  color: white !important;
+  background: linear-gradient(135deg, var(--waline-badge-color), var(--waline-active-color)) !important;
+  border-radius: 4px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  line-height: 1.4 !important;
+  vertical-align: middle !important;
+}
+
+html.light .wl-badge {
+  background: linear-gradient(135deg, var(--waline-badge-color), var(--waline-active-color)) !important;
+  color: white !important;
+}
+
+/* 确保徽章不会被隐藏 */
+.wl-head span.wl-badge {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 /* 头部输入框样式 - 只修改颜色，保留官方排版 */
 .wl-header input {
   background: rgba(255, 255, 255, 0.03) !important;

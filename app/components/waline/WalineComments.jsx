@@ -56,7 +56,7 @@ export default function WalineComments({ path = '/guestbook' }) {
         },
         comment: true,
         requiredMeta: ['nick', 'mail'],
-        avatar: 'mp',
+        avatar: 'monsterid',
         meta: ['nick', 'mail'],
         pageSize: 10,
         noCopyright: true,
