@@ -411,6 +411,16 @@
           "zh": "Amis 的个人博客，记录开发、探索、笔记。 更新代码仓库。",
           "en": "Amis 的个人博客，记录开发、探索、笔记。 更新代码仓库。"
         }
+      },
+      {
+        "id": "friend-1774194093621-ntu33qr5h",
+        "url": "https://suko.online",
+        "name": "Homo Faber",
+        "avatar": "https://suko.online/favicon.png",
+        "description": {
+          "zh": "gesiiss的个人博客",
+          "en": "gesiiss的个人博客"
+        }
       }
     ]
   }
