@@ -12,30 +12,29 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
-    // 配置安全响应头
     return [
       {
-        source: '/:path*', // 匹配所有路径
+        source: '/:path*',
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY', // 禁止页面被嵌入到 iframe
+            value: 'DENY',
           },
           {
             key: 'X-Content-Type-Options',
-            value: 'nosniff', // 禁止浏览器 MIME 类型嗅探
+            value: 'nosniff',
           },
           {
             key: 'X-XSS-Protection',
-            value: '1; mode=block', // 启用 XSS 过滤并阻止页面加载
+            value: '1; mode=block',
           },
           {
             key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin', // 控制跨域时发送的 Referrer 信息
+            value: 'strict-origin-when-cross-origin',
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()', // 禁用摄像头、麦克风和地理位置权限
+            value: 'camera=(), microphone=(), geolocation=()',
           },
           {
             key: 'Content-Security-Policy',

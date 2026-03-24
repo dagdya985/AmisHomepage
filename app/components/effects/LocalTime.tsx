@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useThemeStore } from "../../stores/theme-store";
-import { useLanguageStore } from "../../stores/language-store";
+import { useLanguageStore, useTranslation } from "../../stores/language-store";
 
 function getChineseZodiac(year: number): string {
   const zodiacs = ["鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪"];
@@ -160,7 +160,8 @@ function getCachedHolidayData(year: number): { data: any; year: number } | null 
 
 export default function LocalTime() {
   const { theme } = useThemeStore();
-  const { language, t } = useLanguageStore();
+  const { language } = useLanguageStore();
+  const { t } = useTranslation();
   const [time, setTime] = useState<Date | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -248,8 +249,8 @@ export default function LocalTime() {
   };
 
   const formatDate = (date: Date) => {
-    const weekdays = t("weekdays");
-    const months = t("months");
+    const weekdays = t('weekdays', { returnObjects: true }) as string[];
+    const months = t('months', { returnObjects: true }) as string[];
     const day = weekdays[date.getDay()];
     const month = months[date.getMonth()];
     const dateNum = date.getDate();
@@ -289,8 +290,8 @@ export default function LocalTime() {
 
   const renderCalendar = () => {
     const { daysInMonth, startingDay } = getDaysInMonth(currentMonth);
-    const weekdays = t("weekdays");
-    const months = t("months");
+    const weekdays = t('weekdays', { returnObjects: true }) as string[];
+    const months = t('months', { returnObjects: true }) as string[];
     
     const days = [];
     

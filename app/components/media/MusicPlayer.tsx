@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useMusicPlayerStore } from "../../stores/music-player-store";
 import type { LoopMode } from "../../../types";
 import { useThemeStore } from "../../stores/theme-store";
-import { useLanguageStore } from "../../stores/language-store";
+import { useTranslation } from "../../stores/language-store";
 import { useAudioPlayer } from "../../hooks/useAudioPlayer";
 
 const LOOP_MODES: LoopMode[] = ['list-loop', 'list-no-loop', 'single-loop', 'single-no-loop']
@@ -59,7 +59,7 @@ export default function MusicPlayer() {
   } = useAudioPlayer();
 
   const { theme } = useThemeStore();
-  const { t } = useLanguageStore();
+  const { t } = useTranslation();
   const isDark = theme === "dark";
   const [isMuted, setIsMuted] = useState(false);
   const [previousVolume, setPreviousVolume] = useState(volume);
@@ -410,7 +410,7 @@ export default function MusicPlayer() {
                   isDark ? "border-white/10" : "border-gray-200"
                 }`}>
                   <p className={`text-xs font-medium ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-                    {t("totalMusic")(musicList.length)}
+                    {t("totalMusic", { count: musicList.length })}
                   </p>
                 </div>
                 {musicList.map((music, index) => (

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useLanguageStore } from "../stores/language-store";
+import { useLanguageStore, useTranslation } from "../stores/language-store";
 import { useThemeStore } from "../stores/theme-store";
 import { friendLinksConfig } from "../site-config";
 import LoadingScreen from "../components/effects/LoadingScreen";
@@ -62,7 +62,8 @@ const floatVariants = {
 };
 
 export default function FriendLinksPage() {
-  const { t, hydrated, hydrate, language } = useLanguageStore();
+  const { t } = useTranslation();
+  const { hydrated, hydrate, language } = useLanguageStore();
   const { theme } = useThemeStore();
   const [mounted, setMounted] = useState(false);
 

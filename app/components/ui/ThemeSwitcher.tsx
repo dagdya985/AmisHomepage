@@ -1,11 +1,11 @@
 "use client";
 
 import { useThemeStore } from "../../stores/theme-store";
-import { useLanguageStore } from "../../stores/language-store";
+import { useTranslation } from "../../stores/language-store";
 
 export default function ThemeSwitcher() {
   const { theme, toggleTheme, isTransitioning } = useThemeStore();
-  const { t } = useLanguageStore();
+  const { t } = useTranslation();
 
   return (
     <button

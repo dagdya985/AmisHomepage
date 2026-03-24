@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useLanguageStore } from "../stores/language-store";
+import { useLanguageStore, useTranslation } from "../stores/language-store";
 import { useThemeStore } from "../stores/theme-store";
 import { guestbookConfig } from "../site-config";
 import LoadingScreen from "../components/effects/LoadingScreen";
@@ -47,7 +47,8 @@ const floatVariants = {
 };
 
 export default function GuestbookPage() {
-  const { t, hydrated, hydrate, language } = useLanguageStore();
+  const { t } = useTranslation();
+  const { hydrated, hydrate, language } = useLanguageStore();
   const { theme } = useThemeStore();
   const [mounted, setMounted] = useState(false);
 

@@ -7,6 +7,7 @@ import { metadata, viewport } from "./metadata";
 import { initScript } from "./scripts/initScript";
 import { seoScripts } from "./scripts/seo-scripts";
 import SEOHead from "./components/seo/SEOHead";
+import { I18nProvider } from "../i18n";
 
 export { metadata, viewport };
 
@@ -42,9 +43,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${zcoolQingKeHuangYou.variable} antialiased`}
         suppressHydrationWarning
       >
-        {children}
-        <MusicPlayer />
-        <Analytics />
+        <I18nProvider>
+          {children}
+          <MusicPlayer />
+          <Analytics />
+        </I18nProvider>
       </body>
     </html>
   );

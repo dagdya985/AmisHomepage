@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { linksConfig, guestbookConfig, friendLinksConfig } from "./site-config";
-import { useLanguageStore } from "./stores/language-store";
+import { useLanguageStore, useTranslation } from "./stores/language-store";
 import { useThemeStore } from "./stores/theme-store";
 import { useSiteConfig } from "./hooks/useSiteConfig";
 import { useLanguageTransition } from "./hooks/useLanguageTransition";
@@ -28,7 +28,8 @@ import LocalTime from "./components/effects/LocalTime";
 import CustomCursor from "./components/ui/CustomCursor";
 
 export default function Home() {
-  const { t, hydrated, hydrate } = useLanguageStore();
+  const { t } = useTranslation();
+  const { hydrated, hydrate } = useLanguageStore();
   const { theme } = useThemeStore();
   const { siteContent } = useSiteConfig();
   const { isLanguageChanging } = useLanguageTransition();

@@ -1,9 +1,8 @@
 /* eslint-disable prefer-const */
- 
 "use client";
 
 import { useState, useEffect } from "react";
-import { useLanguageStore } from "../../stores/language-store";
+import { useTranslation } from "../../stores/language-store";
 import { useThemeStore } from "../../stores/theme-store";
 import { skillsConfig } from "../../site-config";
 import { getThemeColors } from "../../themeConfig";
@@ -11,7 +10,7 @@ import { useScrollAnimation } from "../../hooks/useScrollAnimation";
 import { useConfigStore } from "../../stores/config-store";
 
 export default function Skills() {
-  const { t } = useLanguageStore();
+  const { t } = useTranslation();
   const { theme } = useThemeStore();
   const colors = getThemeColors(theme);
   const { siteContent } = useConfigStore();

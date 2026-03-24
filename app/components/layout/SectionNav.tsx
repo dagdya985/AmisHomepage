@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useLanguageStore } from "../../stores/language-store";
+import { useTranslation } from "../../stores/language-store";
 import { useThemeStore } from "../../stores/theme-store";
 import { useConfigStore } from "../../stores/config-store";
 
 type Section = "about" | "projects" | "skills";
 
 export default function SectionNav() {
-  const { t } = useLanguageStore();
+  const { t } = useTranslation();
   const { theme } = useThemeStore();
   const { siteContent } = useConfigStore();
   const [currentSection, setCurrentSection] = useState<Section>("projects");

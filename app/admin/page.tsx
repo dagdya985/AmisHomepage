@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { useThemeStore } from '../stores/theme-store';
-import { useLanguageStore } from '../stores/language-store';
+import { useLanguageStore, useTranslation } from '../stores/language-store';
 import { useConfigStore } from '../stores/config-store';
 import { toast, Toaster } from 'sonner';
 import LoadingScreen from '../components/effects/LoadingScreen';
@@ -124,7 +124,7 @@ const BilingualInput = ({ label, valueZh, valueEn, onChangeZh, onChangeEn, color
 
 export default function ConfigPage() {
   const { theme } = useThemeStore();
-  const { t } = useLanguageStore();
+  const { t } = useTranslation();
   const { setSiteContent } = useConfigStore();
   const [state, setState] = useState<ConfigState>({
     config: null,
