@@ -5,9 +5,9 @@
   "showCustomCursor": true,
   "customCursorPath": "/cursors/watermelon.cur",
   "site": {
-    "name": "Amis's Homepage",
-    "title": "Amis's Homepage",
-    "url": "https://www.amisweb.cn",
+    "name": "刘同学的主页",
+    "title": "刘同学的主页",
+    "url": "https://dagdya985.github.io/AmisHomepage",
     "ogImage": "/images/index.jpg",
     "backgroundImage": {
       "dark": "/images/index.jpg",
@@ -23,7 +23,7 @@
     },
     "author": "AmisKwok",
     "description": {
-      "zh": "后端开发者 | 移动端开发者。专注于 Java Spring Boot、Flutter 和 Next.js 开发。热爱编程，追求极致，永不止步。",
+      "zh": "目前没有明确的目标",
       "en": "Backend Developer | Mobile Developer. Focused on Java Spring Boot, Flutter and Next.js development. Passionate about coding, pursuing excellence, never stopping."
     },
     "keywords": [
